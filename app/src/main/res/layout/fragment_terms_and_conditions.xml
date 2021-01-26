@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_view">
+
+        <TextView
+            android:id="@+id/terms_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="start"
+            android:paddingBottom="@dimen/_40ssp"
+            android:layout_marginTop="@dimen/_6ssp"
+            android:layout_marginStart="@dimen/_20ssp"
+            android:layout_marginLeft="@dimen/_20ssp"
+            android:layout_marginRight="@dimen/_20ssp"
+            android:layout_marginEnd="@dimen/_20ssp"
+            android:text="@string/lorem_ipsum"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/label_txt_size" />
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_dont_agree"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/_20ssp"
+            android:layout_marginLeft="@dimen/_20ssp"
+            android:layout_marginTop="@dimen/_8ssp"
+            android:layout_marginEnd="@dimen/_10ssp"
+            android:layout_marginRight="@dimen/_10ssp"
+            android:layout_marginBottom="@dimen/_8ssp"
+            android:background="@drawable/button_pressed_black"
+            android:fontFamily="@font/baloo_regular"
+            android:text="Don't Agree"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size" />
+
+        <Button
+            android:id="@+id/btn_agree"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/_10ssp"
+            android:layout_marginLeft="@dimen/_10ssp"
+            android:layout_marginTop="@dimen/_8ssp"
+            android:layout_marginEnd="@dimen/_20ssp"
+            android:layout_marginRight="@dimen/_20ssp"
+            android:layout_marginBottom="@dimen/_8ssp"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/baloo_regular"
+            android:text="Agree"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size" />
+
+    </LinearLayout>
+
+</RelativeLayout>

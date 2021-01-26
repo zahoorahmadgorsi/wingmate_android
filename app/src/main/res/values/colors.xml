@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="colorPrimary">#F55B55</color>
+    <color name="colorPrimaryDark">#F55B55</color>
+    <color name="colorAccent">#F55B55</color>
+    <color name="colorAccent2">#145143</color>
+    <color name="shadow_color">#9028816D</color>
+    <color name="purple_theme">#4A3D60</color>
+    <color name="text_field_unselected">#F5F5F4</color>
+    <color name="text_field_selected">#F7F3D9</color>
+    <color name="text_color">#333333</color>
+    <color name="text_color_grey">#909090</color>
+    <color name="bg_color">#FFFFFF</color>
+    <color name="bg_color_old">#EEEEEE</color>
+    <!--    <color name="text_color">#104233</color>-->
+    <color name="text_black_color">#333333</color>
+    <color name="colorPrimaryTrans">#9028816D</color>
+    <!--<color name="colorAccent">#FFD4E9</color>-->
+
+    <color name="app_yellow">#F8F4D8</color>
+
+    <color name="blue">#169CEE</color>
+    <color name="light_green">#B3CF38</color>
+    <color name="light_green_trans99">#EEB3CF38</color>
+    <color name="light_green_trans90">#90B3CF38</color>
+    <color name="light_green_trans">#60B3CF38</color>
+    <color name="light_green_trans_2">#40B3CF38</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="white_trans">#90FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="black_trans">#90000000</color>
+    <color name="black_trans2">#99000000</color>
+    <color name="black_trans3">#60000000</color>
+    <color name="black_trans4">#40000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="grey">#A1A1A1</color>
+    <color name="grey_mid">#DCDCDC</color>
+    <color name="greenish_bg">#F9F9F9</color>
+    <color name="grey_light">#EEEEEE</color>
+    <color name="edit_text_line_color">@color/shadow_color</color>
+    <color name="green">#76EB00</color>
+    <color name="grey_very_light">#FAFAFA</color>
+    <color name="colorInactive">#747474</color>
+    <color name="colorActiveSmall">#FFFFFF</color>
+    <color name="colorInactiveSmall">#50FFFFFF</color>
+    <color name="dialog_red">#ff0000</color>
+    <color name="red_trans">#60ff0000</color>
+    <color name="red_trans30">#30ff0000</color>
+    <color name="color_tab_1">#455C65</color>
+    <color name="color_tab_2">#00886A</color>
+    <color name="color_tab_3">#8B6B62</color>
+    <color name="color_tab_4">#6C4A42</color>
+    <color name="color_tab_5">#F63D2B</color>
+
+    <color name="color_notification_back">#ffcd33</color>
+    <color name="color_notification_text">#3E4757</color>
+
+    <color name="rending_light_gray">#868686</color>
+    <color name="gray_black">#3D3D31</color>
+
+    <color name="blackOlive">#39393F</color>
+    <color name="orange">#FEC500</color>
+    <color name="bg_tag_default">#7cd167</color>
+
+    <color name="mdtp_accent_color">@color/light_green</color>
+    <color name="mdtp_accent_color_dark">@color/colorPrimary</color>
+</resources>

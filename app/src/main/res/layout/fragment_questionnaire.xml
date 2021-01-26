@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_view"
+        android:layout_marginStart="@dimen/_16ssp"
+        android:layout_marginLeft="@dimen/_16ssp"
+        android:layout_marginTop="@dimen/_8ssp"
+        android:layout_marginEnd="@dimen/_16ssp"
+        android:layout_marginRight="@dimen/_16ssp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/placeholder_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="center"
+            android:textColor="@color/text_color_grey"
+            android:textSize="@dimen/label_txt_size" />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_32ssp"
+            android:background="@drawable/field_bg_unselected"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:hint="@string/search"
+            android:maxLines="1"
+            android:layout_marginTop="@dimen/_6ssp"
+            android:paddingStart="@dimen/_8ssp"
+            android:imeOptions="actionDone"
+            android:paddingLeft="@dimen/_8ssp"
+            android:paddingEnd="@dimen/_8ssp"
+            android:paddingRight="@dimen/_8ssp"
+            android:singleLine="true"
+            android:drawableLeft="@drawable/ic_search"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="@dimen/_8ssp"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/title_size" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_12ssp"
+            tools:listitem="@layout/list_item_option" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_continue"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginStart="@dimen/_40ssp"
+            android:layout_marginLeft="@dimen/_40ssp"
+            android:layout_marginTop="@dimen/_16ssp"
+            android:layout_marginEnd="@dimen/_40ssp"
+            android:layout_marginRight="@dimen/_40ssp"
+            android:layout_marginBottom="@dimen/_8ssp"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/baloo_regular"
+            android:text="@string/save_and_continue"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size" />
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40ssp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingTop="@dimen/_10ssp"
+            android:paddingBottom="@dimen/_10ssp"
+            android:src="@drawable/ic_back_button" />
+    </LinearLayout>
+
+</RelativeLayout>

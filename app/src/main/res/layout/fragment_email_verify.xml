@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_above="@+id/tv"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="140dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/email_verification" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/baloo_regular"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_16ssp"
+            android:text="Email verification for"
+            android:textColor="@color/purple_theme"
+            android:textSize="@dimen/txt_size" />
+
+        <TextView
+            android:id="@+id/email_id_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/baloo_regular"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_4ssp"
+            android:layout_marginEnd="@dimen/_16ssp"
+            android:layout_marginLeft="@dimen/_16ssp"
+            android:layout_marginStart="@dimen/_16ssp"
+            android:layout_marginRight="@dimen/_16ssp"
+            android:text="adam@mail.com"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/txt_size" />
+
+        <TextView
+            android:id="@+id/msg_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_8ssp"
+            android:layout_marginEnd="@dimen/_16ssp"
+            android:layout_marginLeft="@dimen/_16ssp"
+            android:layout_marginStart="@dimen/_16ssp"
+            android:layout_marginRight="@dimen/_16ssp"
+            android:text="@string/email_verification_msg"
+            android:textColor="@color/text_color_grey"
+            android:textSize="@dimen/label_txt_size" />
+
+        <Button
+            android:id="@+id/btn_cont"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginStart="@dimen/_40ssp"
+            android:layout_marginLeft="@dimen/_40ssp"
+            android:layout_marginEnd="@dimen/_40ssp"
+            android:layout_marginRight="@dimen/_40ssp"
+            android:layout_marginTop="@dimen/_16ssp"
+            android:layout_marginBottom="@dimen/_8ssp"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/baloo_regular"
+            android:text="@string/login_now"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size" />
+
+        <TextView
+            android:id="@+id/btn_wrong_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="center"
+            android:padding="@dimen/_4ssp"
+            android:layout_marginTop="@dimen/_4ssp"
+            android:text="Wrong email?"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/txt_size" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_send_again"
+        android:layout_centerHorizontal="true"
+        android:background="?attr/selectableItemBackground"
+        android:fontFamily="@font/open_sans_regular"
+        android:gravity="center"
+        android:text="@string/don_t_receive_a_link"
+        android:textColor="@color/text_color_grey"
+        android:textSize="@dimen/label_txt_size" />
+
+    <TextView
+        android:id="@+id/btn_send_again"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="?attr/selectableItemBackground"
+        android:fontFamily="@font/open_sans_regular"
+        android:gravity="center"
+        android:paddingTop="@dimen/_8ssp"
+        android:paddingBottom="@dimen/_12ssp"
+        android:text="Send Again"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/txt_size" />
+
+</RelativeLayout>

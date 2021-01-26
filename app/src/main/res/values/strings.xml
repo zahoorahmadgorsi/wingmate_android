@@ -1,0 +1,63 @@
+<resources>
+
+    <string name="app_name">Wing Mate</string>
+
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+    <string name="back4app_app_id">D7Vyy11JKs7lpEpMwAHxKbRV0RAdFWI5SzEjZ8r3</string>
+    <string name="back4app_client_key">1QFZvwT0KYo3VYCQ9QhTgQGMejxXXK8rlA8a8W5C</string>
+
+    <string name="internet_not_enabled">Internet is disabled in your device. Enable it?</string>
+    <string name="enable_internet">Enable Internet</string>
+    <string name="gps_disable_in_your_device">GPS is disabled in your device. Enable it?</string>
+    <string name="enable_gps">Enable GPS</string>
+
+    <string name="oops">Oops!</string>
+    <string name="no_internet_connection_found">No internet connection found.</string>
+    <string name="check_your_connection_or_try_again">Check your connection or try again.</string>
+    <string name="retry">RETRY</string>
+    <string name="error_occurred">Error Occurred!</string>
+    <string name="unable_to_fetch_data_from_server">Unable to fetch data from server.</string>
+
+    <string name="title_crop">Crop</string>
+    <string name="signup">Signup</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="signin">Signin</string>
+    <string name="what_s_your_email">What\'s your email?</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="email_required">Email required!</string>
+    <string name="password_required">Password required!</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">Login</string>
+    <string name="email_req">Email required!</string>
+    <string name="invalid_email">Invalid email!</string>
+    <string name="pass_req">Password required!</string>
+    <string name="pass_invalid">Invalid password!</string>
+    <string name="txt_continue">Continue</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae pellentesque dolor. Maecenas aliquam vulputate vestibulum. Donec ac orci eu magna tempor mattis. Curabitur lorem justo, scelerisque at quam ac, dignissim aliquet ex. Aliquam a metus suscipit, imperdiet libero ac, eleifend enim. Nulla facilisi. Fusce scelerisque, nulla eu malesuada pulvinar, massa ante imperdiet purus, nec luctus felis magna at eros. Curabitur ac nulla vel velit vehicula fermentum.\n\nProin gravida magna nec quam pellentesque, in iaculis urna luctus. Aenean sit amet felis in velit commodo lobortis. Ut sed mauris congue, luctus elit vel, ullamcorper nisi. Vivamus vel convallis dolor, vel sagittis neque. Donec risus turpis, ullamcorper vel sapien eu, dignissim ultricies purus. Maecenas eget nulla eget ligula accumsan auctor vitae iaculis turpis. Donec dapibus ac urna eget rutrum. Vivamus luctus et orci sit amet egestas. Ut odio nisl, sagittis maximus vestibulum a, congue ac odio. Vivamus nunc ligula, dignissim vitae ligula at, dictum sodales ipsum.\n\nVestibulum dapibus erat massa, non accumsan odio tristique at. Fusce sodales lectus aliquam sollicitudin venenatis. Ut scelerisque nibh a turpis tempor, et pellentesque tellus ultrices. Sed ultrices neque quis accumsan pulvinar. Vestibulum eget placerat diam, ac posuere turpis. Aenean quis velit in purus varius pellentesque. Quisque nec dictum diam. In eget nisi sed enim consectetur porta vel id quam. Aenean aliquet tincidunt convallis. Aliquam facilisis, nisi quis porta dapibus, nulla ante fringilla tellus, vitae porta sapien sapien ut augue.</string>
+    <string name="my_email">My email is</string>
+    <string name="pass">Password</string>
+    <string name="by_tapping_on_submit_i_agree_with_all">By tapping on submit, I agree with all</string>
+    <string name="terms_amp_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="nick_req">Nick required!</string>
+    <string name="don_t_receive_a_link">Didn\'t receive a link?</string>
+    <string name="verify_your_email">Verify Your Email</string>
+    <string name="email_verification_msg">Hi, you are almost ready to start enjoying Wing Mate! Simply click on button to verify your email address.</string>
+    <string name="please_enter_your_registered_email_address">Please enter your registered email address to retrieve your password</string>
+    <string name="skip">Skip</string>
+    <string name="save_and_continue">Save &amp; Continue</string>
+    <string name="question_country">Where is home for you?</string>
+    <string name="nationality">Nationality</string>
+    <string name="sel_multi">Select one or multiple of the below options.</string>
+    <string name="sel_one">Select one of the below options.</string>
+    <string name="sel_one_country">Select one of the below countries.</string>
+    <string name="search_country">Search Country</string>
+    <string name="login_now">Login Now</string>
+    <string name="no_que_found">No question found!</string>
+    <string name="no_record_found">No record found!</string>
+    <string name="no_option_found">No question options found!</string>
+    <string name="remember_me">Remember me</string>
+    <string name="i_am_21_and_above">I am 21 and above</string>
+    <string name="search">Search</string>
+
+
+</resources>

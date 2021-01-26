@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_que_found">No question found!</string>
+    <string name="no_option_found">No question options found!</string>
+</resources>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16ssp"
+        android:layout_marginLeft="@dimen/_16ssp"
+        android:layout_marginTop="@dimen/_8ssp"
+        android:layout_marginEnd="@dimen/_16ssp"
+        android:layout_marginRight="@dimen/_16ssp"
+        android:fontFamily="@font/open_sans_regular"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/text_color_grey"
+        android:textSize="@dimen/label_txt_size" />
+
+    <TextView
+        android:id="@+id/value_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/button_height"
+        android:layout_marginStart="@dimen/_16ssp"
+        android:layout_marginLeft="@dimen/_16ssp"
+        android:layout_marginTop="@dimen/_6ssp"
+        android:layout_marginEnd="@dimen/_16ssp"
+        android:layout_marginRight="@dimen/_16ssp"
+        android:background="@drawable/field_bg_unselected"
+        android:fontFamily="@font/open_sans_regular"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/_8ssp"
+        android:paddingLeft="@dimen/_8ssp"
+        android:paddingEnd="@dimen/_8ssp"
+        android:paddingRight="@dimen/_8ssp"
+        android:paddingTop="@dimen/_4ssp"
+        android:paddingBottom="@dimen/_4ssp"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/txt_size"
+        app:drawableEndCompat="@drawable/ic_arrow_down" />
+
+</LinearLayout>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/base_activity_LL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/crop_toolbar"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="?actionBarSize">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="@dimen/_40ssp"
+            android:layout_height="match_parent"
+            android:padding="@dimen/_14ssp"
+            android:src="@drawable/ic_back"
+            app:tint="@color/purple_theme" />
+
+        <LinearLayout
+            android:id="@+id/crop_options_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="?actionBarSize"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/btn_rotate_left"
+                android:layout_width="@dimen/_32ssp"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/_4ssp"
+                android:src="@drawable/ic_rotate_left"
+                app:tint="@color/purple_theme" />
+
+            <ImageView
+                android:id="@+id/btn_rotate_right"
+                android:layout_width="@dimen/_32ssp"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/_4ssp"
+                android:src="@drawable/ic_rotate_right"
+                app:tint="@color/purple_theme" />
+
+            <TextView
+                android:id="@+id/done"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:fontFamily="@font/baloo_regular"
+                android:gravity="center"
+                android:padding="@dimen/_8ssp"
+                android:text="DONE"
+                android:textColor="@color/purple_theme"
+                android:textSize="@dimen/title_size" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/baloo_regular"
+            android:textColor="@color/purple_theme"
+            android:textSize="@dimen/title_size" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/_16ssp"
+        android:visibility="gone"
+        android:paddingRight="@dimen/_16ssp"
+        android:paddingLeft="@dimen/_16ssp"
+        android:paddingEnd="@dimen/_16ssp"
+        android:paddingBottom="@dimen/_6ssp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/_60ssp"
+                android:layout_height="@dimen/_60ssp"
+                android:src="@drawable/app_heart" />
+
+            <TextView
+                android:id="@+id/screen_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/baloo_regular"
+                android:layout_marginTop="@dimen/_8ssp"
+                android:text=""
+                android:textColor="@color/purple_theme"
+                android:textSize="@dimen/header_size" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/steps_view"
+            android:layout_width="@dimen/_60ssp"
+            android:layout_height="@dimen/_60ssp"
+            android:visibility="gone"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true">
+
+            <me.tankery.lib.circularseekbar.CircularSeekBar
+                android:id="@+id/steps_progress"
+                android:layout_width="@dimen/_32ssp"
+                android:layout_height="@dimen/_32ssp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                app:cs_progress = "2"
+                app:cs_max = "5"
+                        app:cs_circle_x_radius = "@dimen/_32ssp"
+                        app:cs_circle_y_radius = "@dimen/_32ssp"
+                app:cs_negative_enabled = "false"
+                app:cs_move_outside_circle = "false"
+                app:cs_maintain_equal_circle = "false"
+                app:cs_use_custom_radii = "false"
+                app:cs_lock_enabled = "true"
+                app:cs_circle_stroke_width = "@dimen/_2ssp"
+                app:cs_disable_pointer = "true"
+                app:cs_circle_fill = "@color/transparent"
+                app:cs_circle_color = "@color/grey_light"
+                app:cs_circle_progress_color = "@color/colorPrimary"
+                app:cs_disable_progress_glow = "true"
+                app:cs_hide_progress_when_empty = "true"/>
+
+
+<!--            app:cs_circle_style = "butt|round|square"-->
+<!--            app:cs_progress = "integer"-->
+<!--            app:cs_max = "integer"-->
+<!--            app:cs_negative_enabled = "boolean"-->
+<!--            app:cs_move_outside_circle = "boolean"-->
+<!--            app:cs_maintain_equal_circle = "boolean"-->
+<!--            app:cs_use_custom_radii = "boolean"-->
+<!--            app:cs_lock_enabled = "boolean"-->
+<!--            app:cs_circle_x_radius = "dimension"-->
+<!--            app:cs_circle_y_radius = "dimension"-->
+<!--            app:cs_circle_stroke_width = "dimension"-->
+<!--            app:cs_disable_pointer = "boolean"-->
+<!--            app:cs_pointer_stroke_width = "dimension"-->
+<!--            app:cs_pointer_halo_width = "dimension"-->
+<!--            app:cs_pointer_halo_border_width = "dimension"-->
+<!--            app:cs_circle_fill = "color"-->
+<!--            app:cs_circle_color = "color"-->
+<!--            app:cs_circle_progress_color = "color"-->
+<!--            app:cs_pointer_color = "color"-->
+<!--            app:cs_pointer_halo_color = "color"-->
+<!--            app:cs_pointer_halo_color_ontouch = "color"-->
+<!--            app:cs_pointer_alpha_ontouch = "integer"-->
+<!--            app:cs_pointer_angle = "float"-->
+<!--            app:cs_start_angle = "float"-->
+<!--            app:cs_end_angle = "float"-->
+<!--            app:cs_disable_progress_glow = "boolean"-->
+<!--            app:cs_hide_progress_when_empty = "boolean"-->
+
+            <TextView
+                android:id="@+id/steps_count_tv"
+                android:layout_width="@dimen/_32ssp"
+                android:layout_height="@dimen/_32ssp"
+                android:fontFamily="@font/baloo_regular"
+                android:text="1/5"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/purple_theme"
+                android:textSize="@dimen/small_label_txt_size" />
+        </RelativeLayout>
+
+         <RelativeLayout
+            android:layout_width="@dimen/_60ssp"
+            android:layout_height="@dimen/_60ssp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true">
+
+             <ImageView
+                 android:id="@+id/ic_step"
+                 android:layout_centerVertical="true"
+                 android:layout_alignParentEnd="true"
+                 android:layout_alignParentRight="true"
+                 android:layout_width="@dimen/_32ssp"
+                 android:layout_height="@dimen/_32ssp"/>
+         </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/skip"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/skip"
+            android:visibility="gone"
+            android:textSize="@dimen/label_txt_size"
+            android:fontFamily="@font/baloo_regular"
+            android:textColor="@color/colorPrimary"
+            android:padding="@dimen/_8ssp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_60ssp"/>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+    </FrameLayout>
+
+</LinearLayout>

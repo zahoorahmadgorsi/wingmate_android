@@ -1,0 +1,333 @@
+package com.app.wingmate.login;
+
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+
+import com.app.wingmate.R;
+import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.utils.ActivityUtility;
+import com.app.wingmate.utils.SharedPrefers;
+import com.app.wingmate.utils.Utilities;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+
+import static com.app.wingmate.utils.AppConstants.ERROR;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DUMMY;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_FORGOT_PASSWORD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_HOME;
+import static com.app.wingmate.utils.CommonKeys.PREF_EMAIL;
+import static com.app.wingmate.utils.CommonKeys.PREF_PASSWORD;
+import static com.app.wingmate.utils.Utilities.showToast;
+
+public class LoginFragment extends BaseFragment implements LoginView {
+
+    public static final String TAG = LoginFragment.class.getName();
+
+    Unbinder unbinder;
+
+    @BindView(R.id.layout)
+    RelativeLayout layout;
+    @BindView(R.id.et_email)
+    EditText emailET;
+    @BindView(R.id.error_email)
+    LinearLayout errorEmailLayout;
+    @BindView(R.id.error_email_tv)
+    TextView errorEmailTV;
+    @BindView(R.id.et_password)
+    EditText passwordET;
+    @BindView(R.id.error_password)
+    LinearLayout errorPasswordLayout;
+    @BindView(R.id.error_password_tv)
+    TextView errorPasswordTV;
+    @BindView(R.id.show_password)
+    ImageView showPasswordIcon;
+    @BindView(R.id.remember_checkbox)
+    AppCompatCheckBox rememberCheckbox;
+    @BindView(R.id.btn_signin)
+    Button signinBtn;
+
+    private boolean showPassword = false;
+
+    private LoginPresenter loginPresenter;
+
+    public LoginFragment() {
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(false);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        loginPresenter = new LoginPresenter(this, new LoginInteractor());
+
+        errorEmailLayout.setVisibility(View.INVISIBLE);
+        errorPasswordLayout.setVisibility(View.INVISIBLE);
+        signinBtn.setSelected(false);
+        signinBtn.setEnabled(false);
+        signinBtn.setClickable(false);
+        signinBtn.setAlpha(0.5f);
+
+        emailET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                errorEmailLayout.setVisibility(View.INVISIBLE);
+                emailET.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.field_bg_selected, null));
+                if (!emailET.getText().toString().isEmpty() && !passwordET.getText().toString().isEmpty()) {
+                    signinBtn.setSelected(true);
+                    signinBtn.setEnabled(true);
+                    signinBtn.setClickable(true);
+                    signinBtn.setAlpha(1.0f);
+                } else {
+                    signinBtn.setSelected(false);
+                    signinBtn.setEnabled(false);
+                    signinBtn.setClickable(false);
+                    signinBtn.setAlpha(0.5f);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        passwordET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                errorPasswordLayout.setVisibility(View.INVISIBLE);
+                passwordET.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.field_bg_selected, null));
+                if (!emailET.getText().toString().isEmpty() && !passwordET.getText().toString().isEmpty()) {
+                    signinBtn.setSelected(true);
+                    signinBtn.setEnabled(true);
+                    signinBtn.setClickable(true);
+                    signinBtn.setAlpha(1.0f);
+                } else {
+                    signinBtn.setSelected(false);
+                    signinBtn.setEnabled(false);
+                    signinBtn.setClickable(false);
+                    signinBtn.setAlpha(0.5f);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        emailET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View arg0, boolean isFocus) {
+                if (LoginFragment.this.getActivity() == null || emailET == null) return;
+                if (isFocus) {
+                    emailET.setBackground(ResourcesCompat.getDrawable(LoginFragment.this.getResources(), R.drawable.field_bg_selected, null));
+                } else {
+                    emailET.setBackground(ResourcesCompat.getDrawable(LoginFragment.this.getResources(), R.drawable.field_bg_unselected, null));
+//                emailET.setBackground(getResources().getDrawable(R.drawable.field_bg_unselected));
+                }
+            }
+        });
+
+        passwordET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View arg0, boolean isFocus) {
+                System.out.println("==========isFocus======="+isFocus);
+                if (LoginFragment.this.getActivity() == null || passwordET == null) return;
+                if (isFocus) {
+                    passwordET.setBackground(ResourcesCompat.getDrawable(LoginFragment.this.getResources(), R.drawable.field_bg_selected, null));
+                } else {
+                    passwordET.setBackground(ResourcesCompat.getDrawable(LoginFragment.this.getResources(), R.drawable.field_bg_unselected, null));
+                }
+            }
+        });
+
+//        rememberCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (isChecked) {
+//                SharedPrefers.saveString(requireContext(), PREF_EMAIL, emailET.getText().toString());
+//                SharedPrefers.saveString(requireContext(), PREF_PASSWORD, passwordET.getText().toString());
+//            } else {
+//                SharedPrefers.saveString(requireContext(), PREF_EMAIL, "");
+//                SharedPrefers.saveString(requireContext(), PREF_PASSWORD, "");
+//            }
+//        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        String e = SharedPrefers.getString(requireContext(), PREF_EMAIL, "");
+        String p = SharedPrefers.getString(requireContext(), PREF_PASSWORD, "");
+
+        if (!e.isEmpty()) {
+            emailET.setText("");
+            emailET.append(e);
+            rememberCheckbox.setChecked(true);
+            emailET.setBackground(ResourcesCompat.getDrawable(LoginFragment.this.getResources(), R.drawable.field_bg_unselected, null));
+        }
+        if (!p.isEmpty()) {
+            passwordET.setText("");
+            passwordET.append(p);
+            rememberCheckbox.setChecked(true);
+            passwordET.setBackground(ResourcesCompat.getDrawable(LoginFragment.this.getResources(), R.drawable.field_bg_unselected, null));
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @OnClick({R.id.remember_me, R.id.btn_signin, R.id.forgot_password, R.id.btn_back, R.id.show_password})
+    public void onViewClicked(View v) {
+        switch (v.getId()) {
+            case R.id.remember_me:
+                rememberCheckbox.toggle();
+                break;
+            case R.id.show_password:
+                showPassword = !showPassword;
+                if (showPassword) {
+                    passwordET.setTransformationMethod(null);
+                    showPasswordIcon.setImageResource(R.drawable.password_show);
+//                    showPasswordIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.MULTIPLY);
+                } else {
+                    passwordET.setTransformationMethod(new PasswordTransformationMethod());
+                    showPasswordIcon.setImageResource(R.drawable.password_hide);
+//                    showPasswordIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
+                }
+                if (passwordET.isFocused())
+                    passwordET.setSelection(passwordET.getText().length());
+                else
+                    passwordET.setBackground(ResourcesCompat.getDrawable(LoginFragment.this.getResources(), R.drawable.field_bg_unselected, null));
+
+                break;
+            case R.id.btn_signin:
+                showProgress();
+                loginPresenter.validateAndLogin(getContext(), emailET.getText().toString().trim(), passwordET.getText().toString().trim());
+                break;
+            case R.id.forgot_password:
+                ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_FORGOT_PASSWORD);
+                break;
+            case R.id.btn_back:
+                getActivity().onBackPressed();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void showProgress() {
+        Utilities.hideKeyboard(getView());
+//        dialog.show(getActivity().getSupportFragmentManager(), "progress_dialog");
+        dialog.show();
+    }
+
+    @Override
+    public void setEmailError() {
+        dismissProgress();
+        errorEmailLayout.setVisibility(View.VISIBLE);
+        errorEmailTV.setText(R.string.email_req);
+        emailET.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.field_bg_error, null));
+    }
+
+    @Override
+    public void setInvalidEmailError() {
+        dismissProgress();
+        errorEmailLayout.setVisibility(View.VISIBLE);
+        errorEmailTV.setText(R.string.invalid_email);
+        emailET.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.field_bg_error, null));
+    }
+
+    @Override
+    public void setPasswordError() {
+        dismissProgress();
+        errorPasswordLayout.setVisibility(View.VISIBLE);
+        errorPasswordTV.setText(R.string.pass_req);
+        passwordET.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.field_bg_error, null));
+    }
+
+    @Override
+    public void setInvalidPasswordError() {
+        dismissProgress();
+        errorPasswordLayout.setVisibility(View.VISIBLE);
+        errorPasswordTV.setText(R.string.pass_invalid);
+        passwordET.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.field_bg_error, null));
+    }
+
+    @Override
+    public void setEmailVerificationError(ParseException e) {
+        dismissProgress();
+        ParseUser.logOut();
+        showToast(getActivity(), getContext(), "User email is not verified", ERROR);
+//        showToast(getActivity(), getContext(), "Email is not verified yet!", ERROR);
+    }
+
+    @Override
+    public void setLoginSuccess(ParseUser parseUser) {
+        dismissProgress();
+        if (rememberCheckbox.isChecked()) {
+            SharedPrefers.saveString(requireContext(), PREF_EMAIL, emailET.getText().toString());
+            SharedPrefers.saveString(requireContext(), PREF_PASSWORD, passwordET.getText().toString());
+        }
+//        if (parseUser.getBoolean(PARAM_QUESTIONNAIRE_FILLED)) {
+        ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_HOME);
+//        } else {
+//            ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE);
+//        }
+    }
+
+    @Override
+    public void setResponseError(ParseException e) {
+        dismissProgress();
+        ParseUser.logOut();
+        showToast(getActivity(), getContext(), e.getMessage(), ERROR);
+    }
+}

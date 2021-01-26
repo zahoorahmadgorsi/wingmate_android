@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_view">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/placeholder_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans_regular"
+                android:gravity="center"
+                android:layout_marginStart="@dimen/_16ssp"
+                android:layout_marginLeft="@dimen/_16ssp"
+                android:layout_marginEnd="@dimen/_16ssp"
+                android:layout_marginRight="@dimen/_16ssp"
+                android:textColor="@color/text_color_grey"
+                android:textSize="@dimen/label_txt_size" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/take_photo_video_btn"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginStart="@dimen/_16ssp"
+                android:layout_marginLeft="@dimen/_16ssp"
+                android:layout_marginEnd="@dimen/_16ssp"
+                android:layout_marginRight="@dimen/_16ssp"
+                android:layout_marginTop="@dimen/_8ssp"
+                app:cardBackgroundColor="@color/grey_light"
+                app:cardCornerRadius="@dimen/_12ssp"
+                app:cardElevation="0dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/photo_video_pic1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+
+                    <ImageView
+                        android:id="@+id/play_icon"
+                        android:layout_width="@dimen/_24ssp"
+                        android:layout_height="@dimen/_24ssp"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"
+                        android:src="@drawable/play_video" />
+
+                    <LinearLayout
+                        android:id="@+id/add_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="@dimen/_24ssp"
+                            android:layout_height="@dimen/_24ssp"
+                            android:src="@drawable/ic_add_photo_video"/>
+
+                        <TextView
+                            android:id="@+id/mode_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/baloo_regular"
+                            android:text="Photos"
+                            android:layout_marginTop="@dimen/_4ssp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/txt_size" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/photos_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:orientation="horizontal"
+                app:reverseLayout="false"
+                android:paddingStart="@dimen/_8ssp"
+                android:paddingLeft="@dimen/_8ssp"
+                android:paddingEnd="@dimen/_8ssp"
+                android:paddingRight="@dimen/_8ssp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginTop="@dimen/_4ssp"
+                tools:listitem="@layout/list_item_photo"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/baloo_regular"
+                android:text="Dos/Donts"
+                android:layout_marginStart="@dimen/_16ssp"
+                android:layout_marginLeft="@dimen/_16ssp"
+                android:layout_marginEnd="@dimen/_16ssp"
+                android:layout_marginRight="@dimen/_16ssp"
+                android:layout_marginTop="@dimen/_8ssp"
+                android:textColor="@color/purple_theme"
+                android:textSize="@dimen/txt_size" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/dos_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginStart="@dimen/_16ssp"
+                android:layout_marginLeft="@dimen/_16ssp"
+                android:layout_marginEnd="@dimen/_16ssp"
+                android:layout_marginRight="@dimen/_16ssp"
+                android:layout_marginTop="@dimen/_4ssp"
+                tools:listitem="@layout/list_item_dos_donts"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/dos_photos_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginTop="@dimen/_8ssp"
+                android:layout_marginStart="@dimen/_16ssp"
+                android:layout_marginLeft="@dimen/_16ssp"
+                android:layout_marginEnd="@dimen/_16ssp"
+                android:layout_marginRight="@dimen/_16ssp"
+                tools:listitem="@layout/list_item_dos_photos"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50ssp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_continue"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginStart="@dimen/_40ssp"
+            android:layout_marginLeft="@dimen/_40ssp"
+            android:layout_marginTop="@dimen/_4ssp"
+            android:layout_marginEnd="@dimen/_40ssp"
+            android:layout_marginRight="@dimen/_40ssp"
+            android:layout_marginBottom="@dimen/_8ssp"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/baloo_regular"
+            android:text="@string/save_and_continue"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size" />
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40ssp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingTop="@dimen/_10ssp"
+            android:paddingBottom="@dimen/_10ssp"
+            android:src="@drawable/ic_back_button" />
+    </LinearLayout>
+
+</RelativeLayout>

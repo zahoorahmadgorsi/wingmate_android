@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16ssp"
+            android:layout_marginLeft="@dimen/_16ssp"
+            android:layout_marginTop="@dimen/_8ssp"
+            android:layout_marginEnd="@dimen/_16ssp"
+            android:layout_marginRight="@dimen/_16ssp"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="center"
+            android:text="Name or Nick Name"
+            android:textColor="@color/text_color_grey"
+            android:textSize="@dimen/label_txt_size" />
+
+        <TextView
+            android:id="@+id/nick_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16ssp"
+            android:layout_marginLeft="@dimen/_16ssp"
+            android:layout_marginTop="@dimen/_6ssp"
+            android:layout_marginEnd="@dimen/_16ssp"
+            android:layout_marginRight="@dimen/_16ssp"
+            android:background="@drawable/field_bg_unselected"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/button_height"
+            android:paddingStart="@dimen/_8ssp"
+            android:paddingLeft="@dimen/_8ssp"
+            android:paddingTop="@dimen/_4ssp"
+            android:paddingEnd="@dimen/_8ssp"
+            android:paddingRight="@dimen/_8ssp"
+            android:paddingBottom="@dimen/_4ssp"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/txt_size" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16ssp"
+            android:layout_marginLeft="@dimen/_16ssp"
+            android:layout_marginTop="@dimen/_8ssp"
+            android:layout_marginEnd="@dimen/_16ssp"
+            android:layout_marginRight="@dimen/_16ssp"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="center"
+            android:text="Gender"
+            android:textColor="@color/text_color_grey"
+            android:textSize="@dimen/label_txt_size" />
+
+        <TextView
+            android:id="@+id/gender_tv"
+            app:drawableEndCompat="@drawable/ic_arrow_down"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16ssp"
+            android:layout_marginLeft="@dimen/_16ssp"
+            android:layout_marginTop="@dimen/_6ssp"
+            android:layout_marginEnd="@dimen/_16ssp"
+            android:layout_marginRight="@dimen/_16ssp"
+            android:background="@drawable/field_bg_unselected"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/button_height"
+            android:paddingStart="@dimen/_8ssp"
+            android:paddingLeft="@dimen/_8ssp"
+            android:paddingTop="@dimen/_4ssp"
+            android:paddingEnd="@dimen/_8ssp"
+            android:paddingRight="@dimen/_8ssp"
+            android:paddingBottom="@dimen/_4ssp"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/txt_size" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16ssp"
+            android:layout_marginLeft="@dimen/_16ssp"
+            android:layout_marginTop="@dimen/_8ssp"
+            android:layout_marginEnd="@dimen/_16ssp"
+            android:layout_marginRight="@dimen/_16ssp"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="center"
+            android:text="About Me"
+            android:textColor="@color/text_color_grey"
+            android:textSize="@dimen/label_txt_size" />
+
+        <TextView
+            android:id="@+id/about_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16ssp"
+            android:layout_marginLeft="@dimen/_16ssp"
+            android:layout_marginTop="@dimen/_6ssp"
+            android:layout_marginEnd="@dimen/_16ssp"
+            android:layout_marginRight="@dimen/_16ssp"
+            android:background="@drawable/field_bg_unselected"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/button_height"
+            android:paddingStart="@dimen/_8ssp"
+            android:paddingLeft="@dimen/_8ssp"
+            android:paddingTop="@dimen/_4ssp"
+            android:paddingEnd="@dimen/_8ssp"
+            android:paddingRight="@dimen/_8ssp"
+            android:paddingBottom="@dimen/_4ssp"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/txt_size" />
+
+    </LinearLayout>
+
+</LinearLayout>

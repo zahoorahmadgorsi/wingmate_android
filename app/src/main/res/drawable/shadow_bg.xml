@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- Drop Shadow Stack -->
+    <item>
+        <shape>
+            <padding
+                android:bottom="@dimen/_3ssp"
+                android:left="@dimen/_3ssp"
+                android:right="@dimen/_3ssp"
+                android:top="@dimen/_3ssp" />
+
+            <solid android:color="#0028816D" />
+
+            <corners android:radius="@dimen/card_radius" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <padding
+                android:bottom="@dimen/_3ssp"
+                android:left="@dimen/_3ssp"
+                android:right="@dimen/_3ssp"
+                android:top="@dimen/_3ssp" />
+
+            <solid android:color="#1028816D" />
+
+            <corners android:radius="@dimen/card_radius" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <padding
+                android:bottom="@dimen/_3ssp"
+                android:left="@dimen/_3ssp"
+                android:right="@dimen/_3ssp"
+                android:top="@dimen/_3ssp" />
+
+            <solid android:color="#2028816D" />
+
+            <corners android:radius="@dimen/card_radius" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <padding
+                android:bottom="@dimen/_3ssp"
+                android:left="@dimen/_3ssp"
+                android:right="@dimen/_3ssp"
+                android:top="@dimen/_3ssp" />
+
+            <solid android:color="#3028816D" />
+
+            <corners android:radius="@dimen/card_radius" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <padding
+                android:bottom="@dimen/_3ssp"
+                android:left="@dimen/_3ssp"
+                android:right="@dimen/_3ssp"
+                android:top="@dimen/_3ssp" />
+
+            <solid android:color="#5028816D" />
+
+            <corners android:radius="@dimen/card_radius" />
+        </shape>
+    </item>
+
+    <!-- Background -->
+    <item>
+        <shape>
+            <solid android:color="@android:color/white" />
+
+            <corners android:radius="@dimen/card_radius" />
+        </shape>
+    </item>
+
+</layer-list>

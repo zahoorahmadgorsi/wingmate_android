@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="@dimen/_100ssp"
+        android:layout_height="@dimen/_100ssp"
+        android:src="@drawable/error_occurred"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:text="@string/error_occurred"
+        android:layout_marginTop="@dimen/_16ssp"
+        android:gravity="center"
+        android:textSize="@dimen/txt_size"
+        android:fontFamily="@font/open_sans_semibold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:layout_marginTop="@dimen/_16ssp"
+        android:text="@string/unable_to_fetch_data_from_server"
+        android:gravity="center"
+        android:textSize="@dimen/title_size"
+        android:fontFamily="@font/open_sans_regular"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:text="@string/check_your_connection_or_try_again"
+        android:gravity="center"
+        android:textSize="@dimen/title_size"
+        android:fontFamily="@font/open_sans_regular"/>
+
+    <Button
+        android:id="@+id/retry_btn"
+        android:layout_width="@dimen/_100ssp"
+        android:layout_height="wrap_content"
+        android:text="@string/retry"
+        android:textColor="@color/white"
+        android:textSize="@dimen/title_size"
+        android:fontFamily="@font/open_sans_regular"
+        android:layout_marginTop="@dimen/_24ssp"
+        android:background="@drawable/button_pressed"/>
+</LinearLayout>

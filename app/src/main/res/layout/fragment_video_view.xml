@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+       android:layout_above="@+id/btn_back">
+
+        <com.potyvideo.library.AndExoPlayerView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:andexo_aspect_ratio="aspect_16_9"
+            app:andexo_full_screen="false"
+            android:layout_centerInParent="true"
+            app:andexo_play_when_ready="true"
+            app:andexo_show_controller="true"
+            app:andexo_resize_mode="Fit"/>
+
+        <ImageView
+            android:id="@+id/img_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/video_placeholder1" />
+
+        <ImageView
+            android:id="@+id/play_btn"
+            android:layout_width="@dimen/_40ssp"
+            android:layout_height="@dimen/_40ssp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/play_video" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40ssp"
+        android:layout_alignParentBottom="true"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/_8ssp"
+        android:visibility="gone"
+        android:src="@drawable/ic_back_button" />
+
+</RelativeLayout>
