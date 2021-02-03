@@ -13,12 +13,15 @@ import com.app.wingmate.R;
 import com.app.wingmate.models.PhotoFile;
 import com.app.wingmate.models.UserProfilePhotoVideo;
 import com.app.wingmate.profile.edit.UploadPhotoVideoFragment;
+import com.app.wingmate.utils.ActivityUtility;
 import com.parse.ParseException;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 
 public class PhotosHorizontalListAdapter extends RecyclerView.Adapter<PhotosHorizontalListAdapter.ViewHolder> {
 
@@ -56,6 +59,8 @@ public class PhotosHorizontalListAdapter extends RecyclerView.Adapter<PhotosHori
         holder.itemView.setOnClickListener(v -> {
             if (object.isDummyFile()) {
                 fragment.addImage();
+            } else {
+                ActivityUtility.startPhotoViewActivity(context, KEY_FRAGMENT_PHOTO_VIEW, object.getFile().getUrl());
             }
         });
 

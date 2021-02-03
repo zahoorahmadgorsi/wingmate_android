@@ -54,9 +54,9 @@ public class DosDontsPhotosGridAdapter extends RecyclerView.Adapter<DosDontsPhot
             holder.playIcon.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(object.getFile().getUrl())
-                    .thumbnail(Glide.with(context).load(object.getFile().getUrl()).placeholder(R.drawable.video_loading).apply(new RequestOptions().override(600, 600)))
+                    .thumbnail(Glide.with(context).load(object.getFile().getUrl()).placeholder(R.drawable.image_placeholder).apply(new RequestOptions().override(600, 600)))
                     .apply(new RequestOptions().override(600, 600))
-                    .placeholder(R.drawable.video_loading)
+                    .placeholder(R.drawable.image_placeholder)
                     .into(holder.pic);
         } else {
             holder.playIcon.setVisibility(View.GONE);

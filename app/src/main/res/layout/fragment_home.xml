@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/profile_photo_video"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/_40ssp"
+        android:layout_marginLeft="@dimen/_40ssp"
+        android:layout_marginEnd="@dimen/_40ssp"
+        android:layout_marginRight="@dimen/_40ssp"
+        android:layout_marginBottom="@dimen/_8ssp"
+        android:background="@drawable/button_pressed"
+        android:fontFamily="@font/baloo_regular"
+        android:text="Profile"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/txt_size" />
+
+    <Button
+        android:id="@+id/buy_btn"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/_40ssp"
+        android:layout_marginLeft="@dimen/_40ssp"
+        android:layout_marginEnd="@dimen/_40ssp"
+        android:layout_marginRight="@dimen/_40ssp"
+        android:layout_marginBottom="@dimen/_8ssp"
+        android:layout_marginTop="@dimen/_8ssp"
+        android:background="@drawable/button_pressed"
+        android:fontFamily="@font/baloo_regular"
+        android:text="Pay Now"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/txt_size" />
+
+    <Button
+        android:id="@+id/questionnaire_mandatory"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/_40ssp"
+        android:layout_marginLeft="@dimen/_40ssp"
+        android:layout_marginEnd="@dimen/_40ssp"
+        android:layout_marginTop="@dimen/_8ssp"
+        android:layout_marginRight="@dimen/_40ssp"
+        android:layout_marginBottom="@dimen/_8ssp"
+        android:background="@drawable/button_pressed"
+        android:fontFamily="@font/baloo_regular"
+        android:text="Mandatory Questionnaire"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/txt_size" />
+
+    <Button
+        android:id="@+id/questionnaire_optional"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/_40ssp"
+        android:layout_marginLeft="@dimen/_40ssp"
+        android:layout_marginEnd="@dimen/_40ssp"
+        android:layout_marginTop="@dimen/_8ssp"
+        android:layout_marginRight="@dimen/_40ssp"
+        android:layout_marginBottom="@dimen/_8ssp"
+        android:background="@drawable/button_pressed"
+        android:fontFamily="@font/baloo_regular"
+        android:text="Optional Questionnaire"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/txt_size" />
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/_40ssp"
+        android:layout_marginLeft="@dimen/_40ssp"
+        android:layout_marginEnd="@dimen/_40ssp"
+        android:layout_marginTop="@dimen/_8ssp"
+        android:layout_marginRight="@dimen/_40ssp"
+        android:layout_marginBottom="@dimen/_8ssp"
+        android:background="@drawable/button_pressed"
+        android:fontFamily="@font/baloo_regular"
+        android:text="Logout"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/txt_size" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

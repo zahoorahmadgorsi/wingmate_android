@@ -11,10 +11,7 @@ import com.app.wingmate.utils.AppConstants;
 import com.parse.ParseUser;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_EMAIL_VERIFIED;
-import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
-import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DUMMY;
-import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EMAIL_VERIFY;
-import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_HOME;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 
 public class SplashActivity extends AppCompatActivity {
@@ -37,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
 //                    ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_QUESTIONNAIRE);
 //                }
                     else {
-                        ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_HOME);
+                        ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_DASHBOARD);
                     }
                 } else {
                     ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_PRE_LOGIN);

@@ -25,6 +25,9 @@ public class AppConstants {
 
     public static final String MANDATORY = "Mandatory";
     public static final String OPTIONAL = "Optional";
+    public static final String BOTH = "Both";
+    public static final String MALE = "Male";
+    public static final String FEMALE = "Female";
 
     public static final String CLASS_NAME_USER = "User";
     public static final String PARAM_GENDER = "gender";
@@ -76,4 +79,7 @@ public class AppConstants {
 
     public static final int MODE_PHOTOS = 1;
     public static final int MODE_VIDEO = 2;
+
+    public static final String TAG_PROFILE_EDIT = "tag_profile_edit";
+    public static final String TAG_SEARCH = "tag_search";
 }

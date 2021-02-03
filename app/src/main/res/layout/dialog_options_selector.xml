@@ -17,13 +17,9 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/_4ssp"
-            android:layout_marginLeft="@dimen/_4ssp"
-            android:layout_marginEnd="@dimen/_4ssp"
-            android:layout_marginRight="@dimen/_4ssp"
             android:layout_weight="9"
             app:cardCornerRadius="@dimen/_16ssp"
-            app:cardElevation="@dimen/_4ssp">
+            app:cardElevation="0dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -310,9 +306,9 @@
                     <ImageView
                         android:id="@+id/btn_back"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_32ssp"
-                        android:paddingTop="@dimen/_8ssp"
-                        android:paddingBottom="@dimen/_8ssp"
+                        android:layout_height="@dimen/_40ssp"
+                        android:paddingTop="@dimen/_10ssp"
+                        android:paddingBottom="@dimen/_10ssp"
                         android:src="@drawable/ic_back_button" />
                 </LinearLayout>
             </RelativeLayout>

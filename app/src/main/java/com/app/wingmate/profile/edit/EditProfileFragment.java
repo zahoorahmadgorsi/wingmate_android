@@ -36,6 +36,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
+import static com.app.wingmate.utils.AppConstants.TAG_PROFILE_EDIT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE_TEXT_FIELDS;
 
 public class EditProfileFragment extends BaseFragment implements ProfileView, OptionsSelectorDialog.OptionsSelectorDialogClickListener {
@@ -159,7 +160,7 @@ public class EditProfileFragment extends BaseFragment implements ProfileView, Op
 
     public void showOptionSelectionDialog(Question question, int index, String tag) {
         selectedIndex = index;
-        OptionsSelectorDialog dialog = OptionsSelectorDialog.newInstance(this, getActivity(), question, tag);
+        OptionsSelectorDialog dialog = OptionsSelectorDialog.newInstance(this, getActivity(), question, tag, TAG_PROFILE_EDIT);
         dialog.show(getActivity().getSupportFragmentManager(), "selection_dialog");
     }
 

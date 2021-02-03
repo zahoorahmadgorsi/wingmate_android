@@ -51,6 +51,8 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.app.wingmate.utils.AppConstants.ERROR;
+import static com.app.wingmate.utils.AppConstants.FEMALE;
+import static com.app.wingmate.utils.AppConstants.MALE;
 import static com.app.wingmate.utils.AppConstants.PARAM_VIDEO_LINK;
 import static com.app.wingmate.utils.AppConstants.REQUEST_CODE_TERMS;
 import static com.app.wingmate.utils.AppConstants.WARNING;
@@ -387,7 +389,7 @@ public class SignupFragment extends BaseFragment implements SignupView, ViewPage
                 }
                 break;
             case R.id.gender_male:
-                gender = "male";
+                gender = MALE;
                 genderMaleBtn.setBackgroundResource(R.drawable.bg_enabled);
                 genderFemaleBtn.setBackgroundResource(R.drawable.bg_disabled);
                 if (!gender.isEmpty() && !nickET.getText().toString().isEmpty()) {
@@ -403,7 +405,7 @@ public class SignupFragment extends BaseFragment implements SignupView, ViewPage
                 }
                 break;
             case R.id.gender_female:
-                gender = "female";
+                gender = FEMALE;
                 genderMaleBtn.setBackgroundResource(R.drawable.bg_disabled);
                 genderFemaleBtn.setBackgroundResource(R.drawable.bg_enabled);
                 if (!gender.isEmpty() && !nickET.getText().toString().isEmpty()) {

@@ -2,16 +2,13 @@ package com.app.wingmate.utils;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Parcelable;
 
 import com.app.wingmate.R;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.ui.activities.MainActivity;
-import com.app.wingmate.ui.fragments.CropFragment;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_EMAIL_TAG;
@@ -22,6 +19,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE_TEXT_F
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_FORGOT_PASSWORD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_HOME;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LOGIN;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
@@ -46,6 +44,7 @@ public class ActivityUtility {
         switch (tag) {
             case KEY_FRAGMENT_LOGIN:
             case KEY_FRAGMENT_DUMMY:
+            case KEY_FRAGMENT_DASHBOARD:
             case KEY_FRAGMENT_HOME:
             case KEY_FRAGMENT_PRE_LOGIN:
             case KEY_FRAGMENT_QUESTIONNAIRE:

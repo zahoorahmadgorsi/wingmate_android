@@ -21,6 +21,7 @@ public class CommonKeys {
     public static final String KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE = "UploadPhotoVideoFragment";
     public static final String KEY_FRAGMENT_VIDEO_VIEW = "VideoViewFragment";
     public static final String KEY_FRAGMENT_PHOTO_VIEW = "PhotoViewFragment";
+    public static final String KEY_FRAGMENT_DASHBOARD = "DashboardFragment";
     public static final String KEY_FRAGMENT_HOME = "HomeFragment";
     public static final String KEY_FRAGMENT_DUMMY = "DummyFragment";
     public static final String KEY_FRAGMENT_WEB_VIEW = "WebViewFragment";

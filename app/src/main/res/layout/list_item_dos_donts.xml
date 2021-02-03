@@ -5,12 +5,18 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:padding="@dimen/_4ssp">
+    android:paddingLeft="@dimen/_4ssp"
+    android:paddingStart="@dimen/_4ssp"
+    android:paddingEnd="@dimen/_4ssp"
+    android:paddingRight="@dimen/_4ssp"
+    android:paddingTop="@dimen/_8ssp"
+    android:paddingBottom="@dimen/_8ssp"
+    >
 
     <ImageView
         android:id="@+id/tick"
-        android:layout_width="@dimen/_16ssp"
-        android:layout_height="@dimen/_16ssp"
+        android:layout_width="@dimen/_14ssp"
+        android:layout_height="@dimen/_14ssp"
         android:src="@drawable/big_green_tick" />
 
     <TextView

@@ -19,7 +19,9 @@ import androidx.fragment.app.FragmentManager;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseActivity;
+import com.app.wingmate.dashboard.DashboardFragment;
 import com.app.wingmate.events.RefreshProfile;
+import com.app.wingmate.dashboard.home.HomeFragment;
 import com.app.wingmate.profile.ProfileFragment;
 import com.app.wingmate.profile.edit.EditProfileFragment;
 import com.app.wingmate.profile.edit.EditProfileTextFieldFragment;
@@ -40,7 +42,6 @@ import com.parse.ParseUser;
 
 import org.greenrobot.eventbus.EventBus;
 
-import static com.app.wingmate.utils.AppConstants.MODE_PHOTOS;
 import static com.app.wingmate.utils.AppConstants.MODE_VIDEO;
 import static com.app.wingmate.utils.AppConstants.PARAM_ABOUT_ME;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
@@ -53,6 +54,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EMAIL_VERIFY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_FORGOT_PASSWORD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_HOME;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LOGIN;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
@@ -89,6 +91,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Fragment termsFragment;
     private Fragment webViewFragment;
     private Fragment cropFragment;
+    private Fragment dashboardFragment;
+    private Fragment homeFragment;
     private Fragment dummyFragment;
     private Fragment profileFragment;
     private Fragment editProfileFragment;
@@ -148,8 +152,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case KEY_FRAGMENT_WEB_VIEW:
                 beginWebViewFragment();
                 break;
-            case KEY_FRAGMENT_HOME:
+            case KEY_FRAGMENT_DASHBOARD:
                 checkPermissions();
+                break;
+            case KEY_FRAGMENT_HOME:
+                beginHomeFragment();
                 break;
             case KEY_FRAGMENT_DUMMY:
                 beginDummyFragment();
@@ -268,11 +275,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void beginHomeFragment() {
         showTopView();
-        hideScreenTitle();
-        dummyFragment = getSupportFragmentManager().findFragmentByTag(DummyFragment.TAG);
-        if (dummyFragment == null)
-            dummyFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), DummyFragment.TAG);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, dummyFragment, DummyFragment.TAG).commit();
+        setScreenTitle("Home");
+        homeFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+        if (homeFragment == null)
+            homeFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), HomeFragment.TAG);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment, HomeFragment.TAG).commit();
+    }
+
+    private void beginDashboardFragment() {
+        showTopView();
+        setScreenTitle("Home");
+        dashboardFragment = getSupportFragmentManager().findFragmentByTag(DashboardFragment.TAG);
+        if (dashboardFragment == null)
+            dashboardFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), DashboardFragment.TAG);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, dashboardFragment, DashboardFragment.TAG).commit();
     }
 
     private void beginProfileFragment() {
@@ -397,15 +413,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             super.onBackPressed();
             overridePendingTransition(R.anim.blank_anim, R.anim.left_to_right);
         } else if (uploadPhotosVideoFragment != null) {
-            if (((UploadPhotoVideoFragment) uploadPhotosVideoFragment).CURRENT_MODE == MODE_VIDEO) {
-                ((UploadPhotoVideoFragment) uploadPhotosVideoFragment).setPhotosView();
-            } else {
+//            if (((UploadPhotoVideoFragment) uploadPhotosVideoFragment).CURRENT_MODE == MODE_VIDEO) {
+//                ((UploadPhotoVideoFragment) uploadPhotosVideoFragment).setPhotosView();
+//            } else {
                 if (((UploadPhotoVideoFragment) uploadPhotosVideoFragment).hasChange) {
                     EventBus.getDefault().post(new RefreshProfile());
                 }
                 super.onBackPressed();
                 overridePendingTransition(R.anim.blank_anim, R.anim.left_to_right);
+//            }
+        } else if (dashboardFragment != null) {
+            if (((DashboardFragment) dashboardFragment).viewPager.getCurrentItem() > 0) {
+                ((DashboardFragment) dashboardFragment).viewPager.setCurrentItem(0, true);
+            } else {
+                super.onBackPressed();
+                overridePendingTransition(R.anim.blank_anim, R.anim.left_to_right);
+//                System.exit(0);
             }
+
         } else if (emailVerifyFragment == null && termsFragment == null) {
             super.onBackPressed();
             overridePendingTransition(R.anim.blank_anim, R.anim.left_to_right);
@@ -549,7 +574,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void proceedAfterPermission() {
-        beginHomeFragment();
+        beginDashboardFragment();
     }
 
     @Override

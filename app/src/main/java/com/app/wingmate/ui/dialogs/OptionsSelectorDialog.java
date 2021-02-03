@@ -40,6 +40,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.app.wingmate.utils.AppConstants.ERROR;
+import static com.app.wingmate.utils.AppConstants.FEMALE;
+import static com.app.wingmate.utils.AppConstants.MALE;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.NATIONALITY_QUESTION_OBJECT_ID;
 import static com.app.wingmate.utils.AppConstants.PARAM_ABOUT_ME;
@@ -50,6 +52,8 @@ import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
+import static com.app.wingmate.utils.AppConstants.TAG_PROFILE_EDIT;
+import static com.app.wingmate.utils.AppConstants.TAG_SEARCH;
 import static com.app.wingmate.utils.CommonKeys.KEY_TITLE;
 import static com.app.wingmate.utils.Utilities.showToast;
 
@@ -103,7 +107,7 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
     public UserAnswer currentUserAnswer;
     private boolean isChange = false;
     private String questionType = MANDATORY;
-    private String gender = "male";
+    private String gender = MALE;
 
     private DialogOptionsListAdapter adapter;
     private GridLayoutManager gridLayoutManager;
@@ -111,6 +115,7 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
     public KProgressHUD dialog;
 
     private String TAG;
+    private String VIEW_TAG;
 
     static OptionsSelectorDialogClickListener myListener;
 
@@ -124,12 +129,13 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
         void onSelectorApplyClick(DialogFragment dialog, Question question);
     }
 
-    public static OptionsSelectorDialog newInstance(OptionsSelectorDialogClickListener myListener, Activity myActivity, Question question, String tag) {
+    public static OptionsSelectorDialog newInstance(OptionsSelectorDialogClickListener myListener, Activity myActivity, Question question, String tag, String viewTag) {
         OptionsSelectorDialog dialogFrag = new OptionsSelectorDialog();
         OptionsSelectorDialog.myListener = myListener;
         dialogFrag.myActivity = myActivity;
         dialogFrag.question = question;
         dialogFrag.TAG = tag;
+        dialogFrag.VIEW_TAG = viewTag;
         return dialogFrag;
     }
 
@@ -151,6 +157,7 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
         fragmentView = inflater.inflate(R.layout.dialog_options_selector, container, false);
         ButterKnife.bind(this, fragmentView);
         Objects.requireNonNull(getDialog()).getWindow().setBackgroundDrawableResource(R.color.transparent);
+        getDialog().getWindow().setGravity(Gravity.BOTTOM);
         setViews();
         return fragmentView;
     }
@@ -216,6 +223,7 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
         currentUserAnswer = question.getUserAnswer();
         questionType = question.getQuestionType();
         boolean isMultiSelect = !(questionType.equals(MANDATORY));
+        if (VIEW_TAG.equals(TAG_SEARCH)) isMultiSelect = true;
         allOptionsList = question.getOptions();
         filteredOptionsList = question.getOptions();
         loadQuestion(question, isMultiSelect);
@@ -223,9 +231,9 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
 
     private void setEditFieldsView() {
         if (TAG.equalsIgnoreCase(PARAM_NICK))
-            screenTitleTV.setText("You can call me");
+            screenTitleTV.setText("Edit Profile");
         else if (TAG.equalsIgnoreCase(PARAM_ABOUT_ME))
-            screenTitleTV.setText("Me, Myself & I");
+            screenTitleTV.setText("Edit Profile");
         else
             screenTitleTV.setText("Edit Profile");
         editFieldsView.setVisibility(View.VISIBLE);
@@ -266,10 +274,14 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
 
         if (TAG.equalsIgnoreCase(PARAM_NICK)) {
             titleTV.setText("Name or Nick Name");
+            editText.setText("");
             editText.append(ParseUser.getCurrentUser().getString(PARAM_NICK));
+            editText.setMaxLines(1);
+            editText.requestFocus();
         } else if (TAG.equalsIgnoreCase(PARAM_ABOUT_ME)) {
             titleTV.setText("About Me");
             String aboutme = ParseUser.getCurrentUser().getString(PARAM_ABOUT_ME);
+            editText.setText("");
             if (aboutme != null) editText.append(aboutme);
             ViewGroup.LayoutParams layoutParams = editText.getLayoutParams();
             int heightInPixels = (int) getResources().getDimension(R.dimen._100ssp);
@@ -280,21 +292,22 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
             editText.setPadding(paddingPixel, paddingPixel, paddingPixel, paddingPixel);
             editText.setLayoutParams(layoutParams);
             editText.setGravity(Gravity.START);
+            editText.requestFocus();
         }
-        editText.requestFocus();
     }
 
     private void setGenderView() {
-        screenTitleTV.setText("I am");
+        screenTitleTV.setText("Gender");
         genderView.setVisibility(View.VISIBLE);
         gender = ParseUser.getCurrentUser().getString(PARAM_GENDER);
-        if (gender.equalsIgnoreCase("male")) {
+        if (gender.equalsIgnoreCase(MALE)) {
+            gender = MALE;
             maleLayout.setSelected(true);
             maleTV.setSelected(true);
             femaleLayout.setSelected(false);
             femaleTV.setSelected(false);
-        } else if (gender.equalsIgnoreCase("female")) {
-            gender = "female";
+        } else if (gender.equalsIgnoreCase(FEMALE)) {
+            gender = FEMALE;
             femaleLayout.setSelected(true);
             femaleTV.setSelected(true);
             maleLayout.setSelected(false);
@@ -306,14 +319,14 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.male_layout:
-                gender = "male";
+                gender = MALE;
                 maleLayout.setSelected(true);
                 maleTV.setSelected(true);
                 femaleLayout.setSelected(false);
                 femaleTV.setSelected(false);
                 break;
             case R.id.female_layout:
-                gender = "female";
+                gender = FEMALE;
                 femaleLayout.setSelected(true);
                 femaleTV.setSelected(true);
                 maleLayout.setSelected(false);
@@ -345,7 +358,7 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
         else placeholderTV.setText(R.string.sel_one);
 
         disableContinueBtn();
-        screenTitleTV.setText(question.getQuestionTitle());
+        screenTitleTV.setText(question.getShortTitle());
 
         filteredOptionsList = new ArrayList<>();
         filteredOptionsList.addAll(question.getOptions());
@@ -425,7 +438,8 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
             dialog.show();
             if (currentUserAnswer == null) {
                 currentUserAnswer = new UserAnswer();
-                currentUserAnswer.put(PARAM_USER_ID, ParseUser.getCurrentUser());
+                if (VIEW_TAG.equals(TAG_PROFILE_EDIT))
+                    currentUserAnswer.put(PARAM_USER_ID, ParseUser.getCurrentUser());
                 currentUserAnswer.put(PARAM_QUESTION_ID, question);
             }
             currentUserAnswer.put(PARAM_OPTIONS_IDS, currentSelectedOptions);
@@ -440,17 +454,22 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
                 }
             }
             currentUserAnswer.put(PARAM_OPTIONS_OBJ_ARRAY, myOptions);
-
-            currentUserAnswer.saveInBackground(e -> {
-                dialog.dismiss();
-                if (e == null) {
-                    question.setUserAnswer(currentUserAnswer);
-                    myListener.onSelectorApplyClick(this, question);
-                } else {
-                    showToast(requireActivity(), requireContext(), e.getMessage(), ERROR);
-                }
-                isChange = false;
-            });
+            isChange = false;
+            if (VIEW_TAG.equals(TAG_PROFILE_EDIT)) {
+                currentUserAnswer.saveInBackground(e -> {
+                    dialog.dismiss();
+                    if (e == null) {
+                        question.setUserAnswer(currentUserAnswer);
+                        showToast(getActivity(), getContext(), "Updated successfully", SUCCESS);
+                        myListener.onSelectorApplyClick(this, question);
+                    } else {
+                        showToast(requireActivity(), requireContext(), e.getMessage(), ERROR);
+                    }
+                });
+            } else {
+                question.setUserAnswer(currentUserAnswer);
+                myListener.onSelectorApplyClick(this, question);
+            }
         }
     }
 
@@ -463,7 +482,8 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
         dialog.show();
         ParseUser.getCurrentUser().saveInBackground(e -> {
             if (e == null) {
-                showToast(getActivity(), getContext(), "Profile has been updated successfully", SUCCESS);
+                showToast(getActivity(), getContext(), "Updated successfully", SUCCESS);
+//                showToast(getActivity(), getContext(), "Profile has been updated successfully", SUCCESS);
                 dialog.dismiss();
                 myListener.onSelectorFieldsUpdateClick(this);
             } else {
@@ -477,7 +497,8 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
         dialog.show();
         ParseUser.getCurrentUser().saveInBackground(e -> {
             if (e == null) {
-                showToast(getActivity(), getContext(), "Profile has been updated successfully", SUCCESS);
+                showToast(getActivity(), getContext(), "Updated successfully", SUCCESS);
+//                showToast(getActivity(), getContext(), "Profile has been updated successfully", SUCCESS);
                 dialog.dismiss();
                 myListener.onSelectorGenderUpdateClick(this);
             } else {

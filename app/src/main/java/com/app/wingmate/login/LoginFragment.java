@@ -2,14 +2,12 @@ package com.app.wingmate.login;
 
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.app.wingmate.R;
@@ -36,9 +33,8 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.app.wingmate.utils.AppConstants.ERROR;
-import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DUMMY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_FORGOT_PASSWORD;
-import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_HOME;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.PREF_EMAIL;
 import static com.app.wingmate.utils.CommonKeys.PREF_PASSWORD;
 import static com.app.wingmate.utils.Utilities.showToast;
@@ -318,7 +314,7 @@ public class LoginFragment extends BaseFragment implements LoginView {
             SharedPrefers.saveString(requireContext(), PREF_PASSWORD, passwordET.getText().toString());
         }
 //        if (parseUser.getBoolean(PARAM_QUESTIONNAIRE_FILLED)) {
-        ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_HOME);
+        ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_DASHBOARD);
 //        } else {
 //            ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE);
 //        }

@@ -59,15 +59,15 @@
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_out_down</item>
         <!--<item name="android:windowExitAnimation">@anim/slide_out_down</item>-->
-        <item name="android:windowMinWidthMajor">97%</item>
-        <item name="android:windowMinWidthMinor">97%</item>
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
     </style>
 
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_up_2</item>
         <item name="android:windowExitAnimation">@anim/slide_out_down_2</item>
-        <item name="android:windowMinWidthMajor">98%</item>
-        <item name="android:windowMinWidthMinor">98%</item>
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
 
     </style>
 
@@ -95,6 +95,19 @@
         <item name="android:windowExitAnimation">@anim/zoom_out</item>
         <item name="android:windowMinWidthMajor">95%</item>
         <item name="android:windowMinWidthMinor">95%</item>
+    </style>
+
+    <style name="BottomNavigationView" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">@dimen/small_label_txt_size</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:fontFamily">@font/open_sans_regular</item>
+    </style>
+
+    <style name="BottomNavigationView.Active" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">@dimen/small_label_txt_size</item>
+        <item name="android:textColor">@color/purple_theme</item>
+        <item name="android:fontFamily">@font/open_sans_regular</item>
+
     </style>
 
 </resources>

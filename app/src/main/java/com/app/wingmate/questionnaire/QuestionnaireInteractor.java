@@ -16,6 +16,7 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
+import static com.app.wingmate.utils.AppConstants.BOTH;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUESTION;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUESTION_OPTION;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_ANSWER;
@@ -36,6 +37,7 @@ public class QuestionnaireInteractor {
         void onOptionsResponseSuccess(List<QuestionOption> questionOptions);
 
         void onUserAnswersResponseSuccess(UserAnswer userAnswer);
+
         void onUserAnswersResponseError(ParseException e);
 
         void onResponseError(ParseException e);
@@ -48,7 +50,7 @@ public class QuestionnaireInteractor {
         else {
             ParseQuery query = ParseQuery.getQuery(CLASS_NAME_QUESTION);
             query.orderByAscending(PARAM_DISPLAY_ORDER);
-            query.whereEqualTo(PARAM_QUESTION_TYPE, questionType);
+            if (!questionType.equals(BOTH)) query.whereEqualTo(PARAM_QUESTION_TYPE, questionType);
             query.findInBackground((FindCallback<Question>) (objects, e) -> {
                 if (e == null) {
                     if (objects != null && objects.size() > 0)
