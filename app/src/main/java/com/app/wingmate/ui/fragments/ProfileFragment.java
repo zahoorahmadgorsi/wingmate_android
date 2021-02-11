@@ -1,17 +1,12 @@
-package com.app.wingmate.profile;
+package com.app.wingmate.ui.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.CancellationSignal;
 import android.provider.MediaStore;
-import android.text.Html;
-import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,28 +28,22 @@ import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
 import com.app.wingmate.events.RefreshProfile;
 import com.app.wingmate.models.Question;
-import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.TermsConditions;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.models.UserProfilePhotoVideo;
-import com.app.wingmate.ui.adapters.OptionsListAdapter;
 import com.app.wingmate.ui.adapters.ProfileOptionsListAdapter;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.AppConstants;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -63,16 +52,9 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import me.tankery.lib.circularseekbar.CircularSeekBar;
 
-import static com.app.wingmate.utils.AppConstants.ERROR;
-import static com.app.wingmate.utils.AppConstants.KEY_VIDEO;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
-import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_AGE;
-import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_HEIGHT;
-import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_LOOKING_FOR;
-import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_NATIONALITY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
-import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_VIDEO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_IS_CURRENT_USER;

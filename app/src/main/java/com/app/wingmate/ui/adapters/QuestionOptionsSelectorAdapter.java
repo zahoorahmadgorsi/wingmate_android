@@ -1,12 +1,10 @@
 package com.app.wingmate.ui.adapters;
 
 import android.app.Activity;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,22 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
 import com.app.wingmate.models.Question;
-import com.app.wingmate.models.QuestionOption;
-import com.app.wingmate.models.UserAnswer;
-import com.app.wingmate.profile.edit.EditProfileFragment;
+import com.app.wingmate.ui.fragments.EditProfileFragment;
 import com.app.wingmate.utils.AppConstants;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-
 import static com.app.wingmate.utils.AppConstants.PARAM_ABOUT_ME;
 import static com.app.wingmate.utils.AppConstants.PARAM_GENDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
-import static com.app.wingmate.utils.AppConstants.PARAM_TITLE;
 
 //public class QuestionOptionsSelectorAdapter extends RecyclerView.Adapter<QuestionOptionsSelectorAdapter.ViewHolder> {
 public class QuestionOptionsSelectorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

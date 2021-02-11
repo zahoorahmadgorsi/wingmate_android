@@ -1,4 +1,4 @@
-package com.app.wingmate.dashboard.search;
+package com.app.wingmate.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,7 +17,7 @@ import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
-import com.app.wingmate.dashboard.DashboardFragment;
+import com.app.wingmate.ui.adapters.QuestionOptionsListAdapter;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.ui.dialogs.OptionsSelectorDialog;

@@ -1,4 +1,4 @@
-package com.app.wingmate.forgot_password;
+package com.app.wingmate.ui.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +21,6 @@ import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
-import com.app.wingmate.utils.Utilities;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -32,7 +31,6 @@ import butterknife.Unbinder;
 
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
-import static com.app.wingmate.utils.AppConstants.WARNING;
 import static com.app.wingmate.utils.Utilities.showToast;
 
 public class ForgotPasswordFragment extends BaseFragment implements BaseView {

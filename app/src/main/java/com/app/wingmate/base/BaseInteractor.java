@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.app.wingmate.R;
-import com.app.wingmate.dashboard.DashboardInteractor;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.TermsConditions;

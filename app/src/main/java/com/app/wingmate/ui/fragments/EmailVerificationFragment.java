@@ -1,4 +1,4 @@
-package com.app.wingmate.verify_email;
+package com.app.wingmate.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +15,6 @@ import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
 import com.app.wingmate.utils.ActivityUtility;
-import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import butterknife.BindView;
@@ -23,9 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
-import static com.app.wingmate.utils.AppConstants.WARNING;
 import static com.app.wingmate.utils.CommonKeys.KEY_EMAIL_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_NICK_TAG;

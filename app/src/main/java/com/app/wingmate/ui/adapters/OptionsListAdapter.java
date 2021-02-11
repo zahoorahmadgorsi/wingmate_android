@@ -13,15 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
 import com.app.wingmate.models.QuestionOption;
-import com.app.wingmate.questionnaire.QuestionnaireFragment;
-import com.parse.ParseObject;
+import com.app.wingmate.ui.fragments.QuestionnaireFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.app.wingmate.utils.AppConstants.PARAM_COUNTRY_FLAG_IMAGE;
-import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_IDS;
 import static com.app.wingmate.utils.AppConstants.PARAM_TITLE;
 
 public class OptionsListAdapter extends RecyclerView.Adapter<OptionsListAdapter.ViewHolder> {

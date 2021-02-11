@@ -1,11 +1,9 @@
-package com.app.wingmate.dashboard;
+package com.app.wingmate.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,27 +15,16 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
-import com.app.wingmate.dashboard.home.HomeFragment;
-import com.app.wingmate.dashboard.search.SearchFragment;
-import com.app.wingmate.dashboard.settings.SettingsFragment;
-import com.app.wingmate.models.Question;
 import com.app.wingmate.ui.activities.MainActivity;
-import com.app.wingmate.ui.fragments.DummyFragment;
-import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.DateUtils;
-import com.app.wingmate.utils.SharedPrefers;
 import com.app.wingmate.widgets.NonSwappableViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseUser;
 
-import org.joda.time.Instant;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,13 +38,10 @@ import butterknife.Unbinder;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_GET_SERVER_TIME;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.INFO;
-import static com.app.wingmate.utils.AppConstants.OPTIONAL;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
-import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
-import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
 import static com.app.wingmate.utils.Utilities.showToast;
 
 public class DashboardFragment extends BaseFragment implements ViewPager.OnPageChangeListener {

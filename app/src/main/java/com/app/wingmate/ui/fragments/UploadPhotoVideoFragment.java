@@ -1,4 +1,4 @@
-package com.app.wingmate.profile.edit;
+package com.app.wingmate.ui.fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -34,7 +34,6 @@ import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.ui.adapters.DosDontsListAdapter;
 import com.app.wingmate.ui.adapters.DosDontsPhotosGridAdapter;
 import com.app.wingmate.ui.adapters.PhotosHorizontalListAdapter;
-import com.app.wingmate.ui.fragments.CropFragment;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.FileUtils;
 import com.bumptech.glide.Glide;

@@ -1,4 +1,4 @@
-package com.app.wingmate.signup;
+package com.app.wingmate.ui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,27 +22,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
-import com.app.wingmate.login.LoginFragment;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.Utilities;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.potyvideo.library.AndExoPlayerView;

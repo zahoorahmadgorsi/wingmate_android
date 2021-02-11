@@ -1,4 +1,4 @@
-package com.app.wingmate.dashboard.search;
+package com.app.wingmate.ui.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
+import com.app.wingmate.ui.fragments.SearchFragment;
 import com.app.wingmate.models.Question;
 
 import java.util.ArrayList;

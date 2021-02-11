@@ -1,4 +1,4 @@
-package com.app.wingmate.dashboard.home;
+package com.app.wingmate.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
-import com.app.wingmate.dashboard.DashboardFragment;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

@@ -26,7 +26,6 @@ import com.app.wingmate.R;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.UserAnswer;
-import com.app.wingmate.profile.edit.EditProfileTextFieldFragment;
 import com.app.wingmate.ui.adapters.DialogOptionsListAdapter;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.parse.ParseException;
@@ -52,18 +51,12 @@ import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_IDS;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
-import static com.app.wingmate.utils.AppConstants.PARAM_TITLE;
-import static com.app.wingmate.utils.AppConstants.PARAM_USER_AGE;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_MANDATORY_ARRAY;
-import static com.app.wingmate.utils.AppConstants.PARAM_USER_NATIONALITY;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
-import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_AGE;
-import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_NATIONALITY;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.TAG_PROFILE_EDIT;
 import static com.app.wingmate.utils.AppConstants.TAG_SEARCH;
-import static com.app.wingmate.utils.CommonKeys.KEY_TITLE;
 import static com.app.wingmate.utils.Utilities.showToast;
 
 public class OptionsSelectorDialog extends DialogFragment implements View.OnClickListener {

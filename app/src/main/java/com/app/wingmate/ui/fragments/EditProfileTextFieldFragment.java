@@ -1,4 +1,4 @@
-package com.app.wingmate.profile.edit;
+package com.app.wingmate.ui.fragments;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,9 +18,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
-import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

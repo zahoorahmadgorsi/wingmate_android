@@ -1,4 +1,4 @@
-package com.app.wingmate.questionnaire;
+package com.app.wingmate.ui.fragments;
 
 import android.os.Bundle;
 import android.text.Editable;

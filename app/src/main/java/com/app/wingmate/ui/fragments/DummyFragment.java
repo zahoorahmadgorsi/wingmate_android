@@ -10,8 +10,6 @@ import androidx.annotation.Nullable;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
-import com.app.wingmate.dashboard.DashboardFragment;
-import com.app.wingmate.dashboard.home.HomeFragment;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

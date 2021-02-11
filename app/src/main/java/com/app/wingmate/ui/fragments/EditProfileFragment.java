@@ -1,4 +1,4 @@
-package com.app.wingmate.profile.edit;
+package com.app.wingmate.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

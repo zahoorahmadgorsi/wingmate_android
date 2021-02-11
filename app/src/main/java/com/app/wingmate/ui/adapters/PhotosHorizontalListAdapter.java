@@ -10,14 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
-import com.app.wingmate.models.PhotoFile;
 import com.app.wingmate.models.UserProfilePhotoVideo;
-import com.app.wingmate.profile.edit.UploadPhotoVideoFragment;
+import com.app.wingmate.ui.fragments.UploadPhotoVideoFragment;
 import com.app.wingmate.utils.ActivityUtility;
-import com.parse.ParseException;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
