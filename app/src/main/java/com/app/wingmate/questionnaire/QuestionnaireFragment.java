@@ -1,11 +1,8 @@
 package com.app.wingmate.questionnaire;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,23 +13,24 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.base.BaseInteractor;
+import com.app.wingmate.base.BasePresenter;
+import com.app.wingmate.base.BaseView;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.ui.adapters.OptionsListAdapter;
 import com.app.wingmate.utils.ActivityUtility;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,25 +47,17 @@ import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONAL_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_IDS;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
-import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_RELATION;
-import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
-import static com.app.wingmate.utils.AppConstants.PARAM_TITLE;
-import static com.app.wingmate.utils.AppConstants.PARAM_USER_AGE;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_MANDATORY_ARRAY;
-import static com.app.wingmate.utils.AppConstants.PARAM_USER_NATIONALITY;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
-import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_AGE;
-import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_NATIONALITY;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
-import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_QUESTION_TYPE;
 import static com.app.wingmate.utils.Utilities.showToast;
 
-public class QuestionnaireFragment extends BaseFragment implements QuestionnaireView {
+public class QuestionnaireFragment extends BaseFragment implements BaseView {
 
     public static final String TAG = QuestionnaireFragment.class.getName();
 
@@ -103,7 +93,7 @@ public class QuestionnaireFragment extends BaseFragment implements Questionnaire
 
     private MainActivity mainActivity;
 
-    private QuestionnairePresenter presenter;
+    private BasePresenter presenter;
 
     public QuestionnaireFragment() {
 
@@ -127,7 +117,7 @@ public class QuestionnaireFragment extends BaseFragment implements Questionnaire
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new QuestionnairePresenter(this, new QuestionnaireInteractor());
+        presenter = new BasePresenter(this, new BaseInteractor());
 
         initOptionsListView();
         setSkipBtnListener();
@@ -564,13 +554,31 @@ public class QuestionnaireFragment extends BaseFragment implements Questionnaire
         ParseUser.getCurrentUser().saveInBackground(e -> {
             dismissProgress();
             showToast(requireActivity(), requireContext(), "You have successfully saved " + questionType + " questions.", SUCCESS);
-            if (!ParseUser.getCurrentUser().getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
-                ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
-            } else if (ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC) == null || TextUtils.isEmpty(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))) {
-                ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
+
+//            if (!ParseUser.getCurrentUser().getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
+//                ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+//            } else {
+//                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+//            }
+
+            if (questionType.equals(MANDATORY)) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                dialog.setTitle(getString(R.string.app_name))
+                        .setIcon(R.drawable.app_heart)
+                        .setMessage("Do you want fill optional questionnaire?")
+                        .setNegativeButton("Skip Now", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                        })
+                        .setPositiveButton("Yes", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+                        }).show();
             } else {
                 ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
             }
+
+
 //            new Handler().postDelayed(() -> requireActivity().onBackPressed(), 1000);
         });
 

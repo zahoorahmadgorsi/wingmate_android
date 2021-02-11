@@ -154,6 +154,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case KEY_FRAGMENT_DASHBOARD:
                 checkPermissions();
+                beginDashboardFragment();
                 break;
             case KEY_FRAGMENT_HOME:
                 beginHomeFragment();
@@ -171,6 +172,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 beginEditProfileFieldsFragment();
                 break;
             case KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE:
+                checkPermissions();
                 beginUploadPhotosVideoFragment();
                 break;
             case KEY_FRAGMENT_VIDEO_VIEW:
@@ -425,6 +427,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else if (dashboardFragment != null) {
             if (((DashboardFragment) dashboardFragment).viewPager.getCurrentItem() > 0) {
                 ((DashboardFragment) dashboardFragment).viewPager.setCurrentItem(0, true);
+                setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
             } else {
                 super.onBackPressed();
                 overridePendingTransition(R.anim.blank_anim, R.anim.left_to_right);
@@ -574,7 +577,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void proceedAfterPermission() {
-        beginDashboardFragment();
+
     }
 
     @Override

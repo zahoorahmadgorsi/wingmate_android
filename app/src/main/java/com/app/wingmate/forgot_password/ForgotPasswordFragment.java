@@ -18,6 +18,9 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.base.BaseInteractor;
+import com.app.wingmate.base.BasePresenter;
+import com.app.wingmate.base.BaseView;
 import com.app.wingmate.utils.Utilities;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -32,7 +35,7 @@ import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.WARNING;
 import static com.app.wingmate.utils.Utilities.showToast;
 
-public class ForgotPasswordFragment extends BaseFragment implements ForgotPasswordView{
+public class ForgotPasswordFragment extends BaseFragment implements BaseView {
 
     public static final String TAG = ForgotPasswordFragment.class.getName();
 
@@ -48,7 +51,7 @@ public class ForgotPasswordFragment extends BaseFragment implements ForgotPasswo
     @BindView(R.id.btn_continue)
     Button continueBtn;
 
-    private ForgotPasswordPresenter forgotPasswordPresenter;
+    private BasePresenter forgotPasswordPresenter;
 
     public ForgotPasswordFragment() {
 
@@ -71,7 +74,7 @@ public class ForgotPasswordFragment extends BaseFragment implements ForgotPasswo
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        forgotPasswordPresenter = new ForgotPasswordPresenter(this, new ForgotPasswordInteracter());
+        forgotPasswordPresenter = new BasePresenter(this, new BaseInteractor());
 
         errorEmailLayout.setVisibility(View.INVISIBLE);
         continueBtn.setSelected(false);

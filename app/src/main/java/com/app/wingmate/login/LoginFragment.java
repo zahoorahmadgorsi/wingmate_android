@@ -22,6 +22,9 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.base.BaseInteractor;
+import com.app.wingmate.base.BasePresenter;
+import com.app.wingmate.base.BaseView;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.SharedPrefers;
 import com.app.wingmate.utils.Utilities;
@@ -47,7 +50,7 @@ import static com.app.wingmate.utils.CommonKeys.PREF_EMAIL;
 import static com.app.wingmate.utils.CommonKeys.PREF_PASSWORD;
 import static com.app.wingmate.utils.Utilities.showToast;
 
-public class LoginFragment extends BaseFragment implements LoginView {
+public class LoginFragment extends BaseFragment implements BaseView {
 
     public static final String TAG = LoginFragment.class.getName();
 
@@ -76,7 +79,7 @@ public class LoginFragment extends BaseFragment implements LoginView {
 
     private boolean showPassword = false;
 
-    private LoginPresenter loginPresenter;
+    private BasePresenter loginPresenter;
 
     public LoginFragment() {
 
@@ -99,7 +102,7 @@ public class LoginFragment extends BaseFragment implements LoginView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        loginPresenter = new LoginPresenter(this, new LoginInteractor());
+        loginPresenter = new BasePresenter(this, new BaseInteractor());
 
         errorEmailLayout.setVisibility(View.INVISIBLE);
         errorPasswordLayout.setVisibility(View.INVISIBLE);
@@ -322,19 +325,19 @@ public class LoginFragment extends BaseFragment implements LoginView {
             SharedPrefers.saveString(requireContext(), PREF_PASSWORD, passwordET.getText().toString());
         }
         if (parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)
-                && parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)
+//                && parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)
                 && parseUser.getString(PARAM_PROFILE_PIC) != null
-                && !TextUtils.isEmpty(parseUser.getString(PARAM_PROFILE_PIC))
-        ) {
+                && !TextUtils.isEmpty(parseUser.getString(PARAM_PROFILE_PIC))) {
             ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_DASHBOARD);
-        } else if (!parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
-            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
-        } else if (!parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
-            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
         } else if (parseUser.getString(PARAM_PROFILE_PIC) == null
                 || TextUtils.isEmpty(parseUser.getString(PARAM_PROFILE_PIC))) {
             ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
+        } else if (!parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
+            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
         }
+//        else if (!parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
+//            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+//        }
     }
 
     @Override

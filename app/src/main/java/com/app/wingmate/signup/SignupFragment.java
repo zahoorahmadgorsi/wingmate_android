@@ -32,6 +32,9 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.app.wingmate.R;
+import com.app.wingmate.base.BaseInteractor;
+import com.app.wingmate.base.BasePresenter;
+import com.app.wingmate.base.BaseView;
 import com.app.wingmate.login.LoginFragment;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.base.BaseFragment;
@@ -61,7 +64,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EMAIL_VERIFY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_TERMS_AND_CONDITIONS;
 import static com.app.wingmate.utils.Utilities.showToast;
 
-public class SignupFragment extends BaseFragment implements SignupView, ViewPager.OnPageChangeListener{
+public class SignupFragment extends BaseFragment implements BaseView, ViewPager.OnPageChangeListener{
 
     public static final String TAG = SignupFragment.class.getName();
 
@@ -122,7 +125,7 @@ public class SignupFragment extends BaseFragment implements SignupView, ViewPage
     private String gender = "";
     public int step = 1;
 
-    private SignupPresenter signupPresenter;
+    private BasePresenter signupPresenter;
     private MediaController mediacontroller;
 
     @BindView(R.id.viewPager)
@@ -162,7 +165,7 @@ public class SignupFragment extends BaseFragment implements SignupView, ViewPage
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        signupPresenter = new SignupPresenter(this, new SignupInteractor());
+        signupPresenter = new BasePresenter(this, new BaseInteractor());
 
         mediacontroller = new MediaController(getContext());
 

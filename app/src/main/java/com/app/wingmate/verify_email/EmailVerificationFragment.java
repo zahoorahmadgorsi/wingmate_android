@@ -11,6 +11,9 @@ import androidx.annotation.Nullable;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.base.BaseInteractor;
+import com.app.wingmate.base.BasePresenter;
+import com.app.wingmate.base.BaseView;
 import com.app.wingmate.utils.ActivityUtility;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -28,7 +31,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_NICK_TAG;
 import static com.app.wingmate.utils.Utilities.showToast;
 
-public class EmailVerificationFragment  extends BaseFragment implements EmailVerificationView {
+public class EmailVerificationFragment extends BaseFragment implements BaseView {
 
     public static final String TAG = EmailVerificationFragment.class.getName();
 
@@ -39,7 +42,7 @@ public class EmailVerificationFragment  extends BaseFragment implements EmailVer
     @BindView(R.id.msg_tv)
     TextView msgTV;
 
-    private EmailVerificationPresenter emailVerificationPresenter;
+    private BasePresenter emailVerificationPresenter;
 
     public EmailVerificationFragment() {
 
@@ -62,7 +65,7 @@ public class EmailVerificationFragment  extends BaseFragment implements EmailVer
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        emailVerificationPresenter = new EmailVerificationPresenter(this, new EmailVerificationInteracter());
+        emailVerificationPresenter = new BasePresenter(this, new BaseInteractor());
 
         emailIdTV.setText(getActivity().getIntent().getExtras().getString(KEY_EMAIL_TAG, "adam@mail.com"));
         String nickName = getActivity().getIntent().getExtras().getString(KEY_NICK_TAG, "");

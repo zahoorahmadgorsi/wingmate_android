@@ -4,6 +4,7 @@ public class APIsUtility {
 
     public static final String PARSE_CLOUD_FUNCTION_RESEND_EMAIL = "resendVerificationEmail";
     public static final String PARSE_CLOUD_FUNCTION_UPDATE_WRONG_EMAIL = "updateWrongEmail";
+    public static final String PARSE_CLOUD_FUNCTION_GET_SERVER_TIME = "getServerDate";
 
     public static final String TERM_URL = "";
     public static final String PRIVACY_URL = "";

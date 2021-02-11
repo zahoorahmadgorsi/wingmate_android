@@ -1,5 +1,7 @@
 package com.app.wingmate.utils;
 
+import android.util.Log;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -11,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +42,6 @@ public class DateUtils {
         DateTimeFormatter fmt = ISODateTimeFormat.dateTimeNoMillis();
         return fmt.print(dateTime.withZone(DateTimeZone.UTC));
     }
-
 
     public static String dailyEarningItemFormat(String dateTime) throws Exception {
         DateTimeFormatter fmt = ISODateTimeFormat.dateTimeParser();
@@ -869,6 +871,23 @@ public class DateUtils {
         }
     }
 
+    public static long daysBetweenNew(Date startDate, Date endDate) {
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/London"));
+        if (startDate != null && endDate != null) {
+            Calendar sDate = getDatePart(startDate);
+            Calendar eDate = getDatePart(endDate);
+
+            long daysBetween = 0;
+            while (sDate.before(eDate)) {
+                sDate.add(Calendar.DAY_OF_MONTH, 1);
+                daysBetween++;
+            }
+            return daysBetween;
+        } else {
+            return 0;
+        }
+    }
+
     public static Calendar getDatePart(Date date) {
         Calendar cal = Calendar.getInstance();       // get calendar instance
         cal.setTime(date);
@@ -878,5 +897,23 @@ public class DateUtils {
         cal.set(Calendar.MILLISECOND, 0);            // set millisecond in second
 
         return cal;                                  // return the date part
+    }
+
+    public static Calendar getCalendarFromISO(String datestring) {
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault()) ;
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        try {
+            Date date = dateformat.parse(datestring);
+            date.setHours(date.getHours() - 1);
+            calendar.setTime(date);
+
+            String test = dateformat.format(calendar.getTime());
+            Log.e("TEST_TIME", test);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return calendar;
     }
 }

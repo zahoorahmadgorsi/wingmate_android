@@ -37,3 +37,19 @@ Parse.Cloud.define('updateWrongEmail', async (request) => {
     	return 'success';
 	}
 });
+
+// GET SERVER CURRENT TIME
+
+Parse.Cloud.define("getServerDate", async (request) => {
+    var dateToday = new Date();
+    return dateToday.toISOString();
+    // return dateToday.toDateString();
+	// return dateToday.toISOString().substring(0, 10);
+});
+
+
+Parse.Cloud.define("getServerDateX", function(request, response) {
+    	var dateToday = new Date();
+	response.success(dateToday.toISOString().substring(0, 10));
+    	//response.success(dateToday.toDateString());
+});

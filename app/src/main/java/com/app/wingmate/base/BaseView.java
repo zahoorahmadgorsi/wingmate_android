@@ -1,15 +1,52 @@
 package com.app.wingmate.base;
 
+import com.app.wingmate.models.Question;
+import com.app.wingmate.models.QuestionOption;
+import com.app.wingmate.models.TermsConditions;
+import com.app.wingmate.models.UserAnswer;
+import com.app.wingmate.models.UserProfilePhotoVideo;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import java.util.List;
 
 public interface BaseView {
+
+    // General Methods
     void showProgress();
     void dismissProgress();
     void setInternetError();
     void setResponseSuccess();
     void setResponseError(ParseException e);
     void setResponseGeneralError(String error);
+
+    //Common Methods
+    void setEmailError();
+    void setInvalidEmailError();
+    void setPasswordError();
+    void setInvalidPasswordError();
+
+    //Sign Up Methods
+    void setVideoLinkSuccess(ParseObject parseObject);
+    void setNickError();
+    void setGenderError();
+    void setFormValidateSuccess();
+
+    //Login Methods
+    void setEmailVerificationError(ParseException e);
+    void setLoginSuccess(ParseUser parseUser);
+
+    // Questionnaire Methods
+    void setQuestionResponseSuccess(List<Question> questions);
+    void setOptionsResponseSuccess(List<QuestionOption> questionOptions);
+    void setUserAnswersResponseSuccess(UserAnswer userAnswer);
+    void setUserAnswersResponseError(ParseException e);
+
+    // Profile Methods
+    void setTermsResponseSuccess(List<TermsConditions> termsConditions);
+    void setQuestionsResponseSuccess(List<Question> questions);
+    void setUserAnswersResponseSuccess(List<UserAnswer> userAnswers);
+    void setUserPhotosVideoResponseSuccess(List<UserProfilePhotoVideo> userProfilePhotoVideos);
+
 }

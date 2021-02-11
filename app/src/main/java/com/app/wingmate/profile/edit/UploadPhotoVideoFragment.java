@@ -1,19 +1,12 @@
 package com.app.wingmate.profile.edit;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.media.MediaPlayer;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.CancellationSignal;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,39 +17,32 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
-import com.app.wingmate.models.PhotoFile;
+import com.app.wingmate.base.BaseInteractor;
+import com.app.wingmate.base.BasePresenter;
+import com.app.wingmate.base.BaseView;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.TermsConditions;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.models.UserProfilePhotoVideo;
-import com.app.wingmate.profile.ProfileInteractor;
-import com.app.wingmate.profile.ProfilePresenter;
-import com.app.wingmate.profile.ProfileView;
 import com.app.wingmate.ui.activities.MainActivity;
-import com.app.wingmate.ui.activities.SplashActivity;
 import com.app.wingmate.ui.adapters.DosDontsListAdapter;
 import com.app.wingmate.ui.adapters.DosDontsPhotosGridAdapter;
 import com.app.wingmate.ui.adapters.PhotosHorizontalListAdapter;
-import com.app.wingmate.ui.adapters.ProfileOptionsListAdapter;
 import com.app.wingmate.ui.fragments.CropFragment;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.FileUtils;
-import com.app.wingmate.utils.Utilities;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -77,15 +63,17 @@ import pl.aprilapps.easyphotopicker.MediaFile;
 import pl.aprilapps.easyphotopicker.MediaSource;
 
 import static com.app.wingmate.ui.fragments.CropFragment.REQUEST_CODE_CROP_IMAGE;
-import static com.app.wingmate.utils.AppConstants.MODE_PHOTOS;
-import static com.app.wingmate.utils.AppConstants.MODE_VIDEO;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.KEY_PHOTO;
 import static com.app.wingmate.utils.AppConstants.KEY_PHOTO_TEXT;
 import static com.app.wingmate.utils.AppConstants.KEY_VIDEO;
 import static com.app.wingmate.utils.AppConstants.KEY_VIDEO_TEXT;
+import static com.app.wingmate.utils.AppConstants.MANDATORY;
+import static com.app.wingmate.utils.AppConstants.MODE_PHOTOS;
+import static com.app.wingmate.utils.AppConstants.MODE_VIDEO;
 import static com.app.wingmate.utils.AppConstants.PARAM_FILE;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO;
+import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
@@ -93,12 +81,11 @@ import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
-import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_VIDEO_VIEW;
 import static com.app.wingmate.utils.Utilities.showToast;
-import static com.parse.Parse.getApplicationContext;
 
-public class UploadPhotoVideoFragment extends BaseFragment implements ProfileView {
+public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 
     public static final String TAG = UploadPhotoVideoFragment.class.getName();
 
@@ -155,7 +142,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
     private boolean hasPhotos = false;
     private boolean hasVideo = false;
 
-    private ProfilePresenter presenter;
+    private BasePresenter presenter;
 
     public UploadPhotoVideoFragment() {
 
@@ -178,7 +165,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new ProfilePresenter(this, new ProfileInteractor());
+        presenter = new BasePresenter(this, new BaseInteractor());
 
         CURRENT_MODE = MODE_PHOTOS;
 
@@ -255,7 +242,11 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
                 } else if (CURRENT_MODE == MODE_VIDEO) {
                     if (hasVideo) {
                         CURRENT_MODE = MODE_PHOTOS;
-                        ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                        if (!ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
+                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
+                        } else {
+                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                        }
 //                        getActivity().onBackPressed();
                     } else {
                         showToast(getActivity(), getContext(), "Video is required!", ERROR);

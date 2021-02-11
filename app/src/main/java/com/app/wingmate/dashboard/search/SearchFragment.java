@@ -14,14 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.base.BaseInteractor;
+import com.app.wingmate.base.BasePresenter;
+import com.app.wingmate.base.BaseView;
 import com.app.wingmate.dashboard.DashboardFragment;
-import com.app.wingmate.dashboard.DashboardInteractor;
-import com.app.wingmate.dashboard.DashboardPresenter;
-import com.app.wingmate.dashboard.DashboardView;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.UserAnswer;
-import com.app.wingmate.models.UserProfilePhotoVideo;
-import com.app.wingmate.ui.adapters.QuestionOptionsSelectorAdapter;
 import com.app.wingmate.ui.dialogs.OptionsSelectorDialog;
 import com.parse.FindCallback;
 import com.parse.ParseQuery;
@@ -34,22 +32,17 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUESTION;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_ANSWER;
-import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
-import static com.app.wingmate.utils.AppConstants.MODE_PHOTOS;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
-import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_DISPLAY_ORDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.TAG_SEARCH;
-import static com.app.wingmate.utils.Utilities.showToast;
 
-public class SearchFragment extends BaseFragment implements DashboardView, OptionsSelectorDialog.OptionsSelectorDialogClickListener {
+public class SearchFragment extends BaseFragment implements BaseView, OptionsSelectorDialog.OptionsSelectorDialogClickListener {
 
     public static final String TAG = SearchFragment.class.getName();
 
-    private DashboardPresenter presenter;
+    private BasePresenter presenter;
 
     private DashboardFragment dashboardInstance;
 
@@ -97,7 +90,7 @@ public class SearchFragment extends BaseFragment implements DashboardView, Optio
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new DashboardPresenter(this, new DashboardInteractor());
+        presenter = new BasePresenter(this, new BaseInteractor());
 
         questions = new ArrayList<>();
         gridLayoutManager = new GridLayoutManager(getActivity(), 1);
@@ -108,7 +101,7 @@ public class SearchFragment extends BaseFragment implements DashboardView, Optio
         recyclerView.setAdapter(adapter);
 
         showProgress();
-        presenter.queryQuestions(getContext(), MANDATORY);
+        presenter.querySearchQuestions(getContext(), MANDATORY);
     }
 
     @Override

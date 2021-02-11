@@ -28,6 +28,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.base.BaseInteractor;
+import com.app.wingmate.base.BasePresenter;
+import com.app.wingmate.base.BaseView;
 import com.app.wingmate.events.RefreshProfile;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
@@ -76,7 +79,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_IS_CURRENT_USER;
 import static com.app.wingmate.utils.CommonKeys.KEY_PARSE_USER;
 import static com.app.wingmate.utils.Utilities.showToast;
 
-public class ProfileFragment extends BaseFragment implements ProfileView {
+public class ProfileFragment extends BaseFragment implements BaseView {
 
     public static final String TAG = ProfileFragment.class.getName();
 
@@ -115,7 +118,7 @@ public class ProfileFragment extends BaseFragment implements ProfileView {
     @BindView(R.id.btn_edit_media)
     Button editMediaBtn;
 
-    private ProfilePresenter presenter;
+    private BasePresenter presenter;
 
     private List<UserAnswer> userAnswers;
     private List<UserProfilePhotoVideo> userProfilePhotoVideos;
@@ -150,7 +153,7 @@ public class ProfileFragment extends BaseFragment implements ProfileView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new ProfilePresenter(this, new ProfileInteractor());
+        presenter = new BasePresenter(this, new BaseInteractor());
 
         parseUser = getActivity().getIntent().getParcelableExtra(KEY_PARSE_USER);
         isCurrentUser = getActivity().getIntent().getBooleanExtra(KEY_IS_CURRENT_USER, true);

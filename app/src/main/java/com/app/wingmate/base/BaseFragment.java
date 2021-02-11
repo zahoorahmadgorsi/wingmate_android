@@ -5,8 +5,17 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.app.wingmate.models.Question;
+import com.app.wingmate.models.QuestionOption;
+import com.app.wingmate.models.TermsConditions;
+import com.app.wingmate.models.UserAnswer;
+import com.app.wingmate.models.UserProfilePhotoVideo;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+
+import java.util.List;
 
 import pl.aprilapps.easyphotopicker.ChooserType;
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -75,5 +84,95 @@ public class BaseFragment extends Fragment implements BaseView {
     public void setResponseGeneralError(String error) {
         dismissProgress();
         showToast(getActivity(), getContext(), error, ERROR);
+    }
+
+    @Override
+    public void setVideoLinkSuccess(ParseObject parseObject) {
+
+    }
+
+    @Override
+    public void setNickError() {
+
+    }
+
+    @Override
+    public void setGenderError() {
+
+    }
+
+    @Override
+    public void setEmailError() {
+
+    }
+
+    @Override
+    public void setInvalidEmailError() {
+
+    }
+
+    @Override
+    public void setPasswordError() {
+
+    }
+
+    @Override
+    public void setInvalidPasswordError() {
+
+    }
+
+    @Override
+    public void setFormValidateSuccess() {
+
+    }
+
+    @Override
+    public void setEmailVerificationError(ParseException e) {
+
+    }
+
+    @Override
+    public void setLoginSuccess(ParseUser parseUser) {
+
+    }
+
+    @Override
+    public void setQuestionResponseSuccess(List<Question> questions) {
+
+    }
+
+    @Override
+    public void setOptionsResponseSuccess(List<QuestionOption> questionOptions) {
+
+    }
+
+    @Override
+    public void setUserAnswersResponseSuccess(UserAnswer userAnswer) {
+
+    }
+
+    @Override
+    public void setUserAnswersResponseError(ParseException e) {
+
+    }
+
+    @Override
+    public void setTermsResponseSuccess(List<TermsConditions> termsConditions) {
+
+    }
+
+    @Override
+    public void setQuestionsResponseSuccess(List<Question> questions) {
+
+    }
+
+    @Override
+    public void setUserAnswersResponseSuccess(List<UserAnswer> userAnswers) {
+
+    }
+
+    @Override
+    public void setUserPhotosVideoResponseSuccess(List<UserProfilePhotoVideo> userProfilePhotoVideos) {
+
     }
 }

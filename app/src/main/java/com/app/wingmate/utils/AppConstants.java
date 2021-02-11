@@ -5,6 +5,7 @@ public class AppConstants {
     public static final int SPLASH_DISPLAY_LENGTH = 1000;
 
     public static final int VALID_PASSWORD_MIN_LENGTH = 6;
+    public static final int TRIAL_PERIOD = 7;
 
     public static final int REQUEST_CODE_TERMS = 100;
 

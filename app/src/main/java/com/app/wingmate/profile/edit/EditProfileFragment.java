@@ -9,21 +9,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.base.BaseInteractor;
+import com.app.wingmate.base.BasePresenter;
+import com.app.wingmate.base.BaseView;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.TermsConditions;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.models.UserProfilePhotoVideo;
-import com.app.wingmate.profile.ProfileInteractor;
-import com.app.wingmate.profile.ProfilePresenter;
-import com.app.wingmate.profile.ProfileView;
 import com.app.wingmate.ui.adapters.QuestionOptionsSelectorAdapter;
 import com.app.wingmate.ui.dialogs.OptionsSelectorDialog;
-import com.app.wingmate.utils.ActivityUtility;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -35,15 +33,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
 import static com.app.wingmate.utils.AppConstants.TAG_PROFILE_EDIT;
-import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE_TEXT_FIELDS;
 
-public class EditProfileFragment extends BaseFragment implements ProfileView, OptionsSelectorDialog.OptionsSelectorDialogClickListener {
+public class EditProfileFragment extends BaseFragment implements BaseView, OptionsSelectorDialog.OptionsSelectorDialogClickListener {
 
     public static final String TAG = EditProfileFragment.class.getName();
 
-    private ProfilePresenter presenter;
+    private BasePresenter presenter;
 
     Unbinder unbinder;
 
@@ -79,7 +75,7 @@ public class EditProfileFragment extends BaseFragment implements ProfileView, Op
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new ProfilePresenter(this, new ProfileInteractor());
+        presenter = new BasePresenter(this, new BaseInteractor());
 
         questions = new ArrayList<>();
         gridLayoutManager = new GridLayoutManager(getActivity(), 1);
