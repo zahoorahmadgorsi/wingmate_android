@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,8 +19,12 @@ import com.app.wingmate.dashboard.DashboardInteractor;
 import com.app.wingmate.dashboard.DashboardPresenter;
 import com.app.wingmate.dashboard.DashboardView;
 import com.app.wingmate.models.Question;
+import com.app.wingmate.models.UserAnswer;
+import com.app.wingmate.models.UserProfilePhotoVideo;
 import com.app.wingmate.ui.adapters.QuestionOptionsSelectorAdapter;
 import com.app.wingmate.ui.dialogs.OptionsSelectorDialog;
+import com.parse.FindCallback;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +34,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUESTION;
+import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_ANSWER;
+import static com.app.wingmate.utils.AppConstants.ERROR;
+import static com.app.wingmate.utils.AppConstants.MANDATORY;
+import static com.app.wingmate.utils.AppConstants.MODE_PHOTOS;
+import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
+import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_DISPLAY_ORDER;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.TAG_SEARCH;
+import static com.app.wingmate.utils.Utilities.showToast;
 
 public class SearchFragment extends BaseFragment implements DashboardView, OptionsSelectorDialog.OptionsSelectorDialogClickListener {
 
@@ -94,7 +108,7 @@ public class SearchFragment extends BaseFragment implements DashboardView, Optio
         recyclerView.setAdapter(adapter);
 
         showProgress();
-        presenter.queryQuestions(getContext());
+        presenter.queryQuestions(getContext(), MANDATORY);
     }
 
     @Override
@@ -108,8 +122,47 @@ public class SearchFragment extends BaseFragment implements DashboardView, Optio
         unbinder.unbind();
     }
 
-    @OnClick({})
+    @OnClick({R.id.btn_search})
     public void onViewClicked(View v) {
+        switch (v.getId()) {
+            case R.id.btn_search:
+
+                showProgress();
+
+                ParseQuery query = ParseQuery.getQuery(CLASS_NAME_USER_ANSWER);
+
+                query.include(PARAM_OPTIONS_OBJ_ARRAY);
+                query.include(PARAM_USER_ID);
+
+                query.whereContainedIn(PARAM_OPTIONS_OBJ_ARRAY, questions.get(0).getUserAnswer().getOptionsObjArray());
+                query.whereContainedIn(PARAM_OPTIONS_OBJ_ARRAY, questions.get(1).getUserAnswer().getOptionsObjArray());
+                query.whereContainedIn(PARAM_OPTIONS_OBJ_ARRAY, questions.get(2).getUserAnswer().getOptionsObjArray());
+
+                query.setLimit(1000);
+                query.findInBackground((FindCallback<UserAnswer>) (objects, e) -> {
+                    if (e == null) {
+                        String results = "";
+                        for (int i = 0; i < objects.size(); i++) {
+                            System.out.println(objects.get(i).getUserId().getObjectId());
+                            System.out.println(objects.get(i).getUserId().getEmail());
+                            results = results + objects.get(i).getUserId().getUsername() + "\n\n";
+//                            results = results + objects.get(i).getUserId().getObjectId() + ": " + objects.get(i).getUserId().getUsername() + "\n\n";
+                        }
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                        dialog.setTitle("Alert")
+                                .setIcon(R.drawable.app_heart)
+                                .setMessage(objects.size() + " Results Found\n\n" + results)
+                                .setNegativeButton("Ok", (dialoginterface, i) -> dialoginterface.cancel())
+                                .show();
+                    } else {
+                        System.out.println("====ee====" + e.getMessage());
+                    }
+                    dismissProgress();
+                });
+
+
+                break;
+        }
 
     }
 

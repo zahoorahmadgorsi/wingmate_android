@@ -87,6 +87,7 @@
             android:background="?attr/selectableItemBackground"
             android:paddingTop="@dimen/_10ssp"
             android:paddingBottom="@dimen/_10ssp"
+            android:visibility="visible"
             android:src="@drawable/ic_back_button" />
     </LinearLayout>
 

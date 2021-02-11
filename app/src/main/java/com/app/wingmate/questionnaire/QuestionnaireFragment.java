@@ -3,6 +3,7 @@ package com.app.wingmate.questionnaire;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.ui.adapters.OptionsListAdapter;
+import com.app.wingmate.utils.ActivityUtility;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -48,9 +50,20 @@ import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONAL_QUESTIONNAIRE_F
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_IDS;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_RELATION;
+import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
+import static com.app.wingmate.utils.AppConstants.PARAM_TITLE;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_AGE;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_MANDATORY_ARRAY;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_NATIONALITY;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
+import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_AGE;
+import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_NATIONALITY;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_QUESTION_TYPE;
 import static com.app.wingmate.utils.Utilities.showToast;
 
@@ -130,6 +143,7 @@ public class QuestionnaireFragment extends BaseFragment implements Questionnaire
 
         searchET.setVisibility(View.GONE);
         backBtn.setVisibility(View.VISIBLE);
+        backBtn.setAlpha(0.5f);
 
         filteredOptionsList = new ArrayList<>();
         currentSelectedOptions = new ArrayList<>();
@@ -281,7 +295,7 @@ public class QuestionnaireFragment extends BaseFragment implements Questionnaire
         adapter.setData(filteredOptionsList);
         adapter.setMultiSelection(isMultiSelection);
         adapter.notifyDataSetChanged();
-        if (currentSelectedOptions.size() > 0) enableContinueBtn();
+        if (isMultiSelection || currentSelectedOptions.size() > 0) enableContinueBtn();
     }
 
     public void selectOption(int index, boolean isMultiSelect) {
@@ -291,7 +305,7 @@ public class QuestionnaireFragment extends BaseFragment implements Questionnaire
         if (currentSelectedOptions.contains(objectId))
             currentSelectedOptions.remove(objectId);
         else currentSelectedOptions.add(objectId);
-        if (currentSelectedOptions != null && currentSelectedOptions.size() > 0)
+        if (isMultiSelect || (currentSelectedOptions != null && currentSelectedOptions.size() > 0))
             enableContinueBtn();
         else disableContinueBtn();
         adapter.notifyDataSetChanged();
@@ -346,6 +360,7 @@ public class QuestionnaireFragment extends BaseFragment implements Questionnaire
             }
         }
         backBtn.setVisibility(View.VISIBLE);
+        backBtn.setAlpha(1.0f);
 //        if (currentUserAnswer == null) {
 ////            ParseObject currentUserAnswer = new ParseObject(CLASS_NAME_USER_ANSWER);
 //            currentUserAnswer = new UserAnswer();
@@ -421,6 +436,14 @@ public class QuestionnaireFragment extends BaseFragment implements Questionnaire
 
             currentUserAnswer.saveInBackground(e -> {
                 if (e == null) {
+//                    if (questionnaire.get(selectedQuestionIndex).getShortTitle().equals(SHORT_TITLE_NATIONALITY)) {
+//                        ParseUser.getCurrentUser().put(PARAM_USER_NATIONALITY, myOptions.get(0).getString(PARAM_TITLE));
+//                        ParseUser.getCurrentUser().saveInBackground(e1 -> { });
+//                    } else if (questionnaire.get(selectedQuestionIndex).getShortTitle().equals(SHORT_TITLE_AGE)) {
+//                        ParseUser.getCurrentUser().put(PARAM_USER_AGE, myOptions.get(0).getString(PARAM_TITLE));
+//                        ParseUser.getCurrentUser().saveInBackground(e1 -> { });
+//                    }
+                    saveToUserTable();
                     if (questionNo < totalNoOfQuestions) {
                         questionnaire.get(selectedQuestionIndex).setUserAnswer(currentUserAnswer);
                         questionNo++;
@@ -430,6 +453,7 @@ public class QuestionnaireFragment extends BaseFragment implements Questionnaire
                         setUserQuestionsStatus();
                     }
                     backBtn.setVisibility(View.VISIBLE);
+                    backBtn.setAlpha(1.0f);
                 } else {
                     setResponseError(e);
                 }
@@ -446,7 +470,84 @@ public class QuestionnaireFragment extends BaseFragment implements Questionnaire
                 setUserQuestionsStatus();
             }
             backBtn.setVisibility(View.VISIBLE);
+            backBtn.setAlpha(1.0f);
             isChange = false;
+        }
+    }
+
+    private void saveToUserTable() {
+        // Check if Question is Mandatory or Optional
+        if (questionnaire.get(selectedQuestionIndex).getQuestionType().equals(MANDATORY)) {
+
+            // Load UserAnswers list from user table
+            List<UserAnswer> mandatoryAnswersList = ParseUser.getCurrentUser().getList(PARAM_USER_MANDATORY_ARRAY);
+
+            // Initialize in-case if no record in User table
+            if (mandatoryAnswersList == null) mandatoryAnswersList = new ArrayList<>();
+
+            // Loop to check if current question is present in list, if yes then remove it
+            for (int i = 0; i < mandatoryAnswersList.size(); i++) {
+                try {
+                    if (mandatoryAnswersList.get(i).fetchIfNeeded().getParseObject(PARAM_QUESTION_ID).getObjectId().equals(currentUserAnswer.getQuestionId().getObjectId()))
+                        mandatoryAnswersList.remove(i);
+                } catch (ParseException exception) {
+                    exception.printStackTrace();
+                }
+            }
+
+            // Add new UserAnswer object in list
+            mandatoryAnswersList.add(currentUserAnswer);
+
+            // Save list to User table
+            ParseUser.getCurrentUser().put(PARAM_USER_MANDATORY_ARRAY, mandatoryAnswersList);
+            ParseUser.getCurrentUser().saveInBackground(e1 -> {
+            });
+        }
+
+        if (questionnaire.get(selectedQuestionIndex).getQuestionType().equals(OPTIONAL)) {
+            List<UserAnswer> optionalAnswersList = ParseUser.getCurrentUser().getList(PARAM_USER_OPTIONAL_ARRAY);
+            if (optionalAnswersList == null) optionalAnswersList = new ArrayList<>();
+            for (int i = 0; i < optionalAnswersList.size(); i++) {
+                try {
+                    if (optionalAnswersList.get(i).fetchIfNeeded().getParseObject(PARAM_QUESTION_ID).getObjectId().equals(currentUserAnswer.getQuestionId().getObjectId()))
+                        optionalAnswersList.remove(i);
+                } catch (ParseException exception) {
+                    exception.printStackTrace();
+                }
+            }
+            optionalAnswersList.add(currentUserAnswer);
+            ParseUser.getCurrentUser().put(PARAM_USER_OPTIONAL_ARRAY, optionalAnswersList);
+            ParseUser.getCurrentUser().saveInBackground(e1 -> {
+            });
+        }
+    }
+
+    private void saveSkipToUserTable() {
+        List<UserAnswer> mandatoryAnswersList = ParseUser.getCurrentUser().getList(PARAM_USER_MANDATORY_ARRAY);
+        List<UserAnswer> optionalAnswersList = ParseUser.getCurrentUser().getList(PARAM_USER_OPTIONAL_ARRAY);
+
+        if (questionnaire.get(selectedQuestionIndex).getQuestionType().equals(MANDATORY)) {
+            if (mandatoryAnswersList == null) mandatoryAnswersList = new ArrayList<>();
+            for (int i = 0; i < mandatoryAnswersList.size(); i++) {
+                if (mandatoryAnswersList.get(i).getQuestionId().getObjectId().equals(questionnaire.get(selectedQuestionIndex).getObjectId()))
+                    mandatoryAnswersList.remove(i);
+            }
+            mandatoryAnswersList.add(new UserAnswer());
+            ParseUser.getCurrentUser().put(PARAM_USER_MANDATORY_ARRAY, mandatoryAnswersList);
+            ParseUser.getCurrentUser().saveInBackground(e1 -> {
+            });
+
+        }
+        if (questionnaire.get(selectedQuestionIndex).getQuestionType().equals(OPTIONAL)) {
+            if (optionalAnswersList == null) optionalAnswersList = new ArrayList<>();
+            for (int i = 0; i < optionalAnswersList.size(); i++) {
+                if (optionalAnswersList.get(i).getQuestionId().getObjectId().equals(questionnaire.get(selectedQuestionIndex).getObjectId()))
+                    optionalAnswersList.remove(i);
+            }
+            optionalAnswersList.add(new UserAnswer());
+            ParseUser.getCurrentUser().put(PARAM_USER_OPTIONAL_ARRAY, optionalAnswersList);
+            ParseUser.getCurrentUser().saveInBackground(e1 -> {
+            });
         }
     }
 
@@ -463,7 +564,14 @@ public class QuestionnaireFragment extends BaseFragment implements Questionnaire
         ParseUser.getCurrentUser().saveInBackground(e -> {
             dismissProgress();
             showToast(requireActivity(), requireContext(), "You have successfully saved " + questionType + " questions.", SUCCESS);
-            new Handler().postDelayed(() -> requireActivity().onBackPressed(), 1000);
+            if (!ParseUser.getCurrentUser().getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
+                ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+            } else if (ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC) == null || TextUtils.isEmpty(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))) {
+                ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
+            } else {
+                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+            }
+//            new Handler().postDelayed(() -> requireActivity().onBackPressed(), 1000);
         });
 
     }
@@ -477,12 +585,16 @@ public class QuestionnaireFragment extends BaseFragment implements Questionnaire
             // boolean isMultiSelect = questionnaire.get(selectedQuestionIndex).getBoolean(PARAM_MULTIPLE_SELECTION);
             boolean isMultiSelect = !(questionType.equals(MANDATORY));
             loadQuestion(questionnaire.get(selectedQuestionIndex), isMultiSelect);
-//            if (questionNo == 1)
-//                backBtn.setVisibility(View.VISIBLE);
-//            else
-//                backBtn.setVisibility(View.VISIBLE);
+            if (questionNo == 1) {
+                backBtn.setVisibility(View.VISIBLE);
+                backBtn.setAlpha(0.5f);
+            } else {
+                backBtn.setVisibility(View.VISIBLE);
+                backBtn.setAlpha(1.0f);
+            }
+
         } else {
-            requireActivity().onBackPressed();
+//            requireActivity().onBackPressed();
         }
     }
 }

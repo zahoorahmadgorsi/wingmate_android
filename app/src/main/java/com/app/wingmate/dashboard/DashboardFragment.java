@@ -17,6 +17,7 @@ import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.dashboard.home.HomeFragment;
 import com.app.wingmate.dashboard.search.SearchFragment;
+import com.app.wingmate.dashboard.settings.SettingsFragment;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.ui.fragments.DummyFragment;
@@ -46,10 +47,10 @@ public class DashboardFragment extends BaseFragment implements ViewPager.OnPageC
     public NonSwappableViewPager viewPager;
 
     private HomeFragment homeFragment;
-    private DummyFragment searchFragment;
+    private SearchFragment searchFragment;
     private DummyFragment likesFragment;
     private DummyFragment messagesFragment;
-    private DummyFragment settingsFragment;
+    private SettingsFragment settingsFragment;
 
     private MyPagerAdapter viewPagerAdapter;
 
@@ -102,28 +103,26 @@ public class DashboardFragment extends BaseFragment implements ViewPager.OnPageC
     private void initViews() {
 
         homeFragment = HomeFragment.newInstance(this);
-        searchFragment = DummyFragment.newInstance(this);
+        searchFragment = SearchFragment.newInstance(this);
         likesFragment = DummyFragment.newInstance(this);
         messagesFragment = DummyFragment.newInstance(this);
-        settingsFragment = DummyFragment.newInstance(this);
+        settingsFragment = SettingsFragment.newInstance(this);
 
         viewPagerAdapter = new MyPagerAdapter(requireActivity().getSupportFragmentManager());
         viewPagerAdapter.addFragment(homeFragment);
-//        viewPagerAdapter.addFragment(searchFragment);
-//        viewPagerAdapter.addFragment(likesFragment);
-//        viewPagerAdapter.addFragment(messagesFragment);
-//        viewPagerAdapter.addFragment(settingsFragment);
+        viewPagerAdapter.addFragment(searchFragment);
+        viewPagerAdapter.addFragment(likesFragment);
+        viewPagerAdapter.addFragment(messagesFragment);
+        viewPagerAdapter.addFragment(settingsFragment);
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.setPagingEnabled(false);
-//        viewPager.setOffscreenPageLimit(4);
+//        viewPager.setOffscreenPageLimit(2);
         viewPager.setCurrentItem(0, true);
         viewPager.addOnPageChangeListener(this);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
-        bottomNavigationView.setVisibility(View.INVISIBLE);
-
-        ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+        bottomNavigationView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -166,6 +165,7 @@ public class DashboardFragment extends BaseFragment implements ViewPager.OnPageC
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
     }
 
     @Override

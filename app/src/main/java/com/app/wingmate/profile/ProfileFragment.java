@@ -1,11 +1,17 @@
 package com.app.wingmate.profile;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.provider.MediaStore;
 import android.text.Html;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +38,9 @@ import com.app.wingmate.ui.adapters.OptionsListAdapter;
 import com.app.wingmate.ui.adapters.ProfileOptionsListAdapter;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.AppConstants;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
@@ -39,6 +48,7 @@ import com.squareup.picasso.Picasso;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -98,7 +108,7 @@ public class ProfileFragment extends BaseFragment implements ProfileView {
     TextView matchPercentTV;
     @BindView(R.id.profile_options_rv)
     RecyclerView recyclerView;
-//    @BindView(R.id.about_tv)
+    //    @BindView(R.id.about_tv)
 //    TextView aboutTV;
     @BindView(R.id.btn_edit)
     Button editBtn;
@@ -172,6 +182,7 @@ public class ProfileFragment extends BaseFragment implements ProfileView {
         if (isCurrentUser) {
             parseUser = ParseUser.getCurrentUser();
         }
+        showProgress();
         presenter.queryUserAnswers(getContext(), parseUser);
         presenter.queryUserPhotosVideo(getContext(), parseUser);
     }
@@ -221,8 +232,14 @@ public class ProfileFragment extends BaseFragment implements ProfileView {
     public void setUserAnswersResponseSuccess(List<UserAnswer> userAnswers) {
         dismissProgress();
         this.userAnswers = new ArrayList<>();
-        if (userAnswers != null && userAnswers.size() > 0)
-            this.userAnswers = userAnswers;
+        if (userAnswers != null && userAnswers.size() > 0) {
+//            this.userAnswers = userAnswers;
+            for (int i=0 ; i<userAnswers.size() ; i++) {
+                if (userAnswers.get(i).getOptionsObjArray()!=null && userAnswers.get(i).getOptionsObjArray().size()>0) {
+                    this.userAnswers.add(userAnswers.get(i));
+                }
+            }
+        }
         setAnswersInViews();
         setViews();
     }
@@ -255,7 +272,7 @@ public class ProfileFragment extends BaseFragment implements ProfileView {
 
     private void setAnswersInViews() {
         if (userAnswers != null && userAnswers.size() > 0) {
-            System.out.println("==userAnswers=="+userAnswers.size());
+            System.out.println("==userAnswers==" + userAnswers.size());
             Collections.sort(userAnswers, (lhs, rhs) -> Integer.compare(lhs.getQuestionId().getProfileDisplayOrder(), rhs.getQuestionId().getProfileDisplayOrder()));
 
             UserAnswer aboutAnswer = new UserAnswer();
@@ -271,6 +288,7 @@ public class ProfileFragment extends BaseFragment implements ProfileView {
         pic2Card.setVisibility(View.GONE);
         pic3Card.setVisibility(View.GONE);
         videoCard.setVisibility(View.GONE);
+        pic1.setImageResource(android.R.color.transparent);
         if (userProfilePhotoVideos != null && userProfilePhotoVideos.size() > 0) {
 
             userProfilePhotoOnly = new ArrayList<>();
@@ -285,7 +303,7 @@ public class ProfileFragment extends BaseFragment implements ProfileView {
             if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
                 for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
                     String profilePicUrl = ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC);
-                    System.out.println(profilePicUrl+ "==match=="+userProfilePhotoOnly.get(i).getFile().getUrl());
+                    System.out.println(profilePicUrl + "==match==" + userProfilePhotoOnly.get(i).getFile().getUrl());
                     if (profilePicUrl != null && profilePicUrl.equals(userProfilePhotoOnly.get(i).getFile().getUrl())) {
 //                        UserProfilePhotoVideo user1stPhotoFile = userProfilePhotoOnly.get(i);
 //                        userProfilePhotoOnly.remove(i);
@@ -308,18 +326,95 @@ public class ProfileFragment extends BaseFragment implements ProfileView {
             }
             if (userProfileVideoOnly.size() > 0) {
                 videoCard.setVisibility(View.VISIBLE);
-                try {
-                    Bitmap thumb = ThumbnailUtils.createVideoThumbnail(
-                            userProfileVideoOnly.get(0).getFile().getFile().getPath(),
-                            MediaStore.Images.Thumbnails.MINI_KIND);
-                    Matrix matrix = new Matrix();
-                    Bitmap bmThumbnail = Bitmap.createBitmap(thumb, 0, 0, thumb.getWidth(), thumb.getHeight(), matrix, true);
-                    video1.setImageBitmap(bmThumbnail);
-                } catch (ParseException exception) {
-                    exception.printStackTrace();
-                }
-//                Picasso.get().load(userProfileVideoOnly.get(0).getFile().getUrl()).placeholder(R.drawable.video_loading).into(video1);
+//                try {
+//                    Bitmap thumb = null;
+//                    try {
+//                        int THUMBSIZE = 300;
+//                        CancellationSignal ca = new CancellationSignal();
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                            System.out.println("===hereeee-====");
+//                            thumb = ThumbnailUtils.createVideoThumbnail(userProfileVideoOnly.get(0).getFile().getFile(),
+//                                    new Size(THUMBSIZE, THUMBSIZE), ca);
+//                        } else {
+//                            System.out.println("===hereeee2222-====");
+//                            thumb = ThumbnailUtils.createVideoThumbnail(
+//                                    userProfileVideoOnly.get(0).getFile().getFile().getPath(),
+//                                    MediaStore.Images.Thumbnails.MINI_KIND);
+//                        }
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    Matrix matrix = new Matrix();
+//                    if (thumb != null) {
+//                        System.out.println("===hereeee-33333====");
+//                        Bitmap bmThumbnail = Bitmap.createBitmap(thumb, 0, 0, thumb.getWidth(), thumb.getHeight(), matrix, true);
+//                        video1.setImageBitmap(bmThumbnail);
+//                    }
+//                } catch (ParseException exception) {
+//                    exception.printStackTrace();
+//                }
+
+
+                System.out.println("====url==="+userProfileVideoOnly.get(0).getFile().getUrl());
+                Glide.with(requireContext())
+                        .load(userProfileVideoOnly.get(0).getFile().getUrl())
+                        .thumbnail(Glide.with(requireContext()).load(userProfileVideoOnly.get(0).getFile().getUrl()).placeholder(R.drawable.video_placeholder1).apply(new RequestOptions().override(200, 200)))
+                        .apply(new RequestOptions().override(200, 200))
+//                        .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                        .placeholder(R.drawable.video_placeholder1)
+//                        .error(android.R.drawable.stat_notify_error)
+                        .into(video1);
+
             }
+        }
+    }
+
+
+    public class ThumbnailExtract extends AsyncTask<String, long[], Bitmap> {
+
+        private final String videoUrl;
+        private final ImageView mThumbnail;
+        private final boolean mIsVideo;
+        private MediaMetadataRetriever mmr;
+
+        public ThumbnailExtract(String videoLocalUrl, ImageView thumbnail, boolean isVideo) {
+            this.videoUrl = videoLocalUrl;
+            mThumbnail = thumbnail;
+            mIsVideo = isVideo;
+            if (!isVideo) {
+                mmr = new MediaMetadataRetriever();
+            }
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            if (!mIsVideo) {
+                return getBitmap(videoUrl);
+            } else {
+                return ThumbnailUtils.createVideoThumbnail(videoUrl,
+                        MediaStore.Images.Thumbnails.MINI_KIND);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap thumb) {
+            if (thumb != null) {
+                mThumbnail.setImageBitmap(thumb);
+            }
+        }
+
+        private Bitmap getBitmap(String fileUrl) {
+            mmr.setDataSource(fileUrl);
+            byte[] data = mmr.getEmbeddedPicture();
+            Bitmap bitmap = null;
+            // convert the byte array to a bitmap
+            if (data != null) {
+                bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+            }
+            return bitmap;
+//            return bitmap != null ? ScalingUtilities.createScaledBitmap(bitmap, 40, 40, ScalingUtilities.ScalingLogic.FIT) : bitmap;
         }
     }
 }

@@ -2,6 +2,7 @@ package com.app.wingmate.login;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -33,8 +34,15 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.app.wingmate.utils.AppConstants.ERROR;
+import static com.app.wingmate.utils.AppConstants.MANDATORY;
+import static com.app.wingmate.utils.AppConstants.OPTIONAL;
+import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
+import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONAL_QUESTIONNAIRE_FILLED;
+import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_FORGOT_PASSWORD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.PREF_EMAIL;
 import static com.app.wingmate.utils.CommonKeys.PREF_PASSWORD;
 import static com.app.wingmate.utils.Utilities.showToast;
@@ -174,7 +182,7 @@ public class LoginFragment extends BaseFragment implements LoginView {
         passwordET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View arg0, boolean isFocus) {
-                System.out.println("==========isFocus======="+isFocus);
+                System.out.println("==========isFocus=======" + isFocus);
                 if (LoginFragment.this.getActivity() == null || passwordET == null) return;
                 if (isFocus) {
                     passwordET.setBackground(ResourcesCompat.getDrawable(LoginFragment.this.getResources(), R.drawable.field_bg_selected, null));
@@ -313,11 +321,20 @@ public class LoginFragment extends BaseFragment implements LoginView {
             SharedPrefers.saveString(requireContext(), PREF_EMAIL, emailET.getText().toString());
             SharedPrefers.saveString(requireContext(), PREF_PASSWORD, passwordET.getText().toString());
         }
-//        if (parseUser.getBoolean(PARAM_QUESTIONNAIRE_FILLED)) {
-        ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_DASHBOARD);
-//        } else {
-//            ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE);
-//        }
+        if (parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)
+                && parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)
+                && parseUser.getString(PARAM_PROFILE_PIC) != null
+                && !TextUtils.isEmpty(parseUser.getString(PARAM_PROFILE_PIC))
+        ) {
+            ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_DASHBOARD);
+        } else if (!parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
+            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
+        } else if (!parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
+            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+        } else if (parseUser.getString(PARAM_PROFILE_PIC) == null
+                || TextUtils.isEmpty(parseUser.getString(PARAM_PROFILE_PIC))) {
+            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
+        }
     }
 
     @Override

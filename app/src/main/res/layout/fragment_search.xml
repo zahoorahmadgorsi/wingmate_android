@@ -8,6 +8,25 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/btn_search"
         tools:listitem="@layout/list_item_question_option" />
+
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/_40ssp"
+        android:layout_marginLeft="@dimen/_40ssp"
+        android:layout_marginTop="@dimen/_16ssp"
+        android:layout_marginEnd="@dimen/_40ssp"
+        android:layout_marginRight="@dimen/_40ssp"
+        android:layout_marginBottom="@dimen/_8ssp"
+        android:background="@drawable/button_pressed"
+        android:fontFamily="@font/baloo_regular"
+        android:text="Search"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/txt_size" />
 
 </RelativeLayout>

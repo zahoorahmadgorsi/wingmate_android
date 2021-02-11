@@ -17,9 +17,9 @@ public class DashboardPresenter implements DashboardInteractor.OnFinishedListene
         this.view = view;
     }
 
-    public void queryQuestions(Context context) {
+    public void queryQuestions(Context context, String questionType) {
         if (view != null) {
-            interactor.fetchQuestionsFormParse(context, this);
+            interactor.fetchQuestionsFormParse(context, this, questionType);
         }
     }
 

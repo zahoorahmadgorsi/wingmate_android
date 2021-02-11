@@ -74,6 +74,13 @@ public class ActivityUtility {
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }
 
+    public static void startUploadMediaActivity(Activity context, String tag) {
+        Intent mainIntent = new Intent(context, MainActivity.class);
+        mainIntent.putExtra(KEY_ACTIVITY_TAG, tag);
+        context.startActivity(mainIntent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+
     public static void startPhotoViewActivity(Activity context, String tag, String path) {
         Intent mainIntent = new Intent(context, MainActivity.class);
         mainIntent.putExtra(KEY_ACTIVITY_TAG, tag);
@@ -120,6 +127,15 @@ public class ActivityUtility {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(KEY_ACTIVITY_TAG, tag);
         intent.putExtra(KEY_QUESTION_TYPE, questionType);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+
+    public static void startProfileMediaActivity(Activity context, String tag) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG, tag);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }

@@ -38,6 +38,10 @@ public class AppConstants {
     public static final String PARAM_IS_PAID_USER = "isPaidUser";
     public static final String PARAM_EMAIL_VERIFIED = "emailVerified";
     public static final String PARAM_PROFILE_PIC = "profilePic";
+    public static final String PARAM_USER_MANDATORY_ARRAY = "mandatoryQuestionAnswersList";
+    public static final String PARAM_USER_OPTIONAL_ARRAY = "optionalQuestionAnswersList";
+    public static final String PARAM_USER_NATIONALITY = "nationality";
+    public static final String PARAM_USER_AGE = "age";
 
     public static final String PARAM_EMAIL_NEW = "emailNew";
     public static final String PARAM_EMAIL_WRONG = "emailWrong";

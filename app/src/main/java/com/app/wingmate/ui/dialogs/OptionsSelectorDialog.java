@@ -29,6 +29,7 @@ import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.profile.edit.EditProfileTextFieldFragment;
 import com.app.wingmate.ui.adapters.DialogOptionsListAdapter;
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -44,13 +45,21 @@ import static com.app.wingmate.utils.AppConstants.FEMALE;
 import static com.app.wingmate.utils.AppConstants.MALE;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.NATIONALITY_QUESTION_OBJECT_ID;
+import static com.app.wingmate.utils.AppConstants.OPTIONAL;
 import static com.app.wingmate.utils.AppConstants.PARAM_ABOUT_ME;
 import static com.app.wingmate.utils.AppConstants.PARAM_GENDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_IDS;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
+import static com.app.wingmate.utils.AppConstants.PARAM_TITLE;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_AGE;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_MANDATORY_ARRAY;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_NATIONALITY;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
+import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_AGE;
+import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_NATIONALITY;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.TAG_PROFILE_EDIT;
 import static com.app.wingmate.utils.AppConstants.TAG_SEARCH;
@@ -101,7 +110,7 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
     TextView errorTV;
 
     public Question question;
-    public List<String> currentSelectedOptions;
+    public List<String> currentSelectedOptions = new ArrayList<>();
     private List<QuestionOption> allOptionsList = new ArrayList<>();
     private List<QuestionOption> filteredOptionsList;
     public UserAnswer currentUserAnswer;
@@ -341,7 +350,7 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
                 } else if (TAG.equalsIgnoreCase(PARAM_GENDER)) {
                     saveGenderData();
                 } else if (TAG.equalsIgnoreCase(PARAM_QUESTION_ID)) {
-                    if (currentSelectedOptions != null && currentSelectedOptions.size() > 0) {
+                    if (!(questionType.equals(MANDATORY)) || (currentSelectedOptions != null && currentSelectedOptions.size() > 0)) {
                         saveQuestionsData();
                     } else
                         showToast(requireActivity(), requireContext(), "Please select option!", SUCCESS);
@@ -385,7 +394,7 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
         adapter.setData(filteredOptionsList);
         adapter.setMultiSelection(isMultiSelection);
         adapter.notifyDataSetChanged();
-        if (currentSelectedOptions.size() > 0) enableContinueBtn();
+        if (currentSelectedOptions.size() > 0 || isMultiSelection) enableContinueBtn();
     }
 
     private void disableContinueBtn() {
@@ -427,7 +436,7 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
         if (currentSelectedOptions.contains(objectId))
             currentSelectedOptions.remove(objectId);
         else currentSelectedOptions.add(objectId);
-        if (currentSelectedOptions != null && currentSelectedOptions.size() > 0)
+        if (isMultiSelect || (currentSelectedOptions != null && currentSelectedOptions.size() > 0))
             enableContinueBtn();
         else disableContinueBtn();
         adapter.notifyDataSetChanged();
@@ -435,7 +444,6 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
 
     private void saveQuestionsData() {
         if (isChange) {
-            dialog.show();
             if (currentUserAnswer == null) {
                 currentUserAnswer = new UserAnswer();
                 if (VIEW_TAG.equals(TAG_PROFILE_EDIT))
@@ -456,13 +464,20 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
             currentUserAnswer.put(PARAM_OPTIONS_OBJ_ARRAY, myOptions);
             isChange = false;
             if (VIEW_TAG.equals(TAG_PROFILE_EDIT)) {
+                dialog.show();
                 currentUserAnswer.saveInBackground(e -> {
-                    dialog.dismiss();
                     if (e == null) {
                         question.setUserAnswer(currentUserAnswer);
-                        showToast(getActivity(), getContext(), "Updated successfully", SUCCESS);
-                        myListener.onSelectorApplyClick(this, question);
+//                        if (question.getShortTitle().equals(SHORT_TITLE_NATIONALITY)) {
+//                            ParseUser.getCurrentUser().put(PARAM_USER_NATIONALITY, myOptions.get(0).getString(PARAM_TITLE));
+//                            ParseUser.getCurrentUser().saveInBackground(e1 -> { });
+//                        } else if (question.getShortTitle().equals(SHORT_TITLE_AGE)) {
+//                            ParseUser.getCurrentUser().put(PARAM_USER_AGE, myOptions.get(0).getString(PARAM_TITLE));
+//                            ParseUser.getCurrentUser().saveInBackground(e1 -> { });
+//                        }
+                        saveToUserTable();
                     } else {
+                        dialog.dismiss();
                         showToast(requireActivity(), requireContext(), e.getMessage(), ERROR);
                     }
                 });
@@ -506,5 +521,55 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
             }
         });
     }
+
+    private void saveToUserTable() {
+        // Check if Question is Mandatory or Optional
+        if (question.getQuestionType().equals(MANDATORY)) {
+
+            // Load UserAnswers list from user table
+            List<UserAnswer> mandatoryAnswersList = ParseUser.getCurrentUser().getList(PARAM_USER_MANDATORY_ARRAY);
+
+            // Initialize in-case if no record in User table
+            if (mandatoryAnswersList == null) mandatoryAnswersList = new ArrayList<>();
+
+            // Loop to check if current question is present in list, if yes then remove it
+            for (int i = 0; i < mandatoryAnswersList.size(); i++) {
+                try {
+                    if (mandatoryAnswersList.get(i).fetchIfNeeded().getParseObject(PARAM_QUESTION_ID).getObjectId().equals(currentUserAnswer.getQuestionId().getObjectId()))
+                        mandatoryAnswersList.remove(i);
+                } catch (ParseException exception) {
+                    exception.printStackTrace();
+                }
+            }
+
+            // Add new UserAnswer object in list
+            mandatoryAnswersList.add(currentUserAnswer);
+
+            // Save list to User table
+            ParseUser.getCurrentUser().put(PARAM_USER_MANDATORY_ARRAY, mandatoryAnswersList);
+            ParseUser.getCurrentUser().saveInBackground(e1 -> { });
+        }
+
+        if (question.getQuestionType().equals(OPTIONAL)) {
+            List<UserAnswer> optionalAnswersList = ParseUser.getCurrentUser().getList(PARAM_USER_OPTIONAL_ARRAY);
+            if (optionalAnswersList == null) optionalAnswersList = new ArrayList<>();
+            for (int i = 0; i < optionalAnswersList.size(); i++) {
+                try {
+                    if (optionalAnswersList.get(i).fetchIfNeeded().getParseObject(PARAM_QUESTION_ID).getObjectId().equals(currentUserAnswer.getQuestionId().getObjectId()))
+                        optionalAnswersList.remove(i);
+                } catch (ParseException exception) {
+                    exception.printStackTrace();
+                }
+            }
+            optionalAnswersList.add(currentUserAnswer);
+            ParseUser.getCurrentUser().put(PARAM_USER_OPTIONAL_ARRAY, optionalAnswersList);
+            ParseUser.getCurrentUser().saveInBackground(e1 -> { });
+        }
+
+        dialog.dismiss();
+        showToast(getActivity(), getContext(), "Updated successfully", SUCCESS);
+        myListener.onSelectorApplyClick(this, question);
+    }
+
 
 }

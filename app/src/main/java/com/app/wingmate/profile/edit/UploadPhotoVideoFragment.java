@@ -2,21 +2,30 @@ package com.app.wingmate.profile.edit;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,12 +40,18 @@ import com.app.wingmate.profile.ProfileInteractor;
 import com.app.wingmate.profile.ProfilePresenter;
 import com.app.wingmate.profile.ProfileView;
 import com.app.wingmate.ui.activities.MainActivity;
+import com.app.wingmate.ui.activities.SplashActivity;
 import com.app.wingmate.ui.adapters.DosDontsListAdapter;
 import com.app.wingmate.ui.adapters.DosDontsPhotosGridAdapter;
 import com.app.wingmate.ui.adapters.PhotosHorizontalListAdapter;
 import com.app.wingmate.ui.adapters.ProfileOptionsListAdapter;
 import com.app.wingmate.ui.fragments.CropFragment;
 import com.app.wingmate.utils.ActivityUtility;
+import com.app.wingmate.utils.FileUtils;
+import com.app.wingmate.utils.Utilities;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -44,7 +59,11 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -72,10 +91,12 @@ import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_VIDEO_VIEW;
 import static com.app.wingmate.utils.Utilities.showToast;
+import static com.parse.Parse.getApplicationContext;
 
 public class UploadPhotoVideoFragment extends BaseFragment implements ProfileView {
 
@@ -83,6 +104,8 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
 
     Unbinder unbinder;
 
+    @BindView(R.id.scrollView)
+    NestedScrollView scrollView;
     @BindView(R.id.placeholder_tv)
     TextView placeholderTV;
     @BindView(R.id.photo_video_pic1)
@@ -216,7 +239,8 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
                         ActivityUtility.startVideoViewActivity(requireActivity(), KEY_FRAGMENT_VIDEO_VIEW, user1stVideoFile.getFile().getUrl());
                     } else {
                         CLICK_TAG = TAG_VIDEO;
-                        easyImage.openCameraForVideo(this);
+                        openVideoGallery();
+//                        easyImage.openCameraForVideo(this);
                     }
                 }
                 break;
@@ -231,7 +255,8 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
                 } else if (CURRENT_MODE == MODE_VIDEO) {
                     if (hasVideo) {
                         CURRENT_MODE = MODE_PHOTOS;
-                        getActivity().onBackPressed();
+                        ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+//                        getActivity().onBackPressed();
                     } else {
                         showToast(getActivity(), getContext(), "Video is required!", ERROR);
                     }
@@ -244,6 +269,73 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
                 break;
         }
     }
+
+    public void openVideoCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, MAXIMUM_DURATION_VIDEO);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+        startActivityForResult(intent, VIDEO_CAMERA);
+    }
+
+    private int VIDEO_CAMERA = 2;
+    private int VIDEO_GALLERY = 3;
+    private File videoFile = null;
+    private String videoPath = null;
+    private Uri videoURI = null;
+    public static int MAXIMUM_DURATION_VIDEO = 100;
+
+    public void openVideoGallery() {
+        Intent intent = new Intent();
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, MAXIMUM_DURATION_VIDEO);
+        startActivityForResult(Intent.createChooser(intent, "Select Video"), VIDEO_GALLERY);
+    }
+
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getActivity().managedQuery(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    //this function returns null when using IO file manager
+    public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Video.Media.DATA };
+        Cursor cursor = requireActivity().getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } else
+            return null;
+    }
+
+    private byte[] convertVideoToBytes(Uri uri) {
+        byte[] videoBytes = null;
+        if (uri == null) return null;
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            String realPathFromURI = getRealPathFromURI(uri);
+            String realPathFromURI = getPath(uri);
+            if (realPathFromURI == null) return null;
+            FileInputStream fis = new FileInputStream(new File(realPathFromURI));
+            byte[] buf = new byte[1024];
+            int n;
+            while (-1 != (n = fis.read(buf)))
+                baos.write(buf, 0, n);
+            videoBytes = baos.toByteArray();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return videoBytes;
+    }
+
 
     @Override
     public void setTermsResponseSuccess(List<TermsConditions> list) {
@@ -331,6 +423,10 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
                         break;
                     }
                 }
+                if (user1stPhotoFile == null) {
+                    user1stPhotoFile = userProfilePhotoOnly.get(0);
+                    userProfilePhotoOnly.remove(0);
+                }
                 if (user1stPhotoFile != null && userProfilePhotoOnly != null && userProfilePhotoOnly.size() < 2) {
                     UserProfilePhotoVideo dummyObj = new UserProfilePhotoVideo();
                     dummyObj.setDummyFile(true);
@@ -355,6 +451,8 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
     }
 
     public void setPhotosView() {
+        ((MainActivity) Objects.requireNonNull(getActivity())).setScreenTitle("Upload Photos");
+
         photoVideoPic1.setImageResource(android.R.color.transparent);
         CURRENT_MODE = MODE_PHOTOS;
         placeholderTV.setText("Minimum 1 photo is required");
@@ -385,9 +483,12 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
 
         ((MainActivity) getActivity()).showStepView();
         ((MainActivity) getActivity()).setStepViewStepTVAndProgress(1, 2);
+        scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_UP));
     }
 
     public void setVideoView() {
+        ((MainActivity) Objects.requireNonNull(getActivity())).setScreenTitle("Upload Video");
+
         photoVideoPic1.setImageResource(android.R.color.transparent);
         CURRENT_MODE = MODE_VIDEO;
         placeholderTV.setText("Video is required");
@@ -397,7 +498,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
         dosDontsPhotosGridAdapter.setData(dosDontsVideoFilesList);
         if (user1stVideoFile != null) {
             try {
-                setVideoImage(user1stVideoFile.getFile().getFile().getPath());
+                setVideoImage(user1stVideoFile.getFile().getFile().getPath(), user1stVideoFile.getFile().getUrl());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -420,13 +521,49 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
 //        }
         ((MainActivity) getActivity()).showStepView();
         ((MainActivity) getActivity()).setStepViewStepTVAndProgress(2, 2);
+        scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_UP));
     }
 
-    private void setVideoImage(String videoFilePath) {
-        Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoFilePath, MediaStore.Images.Thumbnails.MINI_KIND);
-        Matrix matrix = new Matrix();
-        Bitmap bmThumbnail = Bitmap.createBitmap(thumb, 0, 0, thumb.getWidth(), thumb.getHeight(), matrix, true);
-        photoVideoPic1.setImageBitmap(bmThumbnail);
+    private void setVideoImage(String videoFilePath, String url) {
+//        try {
+//            Bitmap thumb = null;
+//            try {
+//                int THUMBSIZE = 200;
+//                CancellationSignal ca = new CancellationSignal();
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                    System.out.println("===hereeee-====");
+//                    thumb = ThumbnailUtils.createVideoThumbnail(userProfileVideoOnly.get(0).getFile().getFile(),
+//                            new Size(THUMBSIZE, THUMBSIZE), ca);
+//                } else {
+//                    System.out.println("===hereeee222-====");
+//
+//                    thumb = ThumbnailUtils.createVideoThumbnail(
+//                            userProfileVideoOnly.get(0).getFile().getFile().getPath(),
+//                            MediaStore.Images.Thumbnails.MINI_KIND);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            Matrix matrix = new Matrix();
+//            if (thumb != null) {
+//                System.out.println("===hereeee33333-====");
+//                Bitmap bmThumbnail = Bitmap.createBitmap(thumb, 0, 0, thumb.getWidth(), thumb.getHeight(), matrix, true);
+//                photoVideoPic1.setImageBitmap(bmThumbnail);
+//            }
+//        } catch (ParseException exception) {
+//            exception.printStackTrace();
+//        }
+
+        Glide.with(requireContext())
+                .load(url)
+                .thumbnail(Glide.with(requireContext()).load(url).placeholder(R.drawable.video_placeholder1).apply(new RequestOptions().override(600, 600)))
+                .apply(new RequestOptions().override(600, 600))
+                .placeholder(R.drawable.video_placeholder1)
+//                .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+//                .error(android.R.drawable.stat_notify_error)
+                .into(photoVideoPic1);
+
     }
 
     public void addImage() {
@@ -445,25 +582,34 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
 //                .setPositiveButton("Yes, Delete", (dialoginterface, i) -> {
         if (CURRENT_MODE == MODE_PHOTOS) {
             CLICK_TAG = TAG_LIST;
-            userProfilePhotoOnly.get(index).deleteEventually();
-            userProfilePhotoOnly.remove(index);
-            userPhotosListAdapter.setData(userProfilePhotoOnly);
-            userPhotosListAdapter.notifyDataSetChanged();
-        }
+//            userProfilePhotoOnly.get(index).deleteEventually();
+            showProgress();
+            userProfilePhotoOnly.get(index).deleteInBackground(e -> {
+                if (e == null) {
+                    userProfilePhotoOnly.remove(index);
+                    userPhotosListAdapter.setData(userProfilePhotoOnly);
+                    userPhotosListAdapter.notifyDataSetChanged();
 
-        boolean hasDummy = false;
-        if (userProfilePhotoOnly==null || userProfilePhotoOnly.size()==0)
-            userProfilePhotoOnly = new ArrayList<>();
-        for (int x = 0; x < userProfilePhotoOnly.size(); x++) {
-            if (userProfilePhotoOnly.get(x).isDummyFile())
-                hasDummy = true;
+                    boolean hasDummy = false;
+                    if (userProfilePhotoOnly == null || userProfilePhotoOnly.size() == 0)
+                        userProfilePhotoOnly = new ArrayList<>();
+                    for (int x = 0; x < userProfilePhotoOnly.size(); x++) {
+                        if (userProfilePhotoOnly.get(x).isDummyFile())
+                            hasDummy = true;
+                    }
+                    if (!hasDummy) {
+                        UserProfilePhotoVideo dummyObj = new UserProfilePhotoVideo();
+                        dummyObj.setDummyFile(true);
+                        userProfilePhotoOnly.add(dummyObj);
+                    }
+                    hasChange = true;
+                } else {
+                    showToast(requireActivity(), getContext(), e.getMessage(), ERROR);
+                }
+
+                dismissProgress();
+            });
         }
-        if (!hasDummy) {
-            UserProfilePhotoVideo dummyObj = new UserProfilePhotoVideo();
-            dummyObj.setDummyFile(true);
-            userProfilePhotoOnly.add(dummyObj);
-        }
-        hasChange = true;
 //                }).show();
     }
 
@@ -476,58 +622,83 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
 //                .setPositiveButton("Yes, Delete", (dialoginterface, i) -> {
         if (mode == MODE_PHOTOS) {
             if (user1stPhotoFile != null) {
-                user1stPhotoFile.deleteEventually();
-                user1stPhotoFile = null;
-            }
-            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 1) {
-                user1stPhotoFile = userProfilePhotoOnly.get(0);
-                userProfilePhotoOnly.remove(0);
-                ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
-                ParseUser.getCurrentUser().saveInBackground(e1 -> {
+//                user1stPhotoFile.deleteEventually();
+                showProgress();
+                user1stPhotoFile.deleteInBackground(e -> {
+                    if (e == null) {
+                        user1stPhotoFile = null;
+                        ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, "");
+                        ParseUser.getCurrentUser().saveInBackground(e1 -> {
+                        });
+                        if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 1) {
+                            user1stPhotoFile = userProfilePhotoOnly.get(0);
+                            userProfilePhotoOnly.remove(0);
+                            ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
+                            ParseUser.getCurrentUser().saveInBackground(e1 -> {
+                            });
+                            boolean hasDummy = false;
+                            for (int x = 0; x < userProfilePhotoOnly.size(); x++) {
+                                if (userProfilePhotoOnly.get(x).isDummyFile())
+                                    hasDummy = true;
+                            }
+                            if (!hasDummy) {
+                                UserProfilePhotoVideo dummyObj = new UserProfilePhotoVideo();
+                                dummyObj.setDummyFile(true);
+                                userProfilePhotoOnly.add(dummyObj);
+                            }
+                        }
+                        if (user1stPhotoFile != null) {
+                            Picasso.get().load(user1stPhotoFile.getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(photoVideoPic1);
+                            addView.setVisibility(View.GONE);
+                            delMainImgBtn.setVisibility(View.VISIBLE);
+                            hasPhotos = true;
+                        } else {
+                            userProfilePhotoOnly = new ArrayList<>();
+                            addView.setVisibility(View.VISIBLE);
+                            delMainImgBtn.setVisibility(View.GONE);
+                            photoVideoPic1.setImageResource(android.R.color.transparent);
+                            hasPhotos = false;
+                        }
+                        if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
+                            photosRV.setVisibility(View.VISIBLE);
+                            hasPhotos = true;
+                            photosRV.smoothScrollToPosition(userProfilePhotoOnly.size() - 1);
+                        } else {
+                            userProfilePhotoOnly = new ArrayList<>();
+                            photosRV.setVisibility(View.GONE);
+                        }
+                        userPhotosListAdapter.setData(userProfilePhotoOnly);
+                        userPhotosListAdapter.notifyDataSetChanged();
+                    } else {
+                        showToast(requireActivity(), getContext(), e.getMessage(), ERROR);
+                    }
+                    dismissProgress();
                 });
-                boolean hasDummy = false;
-                for (int x = 0; x < userProfilePhotoOnly.size(); x++) {
-                    if (userProfilePhotoOnly.get(x).isDummyFile())
-                        hasDummy = true;
-                }
-                if (!hasDummy) {
-                    UserProfilePhotoVideo dummyObj = new UserProfilePhotoVideo();
-                    dummyObj.setDummyFile(true);
-                    userProfilePhotoOnly.add(dummyObj);
-                }
+
             }
-            if (user1stPhotoFile != null) {
-                Picasso.get().load(user1stPhotoFile.getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(photoVideoPic1);
-                addView.setVisibility(View.GONE);
-                delMainImgBtn.setVisibility(View.VISIBLE);
-                hasPhotos = true;
-            } else {
-                userProfilePhotoOnly = new ArrayList<>();
-                addView.setVisibility(View.VISIBLE);
-                delMainImgBtn.setVisibility(View.GONE);
-                photoVideoPic1.setImageResource(android.R.color.transparent);
-                hasPhotos = false;
-            }
-            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
-                photosRV.setVisibility(View.VISIBLE);
-                hasPhotos = true;
-                photosRV.smoothScrollToPosition(userProfilePhotoOnly.size() - 1);
-            } else {
-                userProfilePhotoOnly = new ArrayList<>();
-                photosRV.setVisibility(View.GONE);
-            }
-            userPhotosListAdapter.setData(userProfilePhotoOnly);
-            userPhotosListAdapter.notifyDataSetChanged();
         } else if (mode == MODE_VIDEO) {
             if (user1stVideoFile != null) {
-                user1stVideoFile.deleteEventually();
+//                user1stVideoFile.deleteEventually();
+                showProgress();
+                user1stVideoFile.deleteInBackground(new DeleteCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            user1stVideoFile = null;
+                            photoVideoPic1.setImageResource(android.R.color.transparent);
+                            hasVideo = false;
+                            addView.setVisibility(View.VISIBLE);
+                            playIcon.setVisibility(View.GONE);
+                            delMainImgBtn.setVisibility(View.GONE);
+                            hasChange = true;
+                        } else {
+                            showToast(requireActivity(), getContext(), e.getMessage(), ERROR);
+                        }
+                        dismissProgress();
+                    }
+                });
             }
-            photoVideoPic1.setImageResource(android.R.color.transparent);
-            hasVideo = false;
-            addView.setVisibility(View.VISIBLE);
-            playIcon.setVisibility(View.GONE);
-            delMainImgBtn.setVisibility(View.GONE);
-            hasChange = true;
+
         }
         hasChange = true;
 //                }).show();
@@ -544,6 +715,99 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == VIDEO_CAMERA || requestCode == VIDEO_GALLERY) {
+            if (data != null) {
+                videoURI = data.getData();
+//                videoPath = getRealPathFromURI(videoURI);
+                videoPath = FileUtils.getPath(requireContext(), videoURI);
+                MediaPlayer mp = MediaPlayer.create(getContext(), videoURI);
+                int videoDuration = mp.getDuration();
+                mp.release();
+                Log.i("log-", "VIDEO PATH: " + videoPath);
+                Log.i("log-", "VIDEO URI: " + videoURI);
+                Log.i("log-", "VIDEO DURATION: " + videoDuration);
+                if (videoDuration < MAXIMUM_DURATION_VIDEO * 1100) {
+//                    Bitmap thumbnail = null;
+                    videoFile = null;
+                    if (videoPath != null) {
+                        videoFile = new File(videoPath);
+//                        thumbnail = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Images.Thumbnails.MINI_KIND);
+                    } else if (videoURI != null) {
+                        videoFile = new File(videoURI.getPath());
+//                        thumbnail = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Images.Thumbnails.MINI_KIND);
+                    }
+                    if (videoFile != null) {
+                        Log.i("log-", "VIDEO FILE: " + videoFile.getAbsolutePath());
+
+                        showProgress();
+                        ParseFile vidFile = new ParseFile(videoFile);
+//                        ParseFile vidFile = new ParseFile("video.mp4", convertVideoToBytes(videoURI));
+//                        vidFile.saveInBackground((SaveCallback) e -> {
+//                            if(null == e) {
+                                final UserProfilePhotoVideo userProfilePhotoVideo = new UserProfilePhotoVideo();
+                                userProfilePhotoVideo.put(PARAM_USER_ID, ParseUser.getCurrentUser().getObjectId());
+                                userProfilePhotoVideo.put(PARAM_FILE, vidFile);
+                                userProfilePhotoVideo.put(PARAM_IS_PHOTO, false);
+                                userProfilePhotoVideo.saveInBackground(ea -> {
+                                    if (ea == null) {
+                                        if (user1stVideoFile != null) {
+                                            user1stVideoFile.deleteInBackground(e12 -> {
+                                                if (e12==null) {
+                                                    user1stVideoFile = userProfilePhotoVideo;
+                                                    try {
+                                                        setVideoImage(user1stVideoFile.getFile().getFile().getPath(), user1stVideoFile.getFile().getUrl());
+                                                    } catch (ParseException exception) {
+                                                        exception.printStackTrace();
+                                                    }
+                                                    hasVideo = true;
+                                                    addView.setVisibility(View.GONE);
+                                                    delMainImgBtn.setVisibility(View.VISIBLE);
+                                                    playIcon.setVisibility(View.VISIBLE);
+                                                    hasChange = true;
+                                                    showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
+                                                } else {
+                                                    showToast(requireActivity(), getContext(), e12.getMessage(), ERROR);
+                                                    System.out.println("====e12==="+e12.getMessage());
+                                                }
+                                                dismissProgress();
+                                            });
+                                        } else {
+                                            user1stVideoFile = userProfilePhotoVideo;
+                                            try {
+                                                setVideoImage(user1stVideoFile.getFile().getFile().getPath(), user1stVideoFile.getFile().getUrl());
+                                            } catch (ParseException exception) {
+                                                exception.printStackTrace();
+                                            }
+                                            hasVideo = true;
+                                            addView.setVisibility(View.GONE);
+                                            delMainImgBtn.setVisibility(View.VISIBLE);
+                                            playIcon.setVisibility(View.VISIBLE);
+                                            hasChange = true;
+                                            showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
+                                            dismissProgress();
+                                        }
+                                    } else {
+                                        showToast(requireActivity(), getContext(), ea.getMessage(), ERROR);
+                                        System.out.println("==ea====="+ea.getMessage());
+                                        dismissProgress();
+                                    }
+                                });
+//                            } else {
+//                                showToast(requireActivity(), getContext(), e.getMessage(), ERROR);
+//                                System.out.println("==e====="+e.getMessage());
+//                                dismissProgress();
+//                            }
+//                        });
+                    }
+                } else {
+                    showToast(requireContext(), "Your video is longer than " + MAXIMUM_DURATION_VIDEO + " seconds. Please choose or take a shorter video", ERROR);
+                    videoPath = null;
+                    videoURI = null;
+                    videoFile = null;
+                }
+            }
+        }
+
         easyImage.handleActivityResult(requestCode, resultCode, data, getActivity(), new DefaultCallback() {
             @Override
             public void onMediaFilesPicked(MediaFile[] imageFiles, MediaSource source) {
@@ -558,24 +822,45 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
                     userProfilePhotoVideo.saveInBackground(e -> {
                         if (e == null) {
                             if (user1stVideoFile != null) {
-                                user1stVideoFile.deleteEventually();
+//                                user1stVideoFile.deleteEventually();
+                                user1stVideoFile.deleteInBackground(e12 -> {
+                                    if (e12==null) {
+                                        user1stVideoFile = userProfilePhotoVideo;
+                                        try {
+                                            setVideoImage(user1stVideoFile.getFile().getFile().getPath(), user1stVideoFile.getFile().getUrl());
+                                        } catch (ParseException exception) {
+                                            exception.printStackTrace();
+                                        }
+                                        hasVideo = true;
+                                        addView.setVisibility(View.GONE);
+                                        delMainImgBtn.setVisibility(View.VISIBLE);
+                                        playIcon.setVisibility(View.VISIBLE);
+                                        hasChange = true;
+                                        showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
+                                    } else {
+                                        showToast(requireActivity(), getContext(), e12.getMessage(), ERROR);
+                                    }
+                                    dismissProgress();
+                                });
+                            } else {
+                                user1stVideoFile = userProfilePhotoVideo;
+                                try {
+                                    setVideoImage(user1stVideoFile.getFile().getFile().getPath(), user1stVideoFile.getFile().getUrl());
+                                } catch (ParseException exception) {
+                                    exception.printStackTrace();
+                                }
+                                hasVideo = true;
+                                addView.setVisibility(View.GONE);
+                                delMainImgBtn.setVisibility(View.VISIBLE);
+                                playIcon.setVisibility(View.VISIBLE);
+                                hasChange = true;
+                                showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
+                                dismissProgress();
                             }
-                            user1stVideoFile = userProfilePhotoVideo;
-                            try {
-                                setVideoImage(user1stVideoFile.getFile().getFile().getPath());
-                            } catch (ParseException exception) {
-                                exception.printStackTrace();
-                            }
-                            hasVideo = true;
-                            addView.setVisibility(View.GONE);
-                            delMainImgBtn.setVisibility(View.VISIBLE);
-                            playIcon.setVisibility(View.VISIBLE);
-                            hasChange = true;
-                            showToast(getActivity(), getContext(), "Updated successfully", SUCCESS);
                         } else {
                             showToast(requireActivity(), getContext(), e.getMessage(), ERROR);
+                            dismissProgress();
                         }
-                        dismissProgress();
                     });
                 }
             }
@@ -607,22 +892,45 @@ public class UploadPhotoVideoFragment extends BaseFragment implements ProfileVie
                         switch (CLICK_TAG) {
                             case TAG_IMAGE:
                                 if (user1stPhotoFile != null) {
-                                    user1stPhotoFile.deleteEventually();
+//                                    user1stPhotoFile.deleteEventually();
+//                                    showProgress();
+                                    user1stPhotoFile.deleteInBackground(e13 -> {
+                                        if (e13==null) {
+                                            user1stPhotoFile = userProfilePhotoVideo;
+                                            System.out.println("===url====" + user1stPhotoFile.getFile().getUrl());
+                                            ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
+                                            ParseUser.getCurrentUser().saveInBackground(e1 -> {
+                                            });
+                                            if (userProfilePhotoOnly == null || userProfilePhotoOnly.size() == 0) {
+                                                UserProfilePhotoVideo dummyObj = new UserProfilePhotoVideo();
+                                                dummyObj.setDummyFile(true);
+                                                userProfilePhotoOnly = new ArrayList<>();
+                                                userProfilePhotoOnly.add(dummyObj);
+                                            }
+                                            Picasso.get().load(user1stPhotoFile.getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(photoVideoPic1);
+                                            addView.setVisibility(View.GONE);
+                                            delMainImgBtn.setVisibility(View.VISIBLE);
+                                        } else {
+                                            showToast(requireActivity(), getContext(), e13.getMessage(), ERROR);
+                                        }
+                                        dismissProgress();
+                                    });
+                                } else {
+                                    user1stPhotoFile = userProfilePhotoVideo;
+                                    System.out.println("===url====" + user1stPhotoFile.getFile().getUrl());
+                                    ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
+                                    ParseUser.getCurrentUser().saveInBackground(e1 -> {
+                                    });
+                                    if (userProfilePhotoOnly == null || userProfilePhotoOnly.size() == 0) {
+                                        UserProfilePhotoVideo dummyObj = new UserProfilePhotoVideo();
+                                        dummyObj.setDummyFile(true);
+                                        userProfilePhotoOnly = new ArrayList<>();
+                                        userProfilePhotoOnly.add(dummyObj);
+                                    }
+                                    Picasso.get().load(user1stPhotoFile.getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(photoVideoPic1);
+                                    addView.setVisibility(View.GONE);
+                                    delMainImgBtn.setVisibility(View.VISIBLE);
                                 }
-                                user1stPhotoFile = userProfilePhotoVideo;
-                                System.out.println("===url====" + user1stPhotoFile.getFile().getUrl());
-                                ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
-                                ParseUser.getCurrentUser().saveInBackground(e1 -> {
-                                });
-                                if (userProfilePhotoOnly == null || userProfilePhotoOnly.size() == 0) {
-                                    UserProfilePhotoVideo dummyObj = new UserProfilePhotoVideo();
-                                    dummyObj.setDummyFile(true);
-                                    userProfilePhotoOnly = new ArrayList<>();
-                                    userProfilePhotoOnly.add(dummyObj);
-                                }
-                                Picasso.get().load(user1stPhotoFile.getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(photoVideoPic1);
-                                addView.setVisibility(View.GONE);
-                                delMainImgBtn.setVisibility(View.VISIBLE);
                                 break;
                             case TAG_LIST:
                                 if (userProfilePhotoOnly.size() == 1) {
