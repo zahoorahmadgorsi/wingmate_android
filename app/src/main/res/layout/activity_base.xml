@@ -17,9 +17,8 @@
             android:id="@+id/back_btn"
             android:layout_width="@dimen/_40ssp"
             android:layout_height="match_parent"
-            android:padding="@dimen/_14ssp"
-            android:src="@drawable/ic_back"
-            app:tint="@color/purple_theme" />
+            android:padding="@dimen/_8ssp"
+            android:src="@drawable/ic_back_btn"/>
 
         <LinearLayout
             android:id="@+id/crop_options_layout"
@@ -199,6 +198,14 @@
                  android:layout_height="@dimen/_32ssp"/>
          </RelativeLayout>
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_img"
+            android:layout_width="@dimen/_60ssp"
+            android:layout_height="@dimen/_60ssp"
+            android:visibility="gone"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true" />
 
         <TextView
             android:id="@+id/skip"

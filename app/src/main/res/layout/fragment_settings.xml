@@ -38,7 +38,7 @@
         android:layout_marginRight="@dimen/_40ssp"
         android:layout_marginBottom="@dimen/_8ssp"
         android:layout_marginTop="@dimen/_8ssp"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:background="@drawable/button_pressed"
         android:fontFamily="@font/baloo_regular"
         android:text="Pay Now"

@@ -10,8 +10,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.wingmate.R;
+import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.tankery.lib.circularseekbar.CircularSeekBar;
+
+import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 
 //public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 public class BaseActivity extends AppCompatActivity {
@@ -32,6 +37,8 @@ public class BaseActivity extends AppCompatActivity {
     CircularSeekBar stepsProgress;
     TextView stepsCountTV;
     TextView skipTV;
+
+    CircleImageView profileImg;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -54,6 +61,8 @@ public class BaseActivity extends AppCompatActivity {
         stepsCountTV = (TextView) findViewById(R.id.steps_count_tv);
         skipTV = (TextView) findViewById(R.id.skip);
 
+        profileImg = (CircleImageView) findViewById(R.id.profile_img);
+
         hideTopView();
         hideStepView();
         hideSkip();
@@ -61,6 +70,7 @@ public class BaseActivity extends AppCompatActivity {
         hideCropToolbar();
         hideBackBtn();
         hideCropOptions();
+        hideProfileImage();
     }
 
 //    @Override
@@ -185,5 +195,23 @@ public class BaseActivity extends AppCompatActivity {
 
     public TextView getDoneButton() {
         return doneBtn;
+    }
+
+    public void showProfileImage() {
+        profileImg.setVisibility(View.VISIBLE);
+    }
+
+    public void setProfileImage(String url) {
+        profileImg.setVisibility(View.VISIBLE);
+        Picasso.get()
+                .load(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))
+                .centerCrop()
+                .resize(500, 500)
+                .placeholder(R.drawable.image_placeholder)
+                .into(profileImg);
+    }
+
+    public void hideProfileImage() {
+        profileImg.setVisibility(View.GONE);
     }
 }

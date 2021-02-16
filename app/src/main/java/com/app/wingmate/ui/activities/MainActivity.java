@@ -44,6 +44,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_ABOUT_ME;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
+import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DUMMY;
@@ -286,6 +287,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void beginDashboardFragment() {
         showTopView();
         setScreenTitle("Home");
+        setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
         dashboardFragment = getSupportFragmentManager().findFragmentByTag(DashboardFragment.TAG);
         if (dashboardFragment == null)
             dashboardFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), DashboardFragment.TAG);
