@@ -35,13 +35,20 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.app.wingmate.R;
+import com.app.wingmate.models.QuestionOption;
+import com.app.wingmate.models.UserAnswer;
 import com.irozon.sneaker.Sneaker;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -52,6 +59,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.INFO;
 import static com.app.wingmate.utils.AppConstants.NORMAL;
+import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
+import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_MANDATORY_ARRAY;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
+import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_AGE;
+import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_NATIONALITY;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.WARNING;
 
@@ -90,7 +103,7 @@ public class Utilities {
 
     public static void print(String msg) {
 //        if (BuildConfig.DEBUG)
-            System.out.println(msg);
+        System.out.println(msg);
     }
 
     public static void printFaceBookKey(Context mcContext) {
@@ -492,7 +505,7 @@ public class Utilities {
         TextView text = layout.findViewById(R.id.title);
         text.setText(txt);
         Toast toast = new Toast(context);
-        toast.setGravity(Gravity.BOTTOM|Gravity.FILL_HORIZONTAL, 0, 0);
+        toast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, 0);
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
         toast.show();
@@ -550,5 +563,93 @@ public class Utilities {
         return ((!str.equals(""))
                 && (str != null)
                 && (str.matches("^[0-9+]*$")));
+    }
+
+    public static String getUserAge(ParseUser parseUser) {
+        String age = "";
+        if (parseUser != null) {
+            List<UserAnswer> userAnswers = parseUser.getList(PARAM_USER_MANDATORY_ARRAY);
+            if (userAnswers != null && userAnswers.size() > 0) {
+                for (int i = 0; i < userAnswers.size(); i++) {
+                    if (userAnswers.get(i).getQuestionId().getShortTitle().equals(SHORT_TITLE_AGE)) {
+                        age = userAnswers.get(i).getOptionsObjArray().get(0).getOptionTitle();
+                    }
+                }
+            }
+        }
+        return age;
+    }
+
+    public static String getUserNationality(ParseUser parseUser) {
+        String nationality = "";
+        if (parseUser != null) {
+            List<UserAnswer> userAnswers = parseUser.getList(PARAM_USER_MANDATORY_ARRAY);
+            if (userAnswers != null && userAnswers.size() > 0) {
+                for (int i = 0; i < userAnswers.size(); i++) {
+                    if (userAnswers.get(i).getQuestionId().getShortTitle().equals(SHORT_TITLE_NATIONALITY)) {
+                        nationality = userAnswers.get(i).getOptionsObjArray().get(0).getOptionTitle();
+                    }
+                }
+            }
+        }
+        return nationality;
+    }
+
+    public static String getDistanceBetweenUser(ParseUser parseUser) {
+        String distance = "N/A";
+
+        ParseGeoPoint myGeoPoint = ParseUser.getCurrentUser().getParseGeoPoint(PARAM_CURRENT_LOCATION);
+        ParseGeoPoint userGeoPoint = parseUser.getParseGeoPoint(PARAM_CURRENT_LOCATION);
+
+        if (myGeoPoint != null && userGeoPoint != null) {
+            double dis = myGeoPoint.distanceInKilometersTo(userGeoPoint);
+            distance = String.format("%.1f", dis) + " Km";
+        }
+
+        return distance;
+    }
+
+    public static int getMatchPercentage(ParseUser parseUser) {
+        int percent = 0;
+        List<QuestionOption> myOptions = new ArrayList<>();
+        List<QuestionOption> userOptions = new ArrayList<>();
+
+        try {
+            List<UserAnswer> myUserAnswers = ParseUser.getCurrentUser().fetchIfNeeded().getList(PARAM_USER_OPTIONAL_ARRAY);
+            if (myUserAnswers != null && myUserAnswers.size() > 0) {
+                for (int i = 0; i < myUserAnswers.size(); i++) {
+                    if (myUserAnswers.get(i).fetchIfNeeded().getList(PARAM_OPTIONS_OBJ_ARRAY) != null && myUserAnswers.get(i).fetchIfNeeded().getList(PARAM_OPTIONS_OBJ_ARRAY).size() > 0) {
+                        myOptions.addAll(myUserAnswers.get(i).fetchIfNeeded().getList(PARAM_OPTIONS_OBJ_ARRAY));
+                    }
+                }
+            }
+        } catch (ParseException exception) {
+            exception.printStackTrace();
+        }
+
+        List<UserAnswer> otherUserAnswers = parseUser.getList(PARAM_USER_OPTIONAL_ARRAY);
+        if (otherUserAnswers != null && otherUserAnswers.size() > 0) {
+            for (int i = 0; i < otherUserAnswers.size(); i++) {
+                if (otherUserAnswers.get(i).getOptionsObjArray() != null && otherUserAnswers.get(i).getOptionsObjArray().size() > 0) {
+                    userOptions.addAll(otherUserAnswers.get(i).getOptionsObjArray());
+                }
+            }
+        }
+
+        double count = 0;
+        for (int i = 0; i < myOptions.size(); i++) {
+            for (int j = 0; j < userOptions.size(); j++) {
+                if (myOptions.get(i).getObjectId().equals(userOptions.get(j).getObjectId())) {
+                    count++;
+                }
+            }
+        }
+
+        if (myOptions.size() > 0) {
+            double div = count / myOptions.size();
+            double per = div * 100;
+            percent = (int) per;
+        }
+        return percent;
     }
 }

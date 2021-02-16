@@ -113,6 +113,24 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
         }
     }
 
+    public void queryAllUsers(Context context) {
+        if (baseView != null) {
+            interactor.fetchAllUsersFormParse(context, this);
+        }
+    }
+
+    public void checkServerDate(Context context) {
+        if (baseView != null) {
+            interactor.fetchServerDateFormParse(context, this);
+        }
+    }
+
+    public void getSpecificQuestionUserAnswers(Context context, List<QuestionOption> options) {
+        if (baseView != null) {
+            interactor.fetchSpecificQuestionUserAnswersFormParse(context, options, this);
+        }
+    }
+
     @Override
     public void onQuestionSuccess(List<Question> objects) {
         if (baseView != null) {
@@ -131,6 +149,27 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
     public void onUserProfileSuccess(List<UserProfilePhotoVideo> objects) {
         if (baseView != null) {
             baseView.setUserPhotosVideoResponseSuccess(objects);
+        }
+    }
+
+    @Override
+    public void onTrialEnded(String msg) {
+        if (baseView != null) {
+            baseView.setTrialEnded(msg);
+        }
+    }
+
+    @Override
+    public void onSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers) {
+        if (baseView != null) {
+            baseView.setSpecificQuestionUserAnswersSuccess(userAnswers);
+        }
+    }
+
+    @Override
+    public void onAllUsersSuccess(List<ParseUser> parseUsers) {
+        if (baseView != null) {
+            baseView.setAllUsersSuccess(parseUsers);
         }
     }
 

@@ -87,6 +87,11 @@ public class BaseFragment extends Fragment implements BaseView {
     }
 
     @Override
+    public void setTrialEnded(String msg) {
+
+    }
+
+    @Override
     public void setVideoLinkSuccess(ParseObject parseObject) {
 
     }
@@ -173,6 +178,16 @@ public class BaseFragment extends Fragment implements BaseView {
 
     @Override
     public void setUserPhotosVideoResponseSuccess(List<UserProfilePhotoVideo> userProfilePhotoVideos) {
+
+    }
+
+    @Override
+    public void setSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers) {
+
+    }
+
+    @Override
+    public void setAllUsersSuccess(List<ParseUser> parseUsers) {
 
     }
 }

@@ -31,6 +31,7 @@ public class AppConstants {
     public static final String FEMALE = "Female";
 
     public static final String CLASS_NAME_USER = "User";
+    public static final String PARAM_OBJECT_ID = "objectId";
     public static final String PARAM_GENDER = "gender";
     public static final String PARAM_NICK = "nick";
     public static final String PARAM_ABOUT_ME = "aboutMe";
@@ -43,6 +44,7 @@ public class AppConstants {
     public static final String PARAM_USER_OPTIONAL_ARRAY = "optionalQuestionAnswersList";
     public static final String PARAM_USER_NATIONALITY = "nationality";
     public static final String PARAM_USER_AGE = "age";
+    public static final String PARAM_CURRENT_LOCATION = "currentLocation";
 
     public static final String PARAM_EMAIL_NEW = "emailNew";
     public static final String PARAM_EMAIL_WRONG = "emailWrong";
@@ -70,6 +72,9 @@ public class AppConstants {
     public static final String PARAM_TEXT = "text";
     public static final String PARAM_IS_DO = "isDo";
     public static final String PARAM_FILE = "file";
+
+    public static final String PARAM_USER_USER_MANDATORY_ARRAY = PARAM_USER_ID + "." + PARAM_USER_MANDATORY_ARRAY;
+    public static final String PARAM_USER_USER_OPTIONAL_ARRAY = PARAM_USER_ID + "." + PARAM_USER_OPTIONAL_ARRAY;
 
     public static final String CLASS_NAME_USER_PROFILE_PHOTOS_VIDEO = "UserProfilePhotoVideo";
     public static final String PARAM_IS_PHOTO = "isPhoto";

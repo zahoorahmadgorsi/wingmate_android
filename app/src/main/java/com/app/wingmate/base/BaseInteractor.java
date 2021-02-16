@@ -3,12 +3,15 @@ package com.app.wingmate.base;
 import android.content.Context;
 import android.text.TextUtils;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.app.wingmate.R;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.TermsConditions;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.models.UserProfilePhotoVideo;
+import com.app.wingmate.utils.DateUtils;
 import com.app.wingmate.utils.Utilities;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
@@ -21,20 +24,26 @@ import com.parse.ParseUser;
 import com.parse.RequestPasswordResetCallback;
 import com.parse.SignUpCallback;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_GET_SERVER_TIME;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_RESEND_EMAIL;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_UPDATE_WRONG_EMAIL;
 import static com.app.wingmate.utils.AppConstants.BOTH;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUESTION;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUESTION_OPTION;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_TERMS;
+import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_ANSWER;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_PROFILE_PHOTOS_VIDEO;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_VIDEO_LINK;
+import static com.app.wingmate.utils.AppConstants.ERROR;
+import static com.app.wingmate.utils.AppConstants.INFO;
 import static com.app.wingmate.utils.AppConstants.PARAM_DISPLAY_ORDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_EMAIL_NEW;
 import static com.app.wingmate.utils.AppConstants.PARAM_EMAIL_WRONG;
@@ -42,6 +51,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_GENDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
+import static com.app.wingmate.utils.AppConstants.PARAM_OBJECT_ID;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONAL_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTION_ID;
@@ -49,7 +59,14 @@ import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_DISPLAY_ORDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_TYPE;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_MANDATORY_ARRAY;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_USER_MANDATORY_ARRAY;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_USER_OPTIONAL_ARRAY;
+import static com.app.wingmate.utils.AppConstants.SUCCESS;
+import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
 import static com.app.wingmate.utils.AppConstants.VALID_PASSWORD_MIN_LENGTH;
+import static com.app.wingmate.utils.Utilities.showToast;
 
 public class BaseInteractor {
 
@@ -59,29 +76,54 @@ public class BaseInteractor {
 
     interface OnFinishedListener {
         void onInternetError();
+
         void onNickError();
+
         void onGenderError();
+
         void onEmailError();
+
         void onInvalidEmailError();
+
         void onPasswordError();
+
         void onInvalidPasswordError();
+
         void onResponseSuccess();
+
         void onFormValidateSuccess();
+
         void onVideoLinkSuccess(ParseObject parseObject);
+
         void onResponseError(ParseException e);
+
         void onEmailVerificationError(ParseException e);
+
         void onLoginSuccess(ParseUser parseUser);
 
         void onQuestionResponseSuccess(List<Question> questions);
+
         void onOptionsResponseSuccess(List<QuestionOption> questionOptions);
+
         void onUserAnswersResponseSuccess(UserAnswer userAnswer);
+
         void onUserAnswersResponseError(ParseException e);
+
         void onResponseGeneralError(String error);
 
         void onTermsSuccess(List<TermsConditions> termsConditions);
+
         void onUserAnswerSuccess(List<UserAnswer> userAnswers);
+
         void onQuestionSuccess(List<Question> questions);
+
         void onUserProfileSuccess(List<UserProfilePhotoVideo> userProfilePhotoVideos);
+
+        void onTrialEnded(String msg);
+
+        void onSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers);
+
+        void onAllUsersSuccess(List<ParseUser> parseUsers);
 
     }
 
@@ -295,8 +337,8 @@ public class BaseInteractor {
 //            query.findInBackground(getAllRemainingRecords(context, parseUser, listener));
             query.findInBackground((FindCallback<UserAnswer>) (objects, e) -> {
                 if (e == null) {
-                    if (objects != null && objects.size() > 0)
-                        listener.onUserAnswerSuccess(objects);
+                    if (objects == null || objects.size() == 0) objects = new ArrayList<>();
+                    listener.onUserAnswerSuccess(objects);
 //                    else
 //                        listener.onResponseGeneralError(context.getResources().getString(R.string.no_record_found));
                 } else {
@@ -388,8 +430,8 @@ public class BaseInteractor {
             query.setLimit(1000);
             query.findInBackground((FindCallback<Question>) (objects, e) -> {
                 if (e == null) {
-                    if (objects != null && objects.size() > 0)
-                        listener.onQuestionSuccess(objects);
+                    if (objects == null || objects.size() == 0) objects = new ArrayList<>();
+                    listener.onQuestionSuccess(objects);
 //                    else
 //                        listener.onResponseGeneralError(context.getResources().getString(R.string.no_que_found));
                 } else {
@@ -399,6 +441,26 @@ public class BaseInteractor {
         }
     }
 
+    public void fetchServerDateFormParse(final Context context, final OnFinishedListener listener) {
+        HashMap<String, Object> params = new HashMap<>();
+        ParseCloud.callFunctionInBackground(PARSE_CLOUD_FUNCTION_GET_SERVER_TIME, params, (FunctionCallback<String>) (result, e) -> {
+            if (e == null) {
+                String serverDate = "";
+                serverDate = result;
+                SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                try {
+                    Date SERVER_DATE = isoDateFormat.parse(serverDate);
+                    if (DateUtils.daysBetween(ParseUser.getCurrentUser().getCreatedAt(), SERVER_DATE) >= TRIAL_PERIOD) {
+                        listener.onTrialEnded("");
+                    }
+                } catch (java.text.ParseException parseException) {
+                    parseException.printStackTrace();
+                }
+            }
+        });
+
+    }
+
     public void fetchTermsConditionsFormParse(final Context context, final OnFinishedListener listener) {
         if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
         else {
@@ -406,8 +468,8 @@ public class BaseInteractor {
             query.orderByAscending(PARAM_DISPLAY_ORDER);
             query.findInBackground((FindCallback<TermsConditions>) (objects, e) -> {
                 if (e == null) {
-                    if (objects != null && objects.size() > 0)
-                        listener.onTermsSuccess(objects);
+                    if (objects == null || objects.size() == 0) objects = new ArrayList<>();
+                    listener.onTermsSuccess(objects);
                 } else {
                     listener.onResponseError(e);
                 }
@@ -434,4 +496,62 @@ public class BaseInteractor {
         }
     }
 
+    public void fetchSpecificQuestionUserAnswersFormParse(final Context context, List<QuestionOption> optionsObjArray, final OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            ParseQuery query = ParseQuery.getQuery(CLASS_NAME_USER_ANSWER);
+            query.include(PARAM_USER_ID);
+            query.include(PARAM_QUESTION_ID);
+            query.include(PARAM_OPTIONS_OBJ_ARRAY);
+
+            query.include(PARAM_USER_ID + "." + PARAM_USER_MANDATORY_ARRAY);
+            query.include(PARAM_USER_ID + "." + PARAM_USER_OPTIONAL_ARRAY);
+
+            query.include(PARAM_USER_ID + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_USER_ID + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.include(PARAM_USER_ID + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_USER_ID + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+
+            query.whereContainedIn(PARAM_OPTIONS_OBJ_ARRAY, optionsObjArray);
+            query.setLimit(1000);
+            query.findInBackground((FindCallback<UserAnswer>) (objects, e) -> {
+                if (e == null) {
+                    if (objects == null) objects = new ArrayList<>();
+                    listener.onSpecificQuestionUserAnswersSuccess(objects);
+
+                    System.out.println("===enull===" + objects.size());
+                } else {
+                    listener.onResponseError(e);
+                    System.out.println("===e===" + e.getMessage());
+                }
+            });
+        }
+    }
+
+    public void fetchAllUsersFormParse(final Context context, final OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            ParseQuery<ParseUser> query = ParseUser.getQuery();
+            query.include(PARAM_USER_MANDATORY_ARRAY);
+            query.include(PARAM_USER_OPTIONAL_ARRAY);
+            query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.whereNotEqualTo(PARAM_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
+            query.setLimit(1000);
+            query.findInBackground((objects, e) -> {
+                if (e == null) {
+                    if (objects == null || objects.size() == 0) {
+                        objects = new ArrayList<>();
+                    }
+                    listener.onAllUsersSuccess(objects);
+                    System.out.println("====all users===" + objects.size());
+                } else {
+                    listener.onResponseError(e);
+                    System.out.println("====all users error===" + e.getMessage());
+                }
+            });
+        }
+    }
 }

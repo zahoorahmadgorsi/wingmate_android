@@ -19,6 +19,7 @@ public class Question extends ParseObject {
 
     private List<QuestionOption> options;
     private UserAnswer userAnswer;
+    private List<UserAnswer> searchedResults;
 
     public Question() {
 
@@ -77,5 +78,13 @@ public class Question extends ParseObject {
 
     public List<QuestionOption> getOptionsObjArray() {
         return getList(PARAM_OPTIONS_OBJ_ARRAY);
+    }
+
+    public List<UserAnswer> getSearchedResults() {
+        return searchedResults;
+    }
+
+    public void setSearchedResults(List<UserAnswer> searchedResults) {
+        this.searchedResults = searchedResults;
     }
 }

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ import com.app.wingmate.models.UserProfilePhotoVideo;
 import com.app.wingmate.ui.adapters.ProfileOptionsListAdapter;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.AppConstants;
+import com.app.wingmate.utils.Utilities;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.parse.ParseUser;
@@ -99,6 +101,8 @@ public class ProfileFragment extends BaseFragment implements BaseView {
     Button editBtn;
     @BindView(R.id.btn_edit_media)
     Button editMediaBtn;
+    @BindView(R.id.bottom_view)
+    LinearLayout editProfileView;
 
     private BasePresenter presenter;
 
@@ -163,7 +167,6 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 
     @Subscribe
     public void refreshProfile(RefreshProfile refreshProfile) {
-        System.out.println("===here------");
         if (isCurrentUser) {
             parseUser = ParseUser.getCurrentUser();
         }
@@ -241,11 +244,16 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         if (isCurrentUser) {
             matchView.setVisibility(View.GONE);
             distanceTV.setVisibility(View.GONE);
-            editBtn.setVisibility(View.VISIBLE);
+            editProfileView.setVisibility(View.VISIBLE);
         } else {
             distanceTV.setVisibility(View.VISIBLE);
             matchView.setVisibility(View.VISIBLE);
-            editBtn.setVisibility(View.GONE);
+            editProfileView.setVisibility(View.GONE);
+            int percent = Utilities.getMatchPercentage(parseUser);
+            matchPercentTV.setText(percent + "%");
+            matchProgress.setMax(100);
+            matchProgress.setProgress(percent);
+            distanceTV.setText(Utilities.getDistanceBetweenUser(parseUser));
         }
         if (parseUser != null) {
             nameTV.setText(parseUser.getString(AppConstants.PARAM_NICK));

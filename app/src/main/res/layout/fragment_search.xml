@@ -8,25 +8,90 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/btn_search"
+        android:layout_above="@+id/bottom_view"
         tools:listitem="@layout/list_item_question_option" />
 
-    <Button
-        android:id="@+id/btn_search"
+    <RelativeLayout
+        android:id="@+id/search_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/_40ssp"
-        android:layout_marginLeft="@dimen/_40ssp"
-        android:layout_marginTop="@dimen/_16ssp"
-        android:layout_marginEnd="@dimen/_40ssp"
-        android:layout_marginRight="@dimen/_40ssp"
-        android:layout_marginBottom="@dimen/_8ssp"
-        android:background="@drawable/button_pressed"
-        android:fontFamily="@font/baloo_regular"
-        android:text="Search"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/txt_size" />
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_above="@+id/bottom_view">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/_4ssp"
+            android:paddingStart="@dimen/_4ssp"
+            android:paddingRight="@dimen/_4ssp"
+            android:paddingEnd="@dimen/_4ssp"
+            tools:listitem="@layout/grid_item_user"/>
+
+        <LinearLayout
+            android:id="@+id/empty_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:layout_width="@dimen/_100ssp"
+                android:layout_height="@dimen/_100ssp"
+                android:src="@drawable/no_results"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans_regular"
+                android:gravity="center"
+                android:visibility="visible"
+                android:text="@string/hmmm_we_re_not_getting_any_result_nour_bad_try_another_search"
+                android:textColor="@color/text_color_grey"
+                android:textSize="@dimen/label_txt_size" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginStart="@dimen/_40ssp"
+            android:layout_marginLeft="@dimen/_40ssp"
+            android:layout_marginTop="@dimen/_6ssp"
+            android:layout_marginEnd="@dimen/_40ssp"
+            android:layout_marginRight="@dimen/_40ssp"
+            android:layout_marginBottom="@dimen/_8ssp"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/baloo_regular"
+            android:text="@string/search"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size" />
+
+        <TextView
+            android:id="@+id/btn_reset_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="center"
+            android:visibility="visible"
+            android:paddingTop="@dimen/_4ssp"
+            android:paddingBottom="@dimen/_12ssp"
+            android:text="Reset Filters"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/txt_size" />
+    </LinearLayout>
 
 </RelativeLayout>

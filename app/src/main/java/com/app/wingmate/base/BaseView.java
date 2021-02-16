@@ -20,6 +20,7 @@ public interface BaseView {
     void setResponseSuccess();
     void setResponseError(ParseException e);
     void setResponseGeneralError(String error);
+    void setTrialEnded(String msg);
 
     //Common Methods
     void setEmailError();
@@ -49,4 +50,9 @@ public interface BaseView {
     void setUserAnswersResponseSuccess(List<UserAnswer> userAnswers);
     void setUserPhotosVideoResponseSuccess(List<UserProfilePhotoVideo> userProfilePhotoVideos);
 
+    // Search
+    void setSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers);
+
+    //Home
+    void setAllUsersSuccess(List<ParseUser> parseUsers);
 }

@@ -58,6 +58,9 @@
     <string name="remember_me">Remember me</string>
     <string name="i_am_21_and_above">I am 21 and above</string>
     <string name="search">Search</string>
+    <string name="search_again">Search Again</string>
+    <string name="hmmm_we_re_not_getting_any_result_nour_bad_try_another_search">Hmmm, We’re not getting any result.\nOur bad try another search</string>
+    <string name="try_later">Hmmm, We’re not getting any result.\nOur bad try later</string>
 
 
 </resources>
