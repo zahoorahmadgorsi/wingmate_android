@@ -124,7 +124,6 @@ public class BaseInteractor {
         void onSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers);
 
         void onAllUsersSuccess(List<ParseUser> parseUsers);
-
     }
 
     public void signUpFormValidate(Context context, final String nick, final String gender, final String email, final String password, final OnFinishedListener listener) {
@@ -274,7 +273,6 @@ public class BaseInteractor {
                     else
                         listener.onResponseGeneralError(context.getResources().getString(R.string.no_que_found));
                 } else {
-                    System.out.println("===1==");
                     listener.onResponseError(e);
                 }
             });
@@ -294,7 +292,6 @@ public class BaseInteractor {
                     else
                         listener.onResponseGeneralError(context.getString(R.string.no_option_found));
                 } else {
-                    System.out.println("===2==");
                     listener.onResponseError(e);
                 }
             });
@@ -315,7 +312,6 @@ public class BaseInteractor {
                 if (e == null) {
                     listener.onUserAnswersResponseSuccess(object);
                 } else {
-                    System.out.println("===3==");
                     listener.onUserAnswersResponseError(e);
                 }
             });
@@ -339,8 +335,6 @@ public class BaseInteractor {
                 if (e == null) {
                     if (objects == null || objects.size() == 0) objects = new ArrayList<>();
                     listener.onUserAnswerSuccess(objects);
-//                    else
-//                        listener.onResponseGeneralError(context.getResources().getString(R.string.no_record_found));
                 } else {
                     listener.onResponseError(e);
                 }
@@ -351,7 +345,6 @@ public class BaseInteractor {
     private FindCallback getAllRemainingRecords(final Context context, ParseUser parseUser, final OnFinishedListener listener) {
         return (FindCallback<UserAnswer>) (objects, e) -> {
             if (e == null) {
-                System.out.println("===objects==" + objects.size());
                 results.addAll(objects);
                 int limit = 1000;
                 if (objects.size() == limit) {
@@ -384,12 +377,6 @@ public class BaseInteractor {
             query.whereEqualTo(PARAM_USER_ID, parseUser.getObjectId());
 //            query.findInBackground(getAllRemainingProfilePhotosRecords(context, parseUser, listener));
             query.findInBackground((FindCallback<UserProfilePhotoVideo>) (objects, e) -> {
-//                if (e == null) {
-//                    if (objects != null && objects.size() > 0)
-//                        listener.onUserProfileSuccess(objects);
-//                } else {
-//                    listener.onResponseError(e);
-//                }
                 if (e != null) {
                     listener.onResponseError(e);
                     objects = new ArrayList<>();
@@ -432,8 +419,6 @@ public class BaseInteractor {
                 if (e == null) {
                     if (objects == null || objects.size() == 0) objects = new ArrayList<>();
                     listener.onQuestionSuccess(objects);
-//                    else
-//                        listener.onResponseGeneralError(context.getResources().getString(R.string.no_que_found));
                 } else {
                     listener.onResponseError(e);
                 }
@@ -518,11 +503,8 @@ public class BaseInteractor {
                 if (e == null) {
                     if (objects == null) objects = new ArrayList<>();
                     listener.onSpecificQuestionUserAnswersSuccess(objects);
-
-                    System.out.println("===enull===" + objects.size());
                 } else {
                     listener.onResponseError(e);
-                    System.out.println("===e===" + e.getMessage());
                 }
             });
         }
@@ -546,10 +528,8 @@ public class BaseInteractor {
                         objects = new ArrayList<>();
                     }
                     listener.onAllUsersSuccess(objects);
-                    System.out.println("====all users===" + objects.size());
                 } else {
                     listener.onResponseError(e);
-                    System.out.println("====all users error===" + e.getMessage());
                 }
             });
         }
