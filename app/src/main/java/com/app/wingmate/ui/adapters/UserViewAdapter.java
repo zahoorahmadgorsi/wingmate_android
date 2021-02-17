@@ -71,7 +71,8 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        if (empty != null) empty.setVisibility(mValues.size() == 0 ? View.VISIBLE : View.GONE);
+//        if (empty != null) empty.setVisibility(mValues.size() == 0 ? View.VISIBLE : View.GONE);
+        if (empty != null) empty.setVisibility(mValues.size() == 0 ? View.GONE : View.GONE);
         return mValues.size();
     }
 

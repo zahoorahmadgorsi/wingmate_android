@@ -20,6 +20,7 @@ import com.app.wingmate.events.RefreshHome;
 import com.app.wingmate.events.RefreshSearch;
 import com.app.wingmate.ui.adapters.QuestionOptionsListAdapter;
 import com.app.wingmate.ui.adapters.UserViewAdapter;
+import com.app.wingmate.utils.ActivityUtility;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
@@ -35,6 +36,7 @@ import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 
 public class HomeFragment extends BaseFragment {
 
@@ -94,7 +96,7 @@ public class HomeFragment extends BaseFragment {
         super.onResume();
         if (dashboardInstance.homeProgress) showProgress();
         else dismissProgress();
-
+        pullToRefresh.setRefreshing(false);
         if (dashboardInstance.allUsers != null) {
             userViewAdapter.setData(dashboardInstance.allUsers);
             userViewAdapter.notifyDataSetChanged();
@@ -118,9 +120,12 @@ public class HomeFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.btn_top_fans, R.id.btn_top_search , R.id.btn_top_msg , R.id.btn_top_compatibility})
+    @OnClick({R.id.profile_img, R.id.btn_top_fans, R.id.btn_top_search , R.id.btn_top_msg , R.id.btn_top_compatibility})
     public void onViewClicked(View v) {
         switch (v.getId()) {
+            case R.id.profile_img:
+                ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+                break;
             case R.id.btn_top_fans:
 //                dashboardInstance.setAllInView();
                 dashboardInstance.setTab(2);

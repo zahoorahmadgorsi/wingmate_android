@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -428,6 +429,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else if (dashboardFragment != null) {
             if (((DashboardFragment) dashboardFragment).viewPager.getCurrentItem() > 0) {
                 ((DashboardFragment) dashboardFragment).viewPager.setCurrentItem(0, true);
+                ((DashboardFragment) dashboardFragment).setHomeView();
                 setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
             } else {
                 super.onBackPressed();

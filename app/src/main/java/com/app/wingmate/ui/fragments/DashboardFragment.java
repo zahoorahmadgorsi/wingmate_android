@@ -39,9 +39,11 @@ import com.app.wingmate.utils.DateUtils;
 import com.app.wingmate.widgets.NonSwappableViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FunctionCallback;
+import com.parse.GetCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -65,6 +67,7 @@ import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
+import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
@@ -202,17 +205,13 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         likesFragment = DummyFragment.newInstance(this);
         messagesFragment = DummyFragment.newInstance(this);
         settingsFragment = SettingsFragment.newInstance(this);
-//        viewPagerAdapter = new MyPagerAdapter(requireActivity().getSupportFragmentManager());
-        setHomeView();
-    }
 
-    private void setHomeView() {
         ((MainActivity) getActivity()).hideTopView();
         ((MainActivity) getActivity()).hideScreenTitle();
         ((MainActivity) getActivity()).hideProfileImage();
-        btnSearch.setVisibility(View.VISIBLE);
-        btnFan.setVisibility(View.VISIBLE);
-        btnMsg.setVisibility(View.VISIBLE);
+        btnSearch.setVisibility(View.GONE);
+        btnFan.setVisibility(View.GONE);
+        btnMsg.setVisibility(View.GONE);
         isHomeView = true;
         viewPagerAdapter = new MyPagerAdapter(requireActivity().getSupportFragmentManager());
         viewPagerAdapter.addFragment(homeFragment);
@@ -232,6 +231,20 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         resetAllBottomButtons();
         icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
         tvHome.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+    }
+
+    public void setHomeView() {
+        ((MainActivity) getActivity()).hideTopView();
+        ((MainActivity) getActivity()).hideScreenTitle();
+        ((MainActivity) getActivity()).hideProfileImage();
+        btnSearch.setVisibility(View.GONE);
+        btnFan.setVisibility(View.GONE);
+        btnMsg.setVisibility(View.GONE);
+        resetAllBottomButtons();
+        icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+        tvHome.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+//        viewPager.setCurrentItem(0, true);
+        ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
     }
 
     public void setAllInView() {
@@ -270,6 +283,9 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                 icSearch.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
                 tvSearch.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
                 viewPager.setCurrentItem(1, true);
+                btnSearch.setVisibility(View.VISIBLE);
+                btnFan.setVisibility(View.VISIBLE);
+                btnMsg.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 ((MainActivity) getActivity()).showTopView();
@@ -280,6 +296,9 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                 icFan.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
                 tvFan.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
                 viewPager.setCurrentItem(2, true);
+                btnSearch.setVisibility(View.VISIBLE);
+                btnFan.setVisibility(View.VISIBLE);
+                btnMsg.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 ((MainActivity) getActivity()).showTopView();
@@ -290,6 +309,9 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                 icMsg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
                 tvMsg.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
                 viewPager.setCurrentItem(3, true);
+                btnSearch.setVisibility(View.VISIBLE);
+                btnFan.setVisibility(View.VISIBLE);
+                btnMsg.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -399,6 +421,9 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                 ((MainActivity) getActivity()).hideTopView();
                 ((MainActivity) getActivity()).hideScreenTitle();
                 ((MainActivity) getActivity()).hideProfileImage();
+                btnSearch.setVisibility(View.GONE);
+                btnFan.setVisibility(View.GONE);
+                btnMsg.setVisibility(View.GONE);
                 resetAllBottomButtons();
                 icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
                 tvHome.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
@@ -506,8 +531,41 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     @Override
     public void setAllUsersSuccess(List<ParseUser> parseUsers) {
-        homeProgress = false;
-        this.allUsers = parseUsers;
-        EventBus.getDefault().post(new RefreshHome());
+//        try {
+            ParseUser.getCurrentUser().fetchInBackground((object, e) -> {
+                if (object!=null) {
+                    List<UserAnswer> myUserAnswers = object.getList(PARAM_USER_OPTIONAL_ARRAY);
+                    if (myUserAnswers != null && myUserAnswers.size() > 0) {
+                        for (int i = 0; i < myUserAnswers.size(); i++) {
+                            myUserAnswers.get(i).fetchInBackground((object1, e1) -> {
+                                if (object1 !=null) {
+                                    object1.getList(PARAM_OPTIONS_OBJ_ARRAY);
+                                }
+                            });
+                        }
+                        homeProgress = false;
+                        this.allUsers = parseUsers;
+                        EventBus.getDefault().post(new RefreshHome());
+                    } else {
+                        homeProgress = false;
+                        this.allUsers = parseUsers;
+                        EventBus.getDefault().post(new RefreshHome());
+                    }
+                } else {
+                    homeProgress = false;
+                    this.allUsers = parseUsers;
+                    EventBus.getDefault().post(new RefreshHome());
+                }
+            });
+
+//            List<UserAnswer> myUserAnswers = ParseUser.getCurrentUser().fetchIfNeeded().getList(PARAM_USER_OPTIONAL_ARRAY);
+//            if (myUserAnswers != null && myUserAnswers.size() > 0) {
+//                for (int i = 0; i < myUserAnswers.size(); i++) {
+//                        myUserAnswers.get(i).fetchIfNeeded().getList(PARAM_OPTIONS_OBJ_ARRAY);
+//                }
+//            }
+//        } catch (ParseException exception) {
+//            exception.printStackTrace();
+//        }
     }
 }
