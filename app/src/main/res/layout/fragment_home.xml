@@ -3,18 +3,120 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        tools:listitem="@layout/grid_item_user"
+    <RelativeLayout
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_theme"
+        android:padding="@dimen/_16ssp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toStartOf="@+id/profile_img"
+            android:layout_toLeftOf="@+id/profile_img"
+            android:layout_marginEnd="@dimen/_8ssp"
+            android:layout_marginRight="@dimen/_8ssp"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:id="@+id/qoute_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lorem_ipsum"
+                android:textColor="@color/white"
+                android:textSize="@dimen/label_txt_size"
+                android:fontFamily="@font/open_sans_regular"
+                android:maxLines="2"/>
+
+            <TextView
+                android:id="@+id/author_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8ssp"
+                android:text="Adam Jacob"
+                android:textColor="@color/white"
+                android:textSize="@dimen/small_label_txt_size"
+                android:fontFamily="@font/open_sans_italic"
+                android:maxLines="1"/>
+        </LinearLayout>
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_img"
+            android:layout_width="@dimen/_64ssp"
+            android:layout_height="@dimen/_64ssp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
+            app:civ_border_width="@dimen/_1ssp"
+            app:civ_border_color="@color/white"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/top_buttons_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_view"
+        android:gravity="center"
+        android:padding="@dimen/_8ssp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/btn_top_fans"
+            android:layout_width="@dimen/_48ssp"
+            android:layout_height="@dimen/_48ssp"
+            android:src="@drawable/my_fans" />
+
+        <ImageView
+            android:id="@+id/btn_top_search"
+            android:layout_width="@dimen/_48ssp"
+            android:layout_height="@dimen/_48ssp"
+            android:layout_marginLeft="@dimen/_12ssp"
+            android:layout_marginStart="@dimen/_12ssp"
+            android:src="@drawable/search" />
+
+        <ImageView
+            android:id="@+id/btn_top_msg"
+            android:layout_width="@dimen/_48ssp"
+            android:layout_height="@dimen/_48ssp"
+            android:layout_marginLeft="@dimen/_12ssp"
+            android:layout_marginStart="@dimen/_12ssp"
+            android:src="@drawable/messages" />
+
+        <ImageView
+            android:id="@+id/btn_top_compatibility"
+            android:layout_width="@dimen/_48ssp"
+            android:layout_height="@dimen/_48ssp"
+            android:layout_marginLeft="@dimen/_12ssp"
+            android:layout_marginStart="@dimen/_12ssp"
+            android:src="@drawable/compatibility" />
+
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="@dimen/_4ssp"
-        android:paddingLeft="@dimen/_4ssp"
-        android:paddingEnd="@dimen/_4ssp"
-        android:paddingRight="@dimen/_4ssp" />
+        android:layout_below="@+id/top_buttons_view">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            tools:listitem="@layout/grid_item_user"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/_4ssp"
+            android:paddingLeft="@dimen/_4ssp"
+            android:paddingEnd="@dimen/_4ssp"
+            android:paddingRight="@dimen/_4ssp" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/empty_view"
@@ -35,7 +137,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans_regular"
             android:gravity="center"
-            android:text="@string/try_later"
+            android:text="Loading..."
             android:textColor="@color/text_color_grey"
             android:textSize="@dimen/label_txt_size"
             android:visibility="visible" />

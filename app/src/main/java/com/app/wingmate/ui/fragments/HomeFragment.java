@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
@@ -19,14 +20,21 @@ import com.app.wingmate.events.RefreshHome;
 import com.app.wingmate.events.RefreshSearch;
 import com.app.wingmate.ui.adapters.QuestionOptionsListAdapter;
 import com.app.wingmate.ui.adapters.UserViewAdapter;
+import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 
 public class HomeFragment extends BaseFragment {
 
@@ -34,10 +42,14 @@ public class HomeFragment extends BaseFragment {
 
     Unbinder unbinder;
 
+    @BindView(R.id.pullToRefresh)
+    SwipeRefreshLayout pullToRefresh;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.empty_view)
     LinearLayout emptyView;
+    @BindView(R.id.profile_img)
+    CircleImageView profileImg;
 
     private UserViewAdapter userViewAdapter;
     private GridLayoutManager gridLayoutManager;
@@ -93,6 +105,7 @@ public class HomeFragment extends BaseFragment {
     public void onHomeRefresh(RefreshHome refreshHome) {
         if (dashboardInstance.homeProgress) showProgress();
         else dismissProgress();
+        pullToRefresh.setRefreshing(false);
         userViewAdapter.setData(dashboardInstance.allUsers);
         userViewAdapter.notifyDataSetChanged();
     }
@@ -105,9 +118,24 @@ public class HomeFragment extends BaseFragment {
 
     }
 
-    @OnClick({})
+    @OnClick({R.id.btn_top_fans, R.id.btn_top_search , R.id.btn_top_msg , R.id.btn_top_compatibility})
     public void onViewClicked(View v) {
-
+        switch (v.getId()) {
+            case R.id.btn_top_fans:
+//                dashboardInstance.setAllInView();
+                dashboardInstance.setTab(2);
+                break;
+            case R.id.btn_top_search:
+//                dashboardInstance.setAllInView();
+                dashboardInstance.setTab(1);
+                break;
+            case R.id.btn_top_msg:
+//                dashboardInstance.setAllInView();
+                dashboardInstance.setTab(3);
+                break;
+            case R.id.btn_top_compatibility:
+                break;
+        }
     }
 
     private void initView() {
@@ -117,5 +145,18 @@ public class HomeFragment extends BaseFragment {
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(userViewAdapter);
+
+        Picasso.get()
+                .load(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))
+                .centerCrop()
+                .resize(500, 500)
+                .placeholder(R.drawable.image_placeholder)
+                .into(profileImg);
+
+        pullToRefresh.setOnRefreshListener(() -> {
+            dashboardInstance.homeProgress = true;
+            dashboardInstance.allUsers = new ArrayList<>();
+            dashboardInstance.presenter.queryAllUsers(getContext());
+        });
     }
 }

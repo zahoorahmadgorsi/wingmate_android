@@ -9,11 +9,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -61,6 +65,7 @@ import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
+import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.TAG_SEARCH;
@@ -77,6 +82,36 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     BottomNavigationView bottomNavigationView;
     @BindView(R.id.view_pager)
     public NonSwappableViewPager viewPager;
+    @BindView(R.id.btn_home)
+    LinearLayout btnHome;
+    @BindView(R.id.btn_search)
+    LinearLayout btnSearch;
+    @BindView(R.id.btn_fan)
+    LinearLayout btnFan;
+    @BindView(R.id.btn_msg)
+    LinearLayout btnMsg;
+    @BindView(R.id.btn_settings)
+    LinearLayout btnSettings;
+    @BindView(R.id.ic_home)
+    ImageView icHome;
+    @BindView(R.id.ic_search)
+    ImageView icSearch;
+    @BindView(R.id.ic_fan)
+    ImageView icFan;
+    @BindView(R.id.ic_msg)
+    ImageView icMsg;
+    @BindView(R.id.ic_settings)
+    ImageView icSettings;
+    @BindView(R.id.tv_home)
+    TextView tvHome;
+    @BindView(R.id.tv_search)
+    TextView tvSearch;
+    @BindView(R.id.tv_fan)
+    TextView tvFan;
+    @BindView(R.id.tv_msg)
+    TextView tvMsg;
+    @BindView(R.id.tv_settings)
+    TextView tvSettings;
 
     private HomeFragment homeFragment;
     private SearchFragment searchFragment;
@@ -91,6 +126,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     public List<ParseUser> allUsers;
     public boolean searchProgress = false;
     public boolean homeProgress = false;
+
+    private boolean isHomeView = true;
 
     public BasePresenter presenter;
 
@@ -160,13 +197,23 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
             };
 
     private void initViews() {
-
         homeFragment = HomeFragment.newInstance(this);
         searchFragment = SearchFragment.newInstance(this);
         likesFragment = DummyFragment.newInstance(this);
         messagesFragment = DummyFragment.newInstance(this);
         settingsFragment = SettingsFragment.newInstance(this);
+//        viewPagerAdapter = new MyPagerAdapter(requireActivity().getSupportFragmentManager());
+        setHomeView();
+    }
 
+    private void setHomeView() {
+        ((MainActivity) getActivity()).hideTopView();
+        ((MainActivity) getActivity()).hideScreenTitle();
+        ((MainActivity) getActivity()).hideProfileImage();
+        btnSearch.setVisibility(View.VISIBLE);
+        btnFan.setVisibility(View.VISIBLE);
+        btnMsg.setVisibility(View.VISIBLE);
+        isHomeView = true;
         viewPagerAdapter = new MyPagerAdapter(requireActivity().getSupportFragmentManager());
         viewPagerAdapter.addFragment(homeFragment);
         viewPagerAdapter.addFragment(searchFragment);
@@ -180,8 +227,71 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         viewPager.addOnPageChangeListener(this);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+        bottomNavigationView.setVisibility(View.GONE);
 
-        bottomNavigationView.setVisibility(View.VISIBLE);
+        resetAllBottomButtons();
+        icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+        tvHome.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+    }
+
+    public void setAllInView() {
+        btnSearch.setVisibility(View.VISIBLE);
+        btnFan.setVisibility(View.VISIBLE);
+        btnMsg.setVisibility(View.VISIBLE);
+        isHomeView = false;
+//        viewPagerAdapter.clearFragments();
+        viewPagerAdapter = new MyPagerAdapter(requireActivity().getSupportFragmentManager());
+        viewPagerAdapter.addFragment(homeFragment);
+        viewPagerAdapter.addFragment(searchFragment);
+        viewPagerAdapter.addFragment(likesFragment);
+        viewPagerAdapter.addFragment(messagesFragment);
+        viewPagerAdapter.addFragment(settingsFragment);
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setPagingEnabled(false);
+//        viewPager.setCurrentItem(0, true);
+        viewPager.addOnPageChangeListener(this);
+
+//        bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+//        bottomNavigationView.setVisibility(View.GONE);
+
+//        resetAllBottomButtons();
+//        icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+//        tvHome.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+    }
+
+    public void setTab(int index) {
+        switch (index) {
+            case 1:
+                ((MainActivity) getActivity()).showTopView();
+                ((MainActivity) getActivity()).showScreenTitle();
+                ((MainActivity) getActivity()).setScreenTitle("Search");
+                ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+                resetAllBottomButtons();
+                icSearch.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+                tvSearch.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+                viewPager.setCurrentItem(1, true);
+                break;
+            case 2:
+                ((MainActivity) getActivity()).showTopView();
+                ((MainActivity) getActivity()).showScreenTitle();
+                ((MainActivity) getActivity()).setScreenTitle("My Likes");
+                ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+                resetAllBottomButtons();
+                icFan.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+                tvFan.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+                viewPager.setCurrentItem(2, true);
+                break;
+            case 3:
+                ((MainActivity) getActivity()).showTopView();
+                ((MainActivity) getActivity()).showScreenTitle();
+                ((MainActivity) getActivity()).setScreenTitle("Messages");
+                ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+                resetAllBottomButtons();
+                icMsg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+                tvMsg.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+                viewPager.setCurrentItem(3, true);
+                break;
+        }
     }
 
     @Override
@@ -219,14 +329,18 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         public void addFragment(BaseFragment fragment) {
             mFragmentList.add(fragment);
         }
+
+        public void clearFragments() {
+            mFragmentList.clear();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
-       checkPaidUser();
-       saveCurrentGeoPoint();
+        checkPaidUser();
+        saveCurrentGeoPoint();
     }
 
     private void checkPaidUser() {
@@ -236,10 +350,12 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     }
 
     private void saveCurrentGeoPoint() {
-        ParseGeoPoint geoPoint = new ParseGeoPoint(getLastBestLocation().getLatitude(), getLastBestLocation().getLongitude());
-        ParseUser.getCurrentUser().put(PARAM_CURRENT_LOCATION, geoPoint);
-        ParseUser.getCurrentUser().saveInBackground(e -> {
-        });
+        if (getLastBestLocation() != null) {
+            ParseGeoPoint geoPoint = new ParseGeoPoint(getLastBestLocation().getLatitude(), getLastBestLocation().getLongitude());
+            ParseUser.getCurrentUser().put(PARAM_CURRENT_LOCATION, geoPoint);
+            ParseUser.getCurrentUser().saveInBackground(e -> {
+            });
+        }
     }
 
     private Location getLastBestLocation() {
@@ -274,9 +390,78 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         unbinder.unbind();
     }
 
-    @OnClick({})
+    @OnClick({R.id.btn_home, R.id.btn_search, R.id.btn_fan, R.id.btn_msg, R.id.btn_settings})
     public void onViewClicked(View v) {
+        switch (v.getId()) {
+            case R.id.btn_home:
+                isHomeView = true;
+//                setHomeView();
+                ((MainActivity) getActivity()).hideTopView();
+                ((MainActivity) getActivity()).hideScreenTitle();
+                ((MainActivity) getActivity()).hideProfileImage();
+                resetAllBottomButtons();
+                icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+                tvHome.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+                viewPager.setCurrentItem(0, true);
+                ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+                break;
+            case R.id.btn_search:
+                ((MainActivity) getActivity()).showTopView();
+                ((MainActivity) getActivity()).showScreenTitle();
+                ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+                resetAllBottomButtons();
+                icSearch.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+                tvSearch.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+                viewPager.setCurrentItem(1, true);
+                ((MainActivity) getActivity()).setScreenTitle("Search");
+                break;
+            case R.id.btn_fan:
+                ((MainActivity) getActivity()).showTopView();
+                ((MainActivity) getActivity()).showScreenTitle();
+                ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+                resetAllBottomButtons();
+                icFan.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+                tvFan.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+                viewPager.setCurrentItem(2, true);
+                ((MainActivity) getActivity()).setScreenTitle("My Likes");
+                break;
+            case R.id.btn_msg:
+                ((MainActivity) getActivity()).showTopView();
+                ((MainActivity) getActivity()).showScreenTitle();
+                ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+                resetAllBottomButtons();
+                icMsg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+                tvMsg.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+                viewPager.setCurrentItem(3, true);
+                ((MainActivity) getActivity()).setScreenTitle("Messages");
+                break;
+            case R.id.btn_settings:
+                ((MainActivity) getActivity()).showTopView();
+                ((MainActivity) getActivity()).showScreenTitle();
+                ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+                resetAllBottomButtons();
+                icSettings.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+                tvSettings.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+//                if (isHomeView)
+//                    viewPager.setCurrentItem(1, true);
+//                else
+                viewPager.setCurrentItem(4, true);
+                ((MainActivity) getActivity()).setScreenTitle("Settings");
+                break;
+        }
+    }
 
+    private void resetAllBottomButtons() {
+        icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
+        icSearch.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
+        icFan.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
+        icMsg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
+        icSettings.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
+        tvHome.setTextColor(requireContext().getResources().getColor(R.color.grey));
+        tvSearch.setTextColor(requireContext().getResources().getColor(R.color.grey));
+        tvFan.setTextColor(requireContext().getResources().getColor(R.color.grey));
+        tvMsg.setTextColor(requireContext().getResources().getColor(R.color.grey));
+        tvSettings.setTextColor(requireContext().getResources().getColor(R.color.grey));
     }
 
     @Override

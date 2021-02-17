@@ -101,8 +101,10 @@ public class ProfileFragment extends BaseFragment implements BaseView {
     Button editBtn;
     @BindView(R.id.btn_edit_media)
     Button editMediaBtn;
-    @BindView(R.id.bottom_view)
+    @BindView(R.id.edit_bottom_view)
     LinearLayout editProfileView;
+    @BindView(R.id.others_buttons_view)
+    LinearLayout othersBottomView;
 
     private BasePresenter presenter;
 
@@ -143,6 +145,19 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 
         parseUser = getActivity().getIntent().getParcelableExtra(KEY_PARSE_USER);
         isCurrentUser = getActivity().getIntent().getBooleanExtra(KEY_IS_CURRENT_USER, true);
+
+
+        if (isCurrentUser) {
+            matchView.setVisibility(View.INVISIBLE);
+            distanceTV.setVisibility(View.GONE);
+            editProfileView.setVisibility(View.VISIBLE);
+            othersBottomView.setVisibility(View.GONE);
+        } else {
+            distanceTV.setVisibility(View.VISIBLE);
+            matchView.setVisibility(View.VISIBLE);
+            editProfileView.setVisibility(View.GONE);
+            othersBottomView.setVisibility(View.VISIBLE);
+        }
 
         showProgress();
         presenter.queryUserAnswers(getContext(), parseUser);
@@ -187,7 +202,8 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.back_btn, R.id.btn_edit, R.id.btn_edit_media, R.id.pic_1, R.id.pic2_card, R.id.pic3_card, R.id.video_card})
+    @OnClick({R.id.back_btn, R.id.btn_edit, R.id.btn_edit_media, R.id.pic_1, R.id.pic2_card, R.id.pic3_card, R.id.video_card,
+            R.id.btn_may_be, R.id.btn_like, R.id.btn_crush, R.id.btn_msg})
     public void onViewClicked(View v) {
         if (v.getId() == R.id.back_btn) {
             getActivity().onBackPressed();
@@ -203,6 +219,14 @@ public class ProfileFragment extends BaseFragment implements BaseView {
             ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(2).getFile().getUrl());
         } else if (v.getId() == R.id.video_card) {
             ActivityUtility.startVideoViewActivity(requireActivity(), KEY_FRAGMENT_VIDEO_VIEW, userProfileVideoOnly.get(0).getFile().getUrl());
+        } else if (v.getId() == R.id.btn_may_be) {
+
+        } else if (v.getId() == R.id.btn_like) {
+
+        } else if (v.getId() == R.id.btn_crush) {
+
+        } else if (v.getId() == R.id.btn_msg) {
+
         }
     }
 
@@ -222,8 +246,8 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         this.userAnswers = new ArrayList<>();
         if (userAnswers != null && userAnswers.size() > 0) {
 //            this.userAnswers = userAnswers;
-            for (int i=0 ; i<userAnswers.size() ; i++) {
-                if (userAnswers.get(i).getOptionsObjArray()!=null && userAnswers.get(i).getOptionsObjArray().size()>0) {
+            for (int i = 0; i < userAnswers.size(); i++) {
+                if (userAnswers.get(i).getOptionsObjArray() != null && userAnswers.get(i).getOptionsObjArray().size() > 0) {
                     this.userAnswers.add(userAnswers.get(i));
                 }
             }
@@ -242,7 +266,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 
     private void setViews() {
         if (isCurrentUser) {
-            matchView.setVisibility(View.GONE);
+            matchView.setVisibility(View.INVISIBLE);
             distanceTV.setVisibility(View.GONE);
             editProfileView.setVisibility(View.VISIBLE);
         } else {
@@ -349,7 +373,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 //                }
 
 
-                System.out.println("====url==="+userProfileVideoOnly.get(0).getFile().getUrl());
+                System.out.println("====url===" + userProfileVideoOnly.get(0).getFile().getUrl());
                 Glide.with(requireContext())
                         .load(userProfileVideoOnly.get(0).getFile().getUrl())
                         .thumbnail(Glide.with(requireContext()).load(userProfileVideoOnly.get(0).getFile().getUrl()).placeholder(R.drawable.video_placeholder1).apply(new RequestOptions().override(200, 200)))

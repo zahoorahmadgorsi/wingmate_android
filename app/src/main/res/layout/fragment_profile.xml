@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -62,24 +62,24 @@
                 android:id="@+id/back_btn"
                 android:layout_width="@dimen/_32ssp"
                 android:layout_height="@dimen/_32ssp"
-                android:layout_marginLeft="@dimen/_16ssp"
-                android:layout_marginStart="@dimen/_16ssp"
-                android:layout_marginTop="@dimen/_16ssp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:padding="@dimen/_8ssp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="@dimen/_16ssp"
+                android:layout_marginLeft="@dimen/_16ssp"
+                android:layout_marginTop="@dimen/_16ssp"
                 android:background="@drawable/circle_bg"
-                android:src="@drawable/ic_back_btn"/>
+                android:padding="@dimen/_8ssp"
+                android:src="@drawable/ic_back_btn" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_margin="@dimen/_16ssp">
+                android:layout_margin="@dimen/_16ssp"
+                android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/video_card"
@@ -98,16 +98,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:cropToPadding="true"
-                            android:src="@drawable/video_placeholder1"
-                            android:scaleType="centerCrop" />
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/video_placeholder1" />
 
                         <ImageView
                             android:layout_width="@dimen/_16ssp"
                             android:layout_height="@dimen/_16ssp"
-                            android:src="@drawable/play_video"
-                            android:layout_centerInParent="true" />
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/play_video" />
                     </RelativeLayout>
-
 
 
                 </androidx.cardview.widget.CardView>
@@ -116,8 +115,8 @@
                     android:id="@+id/pic2_card"
                     android:layout_width="@dimen/_40ssp"
                     android:layout_height="@dimen/_40ssp"
-                    app:cardBackgroundColor="@color/grey_mid"
                     android:layout_marginTop="@dimen/_8ssp"
+                    app:cardBackgroundColor="@color/grey_mid"
                     app:cardCornerRadius="@dimen/_8ssp"
                     app:cardElevation="0dp">
 
@@ -125,7 +124,7 @@
                         android:id="@+id/pic_2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop"/>
+                        android:scaleType="centerCrop" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -142,7 +141,7 @@
                         android:id="@+id/pic_3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop"/>
+                        android:scaleType="centerCrop" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -151,25 +150,25 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/_2ssp"
-                android:paddingBottom="@dimen/_2ssp"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/_8ssp"
-                android:layout_marginEnd="@dimen/_8ssp"
-                android:layout_marginLeft="@dimen/_8ssp"
                 android:layout_marginStart="@dimen/_8ssp"
+                android:layout_marginLeft="@dimen/_8ssp"
+                android:layout_marginEnd="@dimen/_8ssp"
                 android:layout_marginRight="@dimen/_8ssp"
-                android:background="@drawable/round_bottom_black_trans">
+                android:layout_marginBottom="@dimen/_8ssp"
+                android:background="@drawable/round_bottom_black_trans"
+                android:paddingTop="@dimen/_2ssp"
+                android:paddingBottom="@dimen/_2ssp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="@dimen/_12ssp"
-                    android:layout_marginLeft="@dimen/_12ssp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true">
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/_12ssp"
+                    android:layout_marginLeft="@dimen/_12ssp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/name_tv"
@@ -196,42 +195,58 @@
                     android:layout_width="@dimen/_48ssp"
                     android:layout_height="@dimen/_48ssp"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:visibility="visible"
-                    android:layout_alignParentRight="true">
+                    android:visibility="gone">
 
                     <me.tankery.lib.circularseekbar.CircularSeekBar
                         android:id="@+id/match_progress"
                         android:layout_width="@dimen/_40ssp"
                         android:layout_height="@dimen/_40ssp"
                         android:layout_centerInParent="true"
-                        app:cs_progress = "2"
-                        app:cs_max = "5"
-                        app:cs_circle_x_radius = "@dimen/_48ssp"
-                        app:cs_circle_y_radius = "@dimen/_48ssp"
-                        app:cs_negative_enabled = "false"
-                        app:cs_move_outside_circle = "false"
-                        app:cs_maintain_equal_circle = "false"
-                        app:cs_use_custom_radii = "false"
-                        app:cs_lock_enabled = "true"
-                        app:cs_circle_stroke_width = "@dimen/_2ssp"
-                        app:cs_disable_pointer = "true"
-                        app:cs_circle_fill = "@color/transparent"
-                        app:cs_circle_color = "@color/grey"
-                        app:cs_circle_progress_color = "@color/white"
-                        app:cs_disable_progress_glow = "true"
-                        app:cs_hide_progress_when_empty = "true"/>
+                        app:cs_circle_color="@color/grey"
+                        app:cs_circle_fill="@color/transparent"
+                        app:cs_circle_progress_color="@color/white"
+                        app:cs_circle_stroke_width="@dimen/_2ssp"
+                        app:cs_circle_x_radius="@dimen/_48ssp"
+                        app:cs_circle_y_radius="@dimen/_48ssp"
+                        app:cs_disable_pointer="true"
+                        app:cs_disable_progress_glow="true"
+                        app:cs_hide_progress_when_empty="true"
+                        app:cs_lock_enabled="true"
+                        app:cs_maintain_equal_circle="false"
+                        app:cs_max="5"
+                        app:cs_move_outside_circle="false"
+                        app:cs_negative_enabled="false"
+                        app:cs_progress="2"
+                        app:cs_use_custom_radii="false" />
 
-                    <TextView
-                        android:id="@+id/match_percent_tv"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/baloo_regular"
-                        android:text=""
-                        android:gravity="center"
                         android:layout_centerInParent="true"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/title_size" />
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/match_percent_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/baloo_regular"
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/label_txt_size" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/baloo_regular"
+                            android:gravity="center"
+                            android:text="Match"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_6ssp" />
+                    </LinearLayout>
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -245,85 +260,104 @@
             android:layout_weight="5"
             tools:listitem="@layout/list_item_profile" />
 
-<!--        <ScrollView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="5">-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <androidx.recyclerview.widget.RecyclerView-->
-<!--                    android:id="@+id/profile_options_rv"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:nestedScrollingEnabled="false"-->
-<!--                    tools:listitem="@layout/list_item_profile" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/about_tv"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:paddingLeft="@dimen/_12ssp"-->
-<!--                    android:paddingStart="@dimen/_12ssp"-->
-<!--                    android:paddingRight="@dimen/_12ssp"-->
-<!--                    android:paddingEnd="@dimen/_12ssp"-->
-<!--                    android:paddingTop="@dimen/_4ssp"-->
-<!--                    android:paddingBottom="@dimen/_12ssp"-->
-<!--                    android:fontFamily="@font/open_sans_regular"-->
-<!--                    android:gravity="start"-->
-<!--                    android:textColor="@color/text_black_color"-->
-<!--                    android:textSize="@dimen/txt_size" />-->
-<!--            </LinearLayout>-->
-
-<!--        </ScrollView>-->
-
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/bottom_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_edit"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/button_height"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/_10ssp"
-            android:layout_marginLeft="@dimen/_10ssp"
-            android:layout_marginTop="@dimen/_8ssp"
-            android:layout_marginEnd="@dimen/_5ssp"
-            android:layout_marginRight="@dimen/_5ssp"
-            android:layout_marginBottom="@dimen/_8ssp"
-            android:background="@drawable/button_pressed"
-            android:fontFamily="@font/baloo_regular"
-            android:text="Edit Profile"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/txt_size" />
+        <LinearLayout
+            android:id="@+id/others_buttons_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_edit_media"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/button_height"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/_5ssp"
-            android:layout_marginLeft="@dimen/_5ssp"
-            android:layout_marginTop="@dimen/_8ssp"
-            android:layout_marginEnd="@dimen/_10ssp"
-            android:layout_marginRight="@dimen/_10ssp"
-            android:layout_marginBottom="@dimen/_8ssp"
-            android:background="@drawable/button_pressed"
-            android:fontFamily="@font/baloo_regular"
-            android:text="Edit Media"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/txt_size" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/_8ssp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/btn_may_be"
+                    android:layout_width="@dimen/_48ssp"
+                    android:layout_height="@dimen/_48ssp"
+                    android:src="@drawable/my_fans" />
+
+                <ImageView
+                    android:id="@+id/btn_like"
+                    android:layout_width="@dimen/_48ssp"
+                    android:layout_height="@dimen/_48ssp"
+                    android:layout_marginLeft="@dimen/_12ssp"
+                    android:layout_marginStart="@dimen/_12ssp"
+                    android:src="@drawable/search" />
+
+                <ImageView
+                    android:id="@+id/btn_crush"
+                    android:layout_width="@dimen/_48ssp"
+                    android:layout_height="@dimen/_48ssp"
+                    android:layout_marginLeft="@dimen/_12ssp"
+                    android:layout_marginStart="@dimen/_12ssp"
+                    android:src="@drawable/messages" />
+
+                <ImageView
+                    android:id="@+id/btn_msg"
+                    android:layout_width="@dimen/_48ssp"
+                    android:layout_height="@dimen/_48ssp"
+                    android:layout_marginLeft="@dimen/_12ssp"
+                    android:layout_marginStart="@dimen/_12ssp"
+                    android:src="@drawable/compatibility" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/edit_bottom_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_edit"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="@dimen/_10ssp"
+                android:layout_marginLeft="@dimen/_10ssp"
+                android:layout_marginTop="@dimen/_8ssp"
+                android:layout_marginEnd="@dimen/_5ssp"
+                android:layout_marginRight="@dimen/_5ssp"
+                android:layout_marginBottom="@dimen/_8ssp"
+                android:layout_weight="1"
+                android:background="@drawable/button_pressed"
+                android:fontFamily="@font/baloo_regular"
+                android:text="Edit Profile"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/txt_size" />
+
+            <Button
+                android:id="@+id/btn_edit_media"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="@dimen/_5ssp"
+                android:layout_marginLeft="@dimen/_5ssp"
+                android:layout_marginTop="@dimen/_8ssp"
+                android:layout_marginEnd="@dimen/_10ssp"
+                android:layout_marginRight="@dimen/_10ssp"
+                android:layout_marginBottom="@dimen/_8ssp"
+                android:layout_weight="1"
+                android:background="@drawable/button_pressed"
+                android:fontFamily="@font/baloo_regular"
+                android:text="Edit Media"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/txt_size" />
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

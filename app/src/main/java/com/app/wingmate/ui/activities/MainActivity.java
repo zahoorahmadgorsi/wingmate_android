@@ -285,9 +285,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void beginDashboardFragment() {
-        showTopView();
-        setScreenTitle("Home");
-        setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+        hideTopView();
+        hideScreenTitle();
+//        setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
         dashboardFragment = getSupportFragmentManager().findFragmentByTag(DashboardFragment.TAG);
         if (dashboardFragment == null)
             dashboardFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), DashboardFragment.TAG);
