@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import androidx.appcompat.app.AlertDialog;
 
 import com.app.wingmate.R;
+import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.TermsConditions;
@@ -22,6 +23,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.RequestPasswordResetCallback;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import java.text.SimpleDateFormat;
@@ -35,6 +37,7 @@ import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_GET_SERVER
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_RESEND_EMAIL;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_UPDATE_WRONG_EMAIL;
 import static com.app.wingmate.utils.AppConstants.BOTH;
+import static com.app.wingmate.utils.AppConstants.CLASS_NAME_FANS;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUESTION;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUESTION_OPTION;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_TERMS;
@@ -47,6 +50,8 @@ import static com.app.wingmate.utils.AppConstants.INFO;
 import static com.app.wingmate.utils.AppConstants.PARAM_DISPLAY_ORDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_EMAIL_NEW;
 import static com.app.wingmate.utils.AppConstants.PARAM_EMAIL_WRONG;
+import static com.app.wingmate.utils.AppConstants.PARAM_FAN_TYPE;
+import static com.app.wingmate.utils.AppConstants.PARAM_FROM_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_GENDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
@@ -58,6 +63,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_OPTION_ID;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_DISPLAY_ORDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_TYPE;
+import static com.app.wingmate.utils.AppConstants.PARAM_TO_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_MANDATORY_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
@@ -124,6 +130,12 @@ public class BaseInteractor {
         void onSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers);
 
         void onAllUsersSuccess(List<ParseUser> parseUsers);
+
+        void onMyFansSuccess(List<Fans> fans);
+
+        void onUserFanStatusSuccess(List<Fans> fans);
+
+        void onFanAddingSuccess(Fans fan);
     }
 
     public void signUpFormValidate(Context context, final String nick, final String gender, final String email, final String password, final OnFinishedListener listener) {
@@ -528,6 +540,110 @@ public class BaseInteractor {
                         objects = new ArrayList<>();
                     }
                     listener.onAllUsersSuccess(objects);
+                } else {
+                    listener.onResponseError(e);
+                }
+            });
+        }
+    }
+
+    public void fetchMyFansFormParse(final Context context, final OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            ParseQuery queryUserToMe = ParseQuery.getQuery(CLASS_NAME_FANS);
+            queryUserToMe.whereEqualTo(PARAM_TO_USER, ParseUser.getCurrentUser());
+
+            ParseQuery queryMeToUser = ParseQuery.getQuery(CLASS_NAME_FANS);
+            queryMeToUser.whereEqualTo(PARAM_FROM_USER, ParseUser.getCurrentUser());
+
+            List<ParseQuery<Fans>> queries = new ArrayList<>();
+            queries.add(queryUserToMe);
+            queries.add(queryMeToUser);
+
+            ParseQuery<Fans> mainQuery = ParseQuery.or(queries);
+            mainQuery.include(PARAM_FROM_USER);
+            mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY);
+            mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+            mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_OPTIONAL_ARRAY);
+            mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+            mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            mainQuery.include(PARAM_TO_USER);
+            mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_MANDATORY_ARRAY);
+            mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+            mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY);
+            mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+            mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            mainQuery.findInBackground((objects, e) -> {
+                if (e == null) {
+                    if (objects == null) objects = new ArrayList<>();
+                    listener.onMyFansSuccess(objects);
+                } else {
+                    listener.onResponseError(e);
+                }
+            });
+
+//            ParseQuery query = ParseQuery.getQuery(CLASS_NAME_FANS);
+//            query.include(PARAM_FROM_USER);
+//            query.include(PARAM_TO_USER);
+//            query.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY);
+//            query.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY);
+//            query.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+//            query.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+//            query.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+//            query.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+//            query.whereEqualTo(PARAM_TO_USER, ParseUser.getCurrentUser());
+//            query.setLimit(1000);
+//            query.findInBackground((FindCallback<Fans>) (objects, e) -> {
+//                if (e == null) {
+//                    if (objects == null) objects = new ArrayList<>();
+//                    listener.onMyFansSuccess(objects);
+//                    System.out.println("====fans==="+objects.size());
+//                } else {
+//                    System.out.println("====fans==="+e.getMessage());
+//                    listener.onResponseError(e);
+//                }
+//            });
+        }
+    }
+
+    public void fetchUserFanStatusFormParse(final Context context, ParseUser parseUser, final OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            ParseQuery query = ParseQuery.getQuery(CLASS_NAME_FANS);
+            query.include(PARAM_FROM_USER);
+            query.include(PARAM_TO_USER);
+            query.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY);
+            query.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY);
+            query.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.whereEqualTo(PARAM_FROM_USER, ParseUser.getCurrentUser());
+            query.whereEqualTo(PARAM_TO_USER, parseUser);
+            query.setLimit(1000);
+            query.findInBackground((FindCallback<Fans>) (objects, e) -> {
+                if (e == null) {
+                    if (objects == null) objects = new ArrayList<>();
+                    listener.onUserFanStatusSuccess(objects);
+                } else {
+                    listener.onResponseError(e);
+                }
+            });
+        }
+    }
+
+    public void setUserAsFan(final Context context, ParseUser toUser, String fanType, final OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            Fans fan = new Fans();
+            fan.put(PARAM_FROM_USER, ParseUser.getCurrentUser());
+            fan.put(PARAM_TO_USER, toUser);
+            fan.put(PARAM_FAN_TYPE, fanType);
+            fan.saveInBackground(e -> {
+                if (e == null) {
+                    listener.onFanAddingSuccess(fan);
                 } else {
                     listener.onResponseError(e);
                 }

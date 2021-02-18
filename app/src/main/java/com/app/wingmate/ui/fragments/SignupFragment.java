@@ -37,6 +37,7 @@ import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.Utilities;
+import com.app.wingmate.widgets.FadePageTransformer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.parse.ParseObject;
@@ -741,19 +742,7 @@ public class SignupFragment extends BaseFragment implements BaseView, ViewPager.
 
     }
 
-    public class FadePageTransformer implements ViewPager.PageTransformer {
-        public void transformPage(View view, float position) {
-            view.setTranslationX(view.getWidth() * -position);
 
-            if (position <= -1.0F || position >= 1.0F) {
-                view.setAlpha(0.0F);
-            } else if (position == 0.0F) {
-                view.setAlpha(1.0F);
-            } else {
-                view.setAlpha(1.0F - Math.abs(position));
-            }
-        }
-    }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {
         private static int NUM_ITEMS = 5;

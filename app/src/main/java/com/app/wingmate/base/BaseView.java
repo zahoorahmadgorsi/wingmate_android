@@ -1,5 +1,6 @@
 package com.app.wingmate.base;
 
+import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.TermsConditions;
@@ -49,10 +50,15 @@ public interface BaseView {
     void setQuestionsResponseSuccess(List<Question> questions);
     void setUserAnswersResponseSuccess(List<UserAnswer> userAnswers);
     void setUserPhotosVideoResponseSuccess(List<UserProfilePhotoVideo> userProfilePhotoVideos);
+    void setUserFanStatusSuccess(List<Fans> fansList);
 
     // Search
     void setSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers);
 
     //Home
     void setAllUsersSuccess(List<ParseUser> parseUsers);
+
+    //Fans
+    void setMyFansSuccess(List<Fans> fansList);
+    void setFanAddedSuccess(Fans fan);
 }

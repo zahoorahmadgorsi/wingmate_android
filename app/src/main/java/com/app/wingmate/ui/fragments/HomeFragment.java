@@ -105,19 +105,29 @@ public class HomeFragment extends BaseFragment {
 
     @Subscribe
     public void onHomeRefresh(RefreshHome refreshHome) {
+        System.out.println("====refresh here=======");
         if (dashboardInstance.homeProgress) showProgress();
         else dismissProgress();
         pullToRefresh.setRefreshing(false);
         userViewAdapter.setData(dashboardInstance.allUsers);
         userViewAdapter.notifyDataSetChanged();
+        if (dashboardInstance.allUsers==null || dashboardInstance.allUsers.size()==0) {
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        EventBus.getDefault().unregister(this);
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @OnClick({R.id.profile_img, R.id.btn_top_fans, R.id.btn_top_search , R.id.btn_top_msg , R.id.btn_top_compatibility})
@@ -159,7 +169,9 @@ public class HomeFragment extends BaseFragment {
                 .into(profileImg);
 
         pullToRefresh.setOnRefreshListener(() -> {
+            pullToRefresh.setRefreshing(false);
             dashboardInstance.homeProgress = true;
+            showProgress();
             dashboardInstance.allUsers = new ArrayList<>();
             dashboardInstance.presenter.queryAllUsers(getContext());
         });

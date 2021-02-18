@@ -77,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/_16ssp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:paddingRight="@dimen/_16ssp"
         android:paddingLeft="@dimen/_16ssp"
         android:paddingEnd="@dimen/_16ssp"
@@ -94,15 +94,148 @@
                 android:layout_height="@dimen/_60ssp"
                 android:src="@drawable/app_heart" />
 
-            <TextView
-                android:id="@+id/screen_title"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/baloo_regular"
-                android:layout_marginTop="@dimen/_8ssp"
-                android:text=""
-                android:textColor="@color/purple_theme"
-                android:textSize="@dimen/header_size" />
+                android:layout_marginTop="@dimen/_8ssp">
+
+                <TextView
+                    android:id="@+id/screen_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/baloo_regular"
+                    android:text=""
+                    android:textColor="@color/purple_theme"
+                    android:textSize="@dimen/header_size" />
+
+                <LinearLayout
+                    android:id="@+id/fans_count_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:visibility="visible"
+                    android:gravity="center_horizontal|end"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/btn_likes_filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/likes_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/baloo_regular"
+                            android:text="0"
+                            android:textColor="@color/purple_theme"
+                            android:textSize="@dimen/txt_size" />
+
+                        <TextView
+                            android:id="@+id/likes_count_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/open_sans_semibold"
+                            android:background="@drawable/custom_select"
+                            android:text="MY LIKES"
+                            android:paddingLeft="@dimen/_6ssp"
+                            android:paddingEnd="@dimen/_6ssp"
+                            android:paddingTop="@dimen/_2ssp"
+                            android:paddingBottom="@dimen/_2ssp"
+                            android:paddingRight="@dimen/_6ssp"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:textColor="@drawable/custom_text_color"
+                            android:textSize="@dimen/extra_small_txt_size" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_crush_filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_4ssp"
+                        android:layout_marginStart="@dimen/_4ssp"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/crush_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/baloo_regular"
+                            android:text="0"
+                            android:textColor="@color/purple_theme"
+                            android:textSize="@dimen/txt_size" />
+
+                        <TextView
+                            android:id="@+id/crush_count_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/open_sans_semibold"
+                            android:background="@drawable/custom_select"
+                            android:text="CRUSH"
+                            android:paddingLeft="@dimen/_6ssp"
+                            android:paddingEnd="@dimen/_6ssp"
+                            android:paddingTop="@dimen/_2ssp"
+                            android:paddingBottom="@dimen/_2ssp"
+                            android:paddingRight="@dimen/_6ssp"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:textColor="@drawable/custom_text_color"
+                            android:textSize="@dimen/extra_small_txt_size" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_may_be_filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_4ssp"
+                        android:layout_marginStart="@dimen/_4ssp"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/may_be_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/baloo_regular"
+                            android:text="0"
+                            android:textColor="@color/purple_theme"
+                            android:textSize="@dimen/txt_size" />
+
+                        <TextView
+                            android:id="@+id/may_be_count_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/open_sans_semibold"
+                            android:background="@drawable/custom_select"
+                            android:text="MAYBE"
+                            android:paddingLeft="@dimen/_6ssp"
+                            android:paddingEnd="@dimen/_6ssp"
+                            android:paddingTop="@dimen/_2ssp"
+                            android:paddingBottom="@dimen/_2ssp"
+                            android:paddingRight="@dimen/_6ssp"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:textColor="@drawable/custom_text_color"
+                            android:textSize="@dimen/extra_small_txt_size" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+<!--            <TextView-->
+<!--                android:id="@+id/screen_title"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:fontFamily="@font/baloo_regular"-->
+<!--                android:layout_marginTop="@dimen/_8ssp"-->
+<!--                android:text="sdgasdgasdg"-->
+<!--                android:textColor="@color/purple_theme"-->
+<!--                android:textSize="@dimen/header_size" />-->
 
         </LinearLayout>
 

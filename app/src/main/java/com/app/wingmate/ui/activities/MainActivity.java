@@ -338,10 +338,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void beginVideoViewFragment() {
-        showCropToolbar();
-        setActivityTitle("Video");
-        showBackBtn();
-        hideCropOptions();
+//        showCropToolbar();
+//        setActivityTitle("Video");
+//        showBackBtn();
+//        hideCropOptions();
         videoViewFragment = getSupportFragmentManager().findFragmentByTag(VideoViewFragment.TAG);
         if (videoViewFragment == null)
             videoViewFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), VideoViewFragment.TAG);
@@ -350,10 +350,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void beginPhotoViewFragment() {
-        showCropToolbar();
-        setActivityTitle("Photo");
-        showBackBtn();
-        hideCropOptions();
+//        showCropToolbar();
+//        setActivityTitle("Photo");
+//        showBackBtn();
+//        hideCropOptions();
         photoViewFragment = getSupportFragmentManager().findFragmentByTag(PhotoViewFragment.TAG);
         if (photoViewFragment == null)
             photoViewFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), PhotoViewFragment.TAG);

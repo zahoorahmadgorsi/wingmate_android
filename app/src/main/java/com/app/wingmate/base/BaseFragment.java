@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.TermsConditions;
@@ -182,12 +183,27 @@ public class BaseFragment extends Fragment implements BaseView {
     }
 
     @Override
+    public void setUserFanStatusSuccess(List<Fans> fansList) {
+
+    }
+
+    @Override
     public void setSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers) {
 
     }
 
     @Override
     public void setAllUsersSuccess(List<ParseUser> parseUsers) {
+
+    }
+
+    @Override
+    public void setMyFansSuccess(List<Fans> fansList) {
+
+    }
+
+    @Override
+    public void setFanAddedSuccess(Fans fan) {
 
     }
 }

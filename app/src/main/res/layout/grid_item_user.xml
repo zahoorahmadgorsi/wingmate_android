@@ -100,6 +100,18 @@
                     android:textColor="@color/text_color" />
             </RelativeLayout>
 
+            <ImageView
+                android:id="@+id/by_me_aswell"
+                android:layout_width="@dimen/_24ssp"
+                android:layout_height="@dimen/_24ssp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/_12ssp"
+                android:src="@drawable/big_green_tick"
+                android:visibility="gone"
+                android:scaleType="centerCrop" />
+
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 

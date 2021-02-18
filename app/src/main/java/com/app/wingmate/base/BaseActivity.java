@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.wingmate.R;
+import com.app.wingmate.utils.ActivityUtility;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
@@ -17,6 +18,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.tankery.lib.circularseekbar.CircularSeekBar;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 
 //public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 public class BaseActivity extends AppCompatActivity {
@@ -40,6 +42,17 @@ public class BaseActivity extends AppCompatActivity {
 
     CircleImageView profileImg;
 
+    LinearLayout fans_count_view;
+    LinearLayout btn_likes_filter;
+    LinearLayout btn_crush_filter;
+    LinearLayout btn_may_be_filter;
+    TextView likes_count;
+    TextView likes_count_tv;
+    TextView crush_count;
+    TextView crush_count_tv;
+    TextView may_be_count;
+    TextView may_be_count_tv;
+
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
@@ -61,7 +74,20 @@ public class BaseActivity extends AppCompatActivity {
         stepsCountTV = (TextView) findViewById(R.id.steps_count_tv);
         skipTV = (TextView) findViewById(R.id.skip);
 
+        fans_count_view = findViewById(R.id.fans_count_view);
+        btn_likes_filter = findViewById(R.id.btn_likes_filter);
+        btn_crush_filter = findViewById(R.id.btn_crush_filter);
+        btn_may_be_filter = findViewById(R.id.btn_may_be_filter);
+        likes_count = findViewById(R.id.likes_count);
+        likes_count_tv = findViewById(R.id.likes_count_tv);
+        crush_count = findViewById(R.id.crush_count);
+        crush_count_tv = findViewById(R.id.crush_count_tv);
+        may_be_count = findViewById(R.id.may_be_count);
+        may_be_count_tv = findViewById(R.id.may_be_count_tv);
+
         profileImg = (CircleImageView) findViewById(R.id.profile_img);
+
+        profileImg.setOnClickListener(v -> ActivityUtility.startPhotoViewActivity(BaseActivity.this, KEY_FRAGMENT_PHOTO_VIEW, ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC)));
 
         hideTopView();
         hideStepView();
@@ -71,6 +97,7 @@ public class BaseActivity extends AppCompatActivity {
         hideBackBtn();
         hideCropOptions();
         hideProfileImage();
+        hideCountsView();
     }
 
 //    @Override
@@ -213,5 +240,53 @@ public class BaseActivity extends AppCompatActivity {
 
     public void hideProfileImage() {
         profileImg.setVisibility(View.GONE);
+    }
+
+    public void hideCountsView() {
+        fans_count_view.setVisibility(View.GONE);
+    }
+
+    public void showCountsView() {
+        fans_count_view.setVisibility(View.VISIBLE);
+    }
+
+    public LinearLayout getFansCountView() {
+        return fans_count_view;
+    }
+
+    public LinearLayout getBtnLikesFilter() {
+        return btn_likes_filter;
+    }
+
+    public LinearLayout getBtnCrushFilter() {
+        return btn_crush_filter;
+    }
+
+    public LinearLayout getBtnMaybeFilter() {
+        return btn_may_be_filter;
+    }
+
+    public TextView getLikesCount() {
+        return likes_count;
+    }
+
+    public TextView getLikesCountTV() {
+        return likes_count_tv;
+    }
+
+    public TextView getCrushCount() {
+        return crush_count;
+    }
+
+    public TextView getCrushCountTV() {
+        return crush_count_tv;
+    }
+
+    public TextView getMaybeCount() {
+        return may_be_count;
+    }
+
+    public TextView getMaybeCountTV() {
+        return may_be_count_tv;
     }
 }

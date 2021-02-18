@@ -2,6 +2,7 @@ package com.app.wingmate.base;
 
 import android.content.Context;
 
+import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.TermsConditions;
@@ -119,6 +120,18 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
         }
     }
 
+    public void queryAllMyFans(Context context) {
+        if (baseView != null) {
+            interactor.fetchMyFansFormParse(context, this);
+        }
+    }
+
+    public void queryUserFansStatus(Context context, ParseUser parseUser) {
+        if (baseView != null) {
+            interactor.fetchUserFanStatusFormParse(context, parseUser, this);
+        }
+    }
+
     public void checkServerDate(Context context) {
         if (baseView != null) {
             interactor.fetchServerDateFormParse(context, this);
@@ -128,6 +141,12 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
     public void getSpecificQuestionUserAnswers(Context context, List<QuestionOption> options) {
         if (baseView != null) {
             interactor.fetchSpecificQuestionUserAnswersFormParse(context, options, this);
+        }
+    }
+
+    public void setFan(Context context, ParseUser parseUser, String fanType) {
+        if (baseView != null) {
+            interactor.setUserAsFan(context, parseUser, fanType, this);
         }
     }
 
@@ -170,6 +189,27 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
     public void onAllUsersSuccess(List<ParseUser> parseUsers) {
         if (baseView != null) {
             baseView.setAllUsersSuccess(parseUsers);
+        }
+    }
+
+    @Override
+    public void onMyFansSuccess(List<Fans> fans) {
+        if (baseView != null) {
+            baseView.setMyFansSuccess(fans);
+        }
+    }
+
+    @Override
+    public void onUserFanStatusSuccess(List<Fans> fans) {
+        if (baseView != null) {
+            baseView.setUserFanStatusSuccess(fans);
+        }
+    }
+
+    @Override
+    public void onFanAddingSuccess(Fans fan) {
+        if (baseView != null) {
+            baseView.setFanAddedSuccess(fan);
         }
     }
 

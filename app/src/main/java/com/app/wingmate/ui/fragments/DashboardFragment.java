@@ -28,14 +28,18 @@ import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
+import com.app.wingmate.events.RefreshFanList;
+import com.app.wingmate.events.RefreshFans;
 import com.app.wingmate.events.RefreshHome;
 import com.app.wingmate.events.RefreshSearch;
+import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.ui.dialogs.OptionsSelectorDialog;
 import com.app.wingmate.utils.DateUtils;
+import com.app.wingmate.widgets.FadePageTransformer;
 import com.app.wingmate.widgets.NonSwappableViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FunctionCallback;
@@ -48,6 +52,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -118,7 +123,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     private HomeFragment homeFragment;
     private SearchFragment searchFragment;
-    private DummyFragment likesFragment;
+    private MyFansFragment likesFragment;
     private DummyFragment messagesFragment;
     private SettingsFragment settingsFragment;
 
@@ -127,8 +132,10 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     public List<Question> questions;
     public List<ParseUser> searchedUsers;
     public List<ParseUser> allUsers;
-    public boolean searchProgress = false;
+    public List<Fans> myFansList;
     public boolean homeProgress = false;
+    public boolean searchProgress = false;
+    public boolean myFansProgress = false;
 
     private boolean isHomeView = true;
 
@@ -144,6 +151,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -170,29 +178,33 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         searchProgress = true;
         questions = new ArrayList<>();
         presenter.querySearchQuestions(getContext(), MANDATORY);
+
+        myFansProgress = true;
+        myFansList = new ArrayList<>();
+        presenter.queryAllMyFans(getContext());
     }
 
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
             item -> {
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-                        viewPager.setCurrentItem(0, true);
+                        viewPager.setCurrentItem(0, false);
                         ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
                         return true;
                     case R.id.navigation_search:
-                        viewPager.setCurrentItem(1, true);
+                        viewPager.setCurrentItem(1, false);
                         ((MainActivity) getActivity()).setScreenTitle("Search");
                         return true;
                     case R.id.navigation_likes:
-                        viewPager.setCurrentItem(2, true);
-                        ((MainActivity) getActivity()).setScreenTitle("My Likes");
+                        viewPager.setCurrentItem(2, false);
+                        ((MainActivity) getActivity()).setScreenTitle("My Fans");
                         return true;
                     case R.id.navigation_messages:
-                        viewPager.setCurrentItem(3, true);
+                        viewPager.setCurrentItem(3, false);
                         ((MainActivity) getActivity()).setScreenTitle("Messages");
                         return true;
                     case R.id.navigation_settings:
-                        viewPager.setCurrentItem(4, true);
+                        viewPager.setCurrentItem(4, false);
                         ((MainActivity) getActivity()).setScreenTitle("Settings");
                         return true;
                 }
@@ -202,7 +214,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     private void initViews() {
         homeFragment = HomeFragment.newInstance(this);
         searchFragment = SearchFragment.newInstance(this);
-        likesFragment = DummyFragment.newInstance(this);
+        likesFragment = MyFansFragment.newInstance(this);
         messagesFragment = DummyFragment.newInstance(this);
         settingsFragment = SettingsFragment.newInstance(this);
 
@@ -220,9 +232,10 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         viewPagerAdapter.addFragment(messagesFragment);
         viewPagerAdapter.addFragment(settingsFragment);
         viewPager.setAdapter(viewPagerAdapter);
+//        viewPager.setPageTransformer(false, new FadePageTransformer());
         viewPager.setPagingEnabled(false);
 //        viewPager.setOffscreenPageLimit(2);
-        viewPager.setCurrentItem(0, true);
+        viewPager.setCurrentItem(0, false);
         viewPager.addOnPageChangeListener(this);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
@@ -231,12 +244,14 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         resetAllBottomButtons();
         icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
         tvHome.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+        btnHome.setAlpha(1.0f);
     }
 
     public void setHomeView() {
         ((MainActivity) getActivity()).hideTopView();
         ((MainActivity) getActivity()).hideScreenTitle();
         ((MainActivity) getActivity()).hideProfileImage();
+        ((MainActivity) getActivity()).hideCountsView();
         btnSearch.setVisibility(View.GONE);
         btnFan.setVisibility(View.GONE);
         btnMsg.setVisibility(View.GONE);
@@ -278,40 +293,46 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
                 ((MainActivity) getActivity()).setScreenTitle("Search");
+                ((MainActivity) getActivity()).hideCountsView();
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icSearch.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
                 tvSearch.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
-                viewPager.setCurrentItem(1, true);
+                viewPager.setCurrentItem(1, false);
                 btnSearch.setVisibility(View.VISIBLE);
                 btnFan.setVisibility(View.VISIBLE);
                 btnMsg.setVisibility(View.VISIBLE);
+                btnMsg.setAlpha(1.0f);
                 break;
             case 2:
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
-                ((MainActivity) getActivity()).setScreenTitle("My Likes");
+                ((MainActivity) getActivity()).setScreenTitle("My Fans");
+                ((MainActivity) getActivity()).showCountsView();
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icFan.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
                 tvFan.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
-                viewPager.setCurrentItem(2, true);
+                viewPager.setCurrentItem(2, false);
                 btnSearch.setVisibility(View.VISIBLE);
                 btnFan.setVisibility(View.VISIBLE);
                 btnMsg.setVisibility(View.VISIBLE);
+                btnFan.setAlpha(1.0f);
                 break;
             case 3:
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
                 ((MainActivity) getActivity()).setScreenTitle("Messages");
+                ((MainActivity) getActivity()).hideCountsView();
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icMsg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
                 tvMsg.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
-                viewPager.setCurrentItem(3, true);
+                viewPager.setCurrentItem(3, false);
                 btnSearch.setVisibility(View.VISIBLE);
                 btnFan.setVisibility(View.VISIBLE);
                 btnMsg.setVisibility(View.VISIBLE);
+                btnMsg.setAlpha(1.0f);
                 break;
         }
     }
@@ -412,6 +433,12 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         unbinder.unbind();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     @OnClick({R.id.btn_home, R.id.btn_search, R.id.btn_fan, R.id.btn_msg, R.id.btn_settings})
     public void onViewClicked(View v) {
         switch (v.getId()) {
@@ -420,6 +447,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 //                setHomeView();
                 ((MainActivity) getActivity()).hideTopView();
                 ((MainActivity) getActivity()).hideScreenTitle();
+                ((MainActivity) getActivity()).hideCountsView();
                 ((MainActivity) getActivity()).hideProfileImage();
                 btnSearch.setVisibility(View.GONE);
                 btnFan.setVisibility(View.GONE);
@@ -427,42 +455,51 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                 resetAllBottomButtons();
                 icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
                 tvHome.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
-                viewPager.setCurrentItem(0, true);
+                viewPager.setCurrentItem(0, false);
                 ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+                btnHome.setAlpha(1.0f);
                 break;
             case R.id.btn_search:
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
+                ((MainActivity) getActivity()).hideCountsView();
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icSearch.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
                 tvSearch.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
-                viewPager.setCurrentItem(1, true);
+                viewPager.setCurrentItem(1, false);
                 ((MainActivity) getActivity()).setScreenTitle("Search");
+                btnSearch.setAlpha(1.0f);
                 break;
             case R.id.btn_fan:
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
+                ((MainActivity) getActivity()).showCountsView();
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icFan.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
                 tvFan.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
-                viewPager.setCurrentItem(2, true);
-                ((MainActivity) getActivity()).setScreenTitle("My Likes");
+                viewPager.setCurrentItem(2, false);
+                ((MainActivity) getActivity()).setScreenTitle("My Fans");
+                btnFan.setAlpha(1.0f);
                 break;
             case R.id.btn_msg:
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
+                ((MainActivity) getActivity()).hideCountsView();
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icMsg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
                 tvMsg.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
-                viewPager.setCurrentItem(3, true);
+                viewPager.setCurrentItem(3, false);
                 ((MainActivity) getActivity()).setScreenTitle("Messages");
+                btnMsg.setAlpha(1.0f);
                 break;
             case R.id.btn_settings:
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
+                ((MainActivity) getActivity()).hideCountsView();
+                ((MainActivity) getActivity()).setScreenTitle("Settings");
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icSettings.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -470,23 +507,43 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 //                if (isHomeView)
 //                    viewPager.setCurrentItem(1, true);
 //                else
-                viewPager.setCurrentItem(4, true);
-                ((MainActivity) getActivity()).setScreenTitle("Settings");
+                viewPager.setCurrentItem(4, false);
+                btnSearch.setVisibility(View.VISIBLE);
+                btnFan.setVisibility(View.VISIBLE);
+                btnMsg.setVisibility(View.VISIBLE);
+                btnSettings.setAlpha(1.0f);
                 break;
         }
     }
 
     private void resetAllBottomButtons() {
-        icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
-        icSearch.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
-        icFan.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
-        icMsg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
-        icSettings.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
-        tvHome.setTextColor(requireContext().getResources().getColor(R.color.grey));
-        tvSearch.setTextColor(requireContext().getResources().getColor(R.color.grey));
-        tvFan.setTextColor(requireContext().getResources().getColor(R.color.grey));
-        tvMsg.setTextColor(requireContext().getResources().getColor(R.color.grey));
-        tvSettings.setTextColor(requireContext().getResources().getColor(R.color.grey));
+//        icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
+//        icSearch.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
+//        icFan.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
+//        icMsg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
+//        icSettings.setColorFilter(ContextCompat.getColor(requireContext(), R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
+//        tvHome.setTextColor(requireContext().getResources().getColor(R.color.grey));
+//        tvSearch.setTextColor(requireContext().getResources().getColor(R.color.grey));
+//        tvFan.setTextColor(requireContext().getResources().getColor(R.color.grey));
+//        tvMsg.setTextColor(requireContext().getResources().getColor(R.color.grey));
+//        tvSettings.setTextColor(requireContext().getResources().getColor(R.color.grey));
+
+        icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+        icSearch.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+        icFan.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+        icMsg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+        icSettings.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
+        tvHome.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+        tvSearch.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+        tvFan.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+        tvMsg.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+        tvSettings.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
+
+        btnHome.setAlpha(0.4f);
+        btnSearch.setAlpha(0.4f);
+        btnFan.setAlpha(0.4f);
+        btnMsg.setAlpha(0.4f);
+        btnSettings.setAlpha(0.4f);
     }
 
     @Override
@@ -532,40 +589,55 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     @Override
     public void setAllUsersSuccess(List<ParseUser> parseUsers) {
 //        try {
-            ParseUser.getCurrentUser().fetchInBackground((object, e) -> {
-                if (object!=null) {
-                    List<UserAnswer> myUserAnswers = object.getList(PARAM_USER_OPTIONAL_ARRAY);
-                    if (myUserAnswers != null && myUserAnswers.size() > 0) {
-                        for (int i = 0; i < myUserAnswers.size(); i++) {
-                            myUserAnswers.get(i).fetchInBackground((object1, e1) -> {
-                                if (object1 !=null) {
-                                    object1.getList(PARAM_OPTIONS_OBJ_ARRAY);
-                                }
-                            });
-                        }
-                        homeProgress = false;
-                        this.allUsers = parseUsers;
-                        EventBus.getDefault().post(new RefreshHome());
-                    } else {
-                        homeProgress = false;
-                        this.allUsers = parseUsers;
-                        EventBus.getDefault().post(new RefreshHome());
+        ParseUser.getCurrentUser().fetchInBackground((object, e) -> {
+            if (object != null) {
+                List<UserAnswer> myUserAnswers = object.getList(PARAM_USER_OPTIONAL_ARRAY);
+                if (myUserAnswers != null && myUserAnswers.size() > 0) {
+                    for (int i = 0; i < myUserAnswers.size(); i++) {
+                        myUserAnswers.get(i).fetchInBackground((object1, e1) -> {
+                            if (object1 != null) {
+                                object1.getList(PARAM_OPTIONS_OBJ_ARRAY);
+                            }
+                        });
                     }
+                    homeProgress = false;
+                    this.allUsers = parseUsers;
+                    EventBus.getDefault().post(new RefreshHome());
                 } else {
                     homeProgress = false;
                     this.allUsers = parseUsers;
                     EventBus.getDefault().post(new RefreshHome());
                 }
-            });
+            } else {
+                homeProgress = false;
+                this.allUsers = parseUsers;
+                EventBus.getDefault().post(new RefreshHome());
+            }
+        });
 
-//            List<UserAnswer> myUserAnswers = ParseUser.getCurrentUser().fetchIfNeeded().getList(PARAM_USER_OPTIONAL_ARRAY);
-//            if (myUserAnswers != null && myUserAnswers.size() > 0) {
-//                for (int i = 0; i < myUserAnswers.size(); i++) {
-//                        myUserAnswers.get(i).fetchIfNeeded().getList(PARAM_OPTIONS_OBJ_ARRAY);
-//                }
+
+//        this.allUsers = parseUsers;
+//        if (this.allUsers != null && this.allUsers.size() > 0) {
+//            for (int i = 0; i < this.allUsers.size(); i++) {
+//
 //            }
-//        } catch (ParseException exception) {
-//            exception.printStackTrace();
 //        }
+//
+//        homeProgress = false;
+//        EventBus.getDefault().post(new RefreshHome());
+    }
+
+    @Override
+    public void setMyFansSuccess(List<Fans> fansList) {
+        myFansProgress = false;
+        this.myFansList = fansList;
+        EventBus.getDefault().post(new RefreshFans());
+    }
+
+    @Subscribe
+    public void refreshFansList(RefreshFanList refreshFanList) {
+        myFansProgress = true;
+        myFansList = new ArrayList<>();
+        presenter.queryAllMyFans(getContext());
     }
 }

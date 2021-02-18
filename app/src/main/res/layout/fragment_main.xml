@@ -37,8 +37,9 @@
                     android:id="@+id/ic_home"
                     android:layout_width="@dimen/_24ssp"
                     android:layout_height="@dimen/_24ssp"
-                    android:padding="@dimen/_2ssp"
-                    android:src="@drawable/ic_home" />
+                    android:padding="@dimen/_4ssp"
+                    app:tint="@color/grey"
+                    android:src="@drawable/tab_home" />
 
                 <TextView
                     android:id="@+id/tv_home"
@@ -62,9 +63,10 @@
                     android:id="@+id/ic_search"
                     android:layout_width="@dimen/_24ssp"
                     android:layout_height="@dimen/_24ssp"
-                    android:padding="@dimen/_2ssp"
+                    android:padding="@dimen/_4ssp"
+                    app:tint="@color/grey"
 
-                    android:src="@drawable/ic_search" />
+                    android:src="@drawable/tab_search" />
 
                 <TextView
                     android:id="@+id/tv_search"
@@ -88,9 +90,10 @@
                     android:id="@+id/ic_fan"
                     android:layout_width="@dimen/_24ssp"
                     android:layout_height="@dimen/_24ssp"
-                    android:padding="@dimen/_2ssp"
+                    android:padding="@dimen/_4ssp"
+                    app:tint="@color/grey"
 
-                    android:src="@drawable/ic_likes" />
+                    android:src="@drawable/tab_like" />
 
                 <TextView
                     android:id="@+id/tv_fan"
@@ -114,9 +117,10 @@
                     android:id="@+id/ic_msg"
                     android:layout_width="@dimen/_24ssp"
                     android:layout_height="@dimen/_24ssp"
-                    android:padding="@dimen/_2ssp"
+                    android:padding="@dimen/_4ssp"
+                    app:tint="@color/grey"
 
-                    android:src="@drawable/ic_messages" />
+                    android:src="@drawable/tab_message" />
 
                 <TextView
                     android:id="@+id/tv_msg"
@@ -140,9 +144,9 @@
                     android:id="@+id/ic_settings"
                     android:layout_width="@dimen/_24ssp"
                     android:layout_height="@dimen/_24ssp"
-                    android:padding="@dimen/_2ssp"
-
-                    android:src="@drawable/ic_settings" />
+                    android:padding="@dimen/_4ssp"
+                    app:tint="@color/grey"
+                    android:src="@drawable/tab_settings" />
 
                 <TextView
                     android:id="@+id/tv_settings"

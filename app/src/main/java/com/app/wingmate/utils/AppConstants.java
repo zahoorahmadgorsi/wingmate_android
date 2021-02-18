@@ -73,6 +73,15 @@ public class AppConstants {
     public static final String PARAM_IS_DO = "isDo";
     public static final String PARAM_FILE = "file";
 
+    public static final String CLASS_NAME_FANS = "Fans";
+    public static final String PARAM_FROM_USER = "fromUser";
+    public static final String PARAM_TO_USER = "toUser";
+    public static final String PARAM_FAN_TYPE = "fanType";
+
+    public static final String FAN_TYPE_LIKE = "Like";
+    public static final String FAN_TYPE_CRUSH = "Crush";
+    public static final String FAN_TYPE_MAY_BE = "Maybe";
+
     public static final String PARAM_USER_USER_MANDATORY_ARRAY = PARAM_USER_ID + "." + PARAM_USER_MANDATORY_ARRAY;
     public static final String PARAM_USER_USER_OPTIONAL_ARRAY = PARAM_USER_ID + "." + PARAM_USER_OPTIONAL_ARRAY;
 

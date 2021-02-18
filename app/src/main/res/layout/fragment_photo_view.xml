@@ -3,12 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black">
 
     <com.jsibbold.zoomage.ZoomageView
         android:id="@+id/zoom_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/btn_cross"
         android:src="@drawable/image_placeholder"
         app:zoomage_restrictBounds="false"
         app:zoomage_animateOnReset="true"
@@ -19,4 +21,14 @@
         app:zoomage_minScale="0.6"
         app:zoomage_maxScale="8"
         />
+
+    <ImageView
+        android:id="@+id/btn_cross"
+        android:layout_width="@dimen/_48ssp"
+        android:layout_height="@dimen/_48ssp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/_10ssp"
+        android:src="@drawable/icon_close" />
 </RelativeLayout>

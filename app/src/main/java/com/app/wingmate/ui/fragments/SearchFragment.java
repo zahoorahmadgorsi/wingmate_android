@@ -135,6 +135,7 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
         searchRecyclerView.setHasFixedSize(false);
         searchRecyclerView.setLayoutManager(searchGridLayoutManager);
         searchRecyclerView.setAdapter(userViewAdapter);
+        emptyView.setVisibility(View.GONE);
     }
 
     @Override
@@ -143,7 +144,7 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
         if (dashboardInstance.searchProgress) showProgress();
         else dismissProgress();
 
-        if (dashboardInstance.searchedUsers != null) {
+        if (dashboardInstance.searchedUsers != null && dashboardInstance.searchedUsers.size() > 0) {
             searchView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
             userViewAdapter.setData(dashboardInstance.searchedUsers);
@@ -172,6 +173,11 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
 
@@ -300,6 +306,12 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
         userViewAdapter.notifyDataSetChanged();
         searchBtn.setText(getString(R.string.search_again));
         resetBtn.setVisibility(View.VISIBLE);
+
+        if (dashboardInstance.searchedUsers == null || dashboardInstance.searchedUsers.size() == 0) {
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+        }
     }
 
     private void manualSearch() {

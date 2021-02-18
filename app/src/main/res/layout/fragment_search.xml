@@ -9,6 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_view"
+
+        android:paddingBottom="@dimen/_8ssp"
         tools:listitem="@layout/list_item_question_option" />
 
     <RelativeLayout
@@ -22,10 +24,10 @@
             android:id="@+id/search_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="@dimen/_4ssp"
-            android:paddingStart="@dimen/_4ssp"
-            android:paddingRight="@dimen/_4ssp"
-            android:paddingEnd="@dimen/_4ssp"
+            android:paddingStart="@dimen/_12ssp"
+            android:paddingLeft="@dimen/_12ssp"
+            android:paddingEnd="@dimen/_12ssp"
+            android:paddingRight="@dimen/_12ssp"
             tools:listitem="@layout/grid_item_user"/>
 
         <LinearLayout

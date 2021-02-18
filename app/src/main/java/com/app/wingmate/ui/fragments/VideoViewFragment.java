@@ -105,11 +105,14 @@ public class VideoViewFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.btn_back})
+    @OnClick({R.id.btn_back, R.id.btn_cross})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.btn_back:
                 getActivity().onBackPressed();
+                break;
+            case R.id.btn_cross:
+                requireActivity().onBackPressed();
                 break;
             default:
                 break;

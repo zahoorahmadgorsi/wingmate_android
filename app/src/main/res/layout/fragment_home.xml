@@ -64,18 +64,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/top_view"
         android:gravity="center"
-        android:padding="@dimen/_8ssp"
+        android:paddingTop="@dimen/_8ssp"
+        android:paddingBottom="@dimen/_8ssp"
+        android:paddingLeft="@dimen/_16ssp"
+        android:paddingStart="@dimen/_16ssp"
+        android:paddingRight="@dimen/_16ssp"
+        android:paddingEnd="@dimen/_16ssp"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/btn_top_fans"
-            android:layout_width="@dimen/_48ssp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="@dimen/_48ssp"
             android:src="@drawable/my_fans" />
 
         <ImageView
             android:id="@+id/btn_top_search"
-            android:layout_width="@dimen/_48ssp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="@dimen/_48ssp"
             android:layout_marginLeft="@dimen/_12ssp"
             android:layout_marginStart="@dimen/_12ssp"
@@ -83,7 +90,8 @@
 
         <ImageView
             android:id="@+id/btn_top_msg"
-            android:layout_width="@dimen/_48ssp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="@dimen/_48ssp"
             android:layout_marginLeft="@dimen/_12ssp"
             android:layout_marginStart="@dimen/_12ssp"
@@ -91,7 +99,8 @@
 
         <ImageView
             android:id="@+id/btn_top_compatibility"
-            android:layout_width="@dimen/_48ssp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="@dimen/_48ssp"
             android:layout_marginLeft="@dimen/_12ssp"
             android:layout_marginStart="@dimen/_12ssp"
@@ -110,10 +119,10 @@
             tools:listitem="@layout/grid_item_user"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingStart="@dimen/_4ssp"
-            android:paddingLeft="@dimen/_4ssp"
-            android:paddingEnd="@dimen/_4ssp"
-            android:paddingRight="@dimen/_4ssp" />
+            android:paddingStart="@dimen/_12ssp"
+            android:paddingLeft="@dimen/_12ssp"
+            android:paddingEnd="@dimen/_12ssp"
+            android:paddingRight="@dimen/_12ssp" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -129,14 +138,14 @@
         <ImageView
             android:layout_width="@dimen/_100ssp"
             android:layout_height="@dimen/_100ssp"
-            android:src="@drawable/wingmate"/>
+            android:src="@drawable/no_results"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans_regular"
             android:gravity="center"
-            android:text="Loading..."
+            android:text="@string/try_later"
             android:textColor="@color/text_color_grey"
             android:textSize="@dimen/label_txt_size"
             android:visibility="visible" />

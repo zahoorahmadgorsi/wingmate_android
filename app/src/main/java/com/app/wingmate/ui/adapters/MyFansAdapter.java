@@ -11,15 +11,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
+import com.app.wingmate.models.Fans;
 import com.app.wingmate.utils.ActivityUtility;
-import com.app.wingmate.utils.Utilities;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
@@ -28,29 +26,29 @@ import static com.app.wingmate.utils.Utilities.getDistanceBetweenUser;
 import static com.app.wingmate.utils.Utilities.getMatchPercentage;
 import static com.app.wingmate.utils.Utilities.getUserAge;
 
-public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHolder> {
+public class MyFansAdapter extends RecyclerView.Adapter<MyFansAdapter.ViewHolder> {
 
     Activity activity;
     Context context;
     private View empty;
-    private List<ParseUser> mValues;
+    private List<Fans> mValues;
 
-    public UserViewAdapter(Context context, List<ParseUser> mValues) {
+    public MyFansAdapter(Context context, List<Fans> mValues) {
         this.context = context;
         this.activity = (Activity) context;
         this.mValues = mValues;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyFansAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item_user, parent, false);
-        return new ViewHolder(view);
+        return new MyFansAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyFansAdapter.ViewHolder holder, final int position) {
 
-        final ParseUser parseUser = mValues.get(position);
+        final ParseUser parseUser = mValues.get(position).getFromUser();
         if (parseUser.getString(PARAM_PROFILE_PIC) != null && parseUser.getString(PARAM_PROFILE_PIC).length() > 0)
             Picasso.get().load(parseUser.getString(PARAM_PROFILE_PIC)).centerCrop().resize(500, 500).placeholder(R.drawable.image_placeholder).into(holder.userPic);
         else {
@@ -64,6 +62,13 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
 
         holder.distanceTV.setText(getDistanceBetweenUser(parseUser));
         holder.matchPercentTV.setText(getMatchPercentage(parseUser) + "% Match");
+
+        if (mValues.get(position).getMySelectedType()!=null && mValues.get(position).getMySelectedType().equals(mValues.get(position).getFanType())) {
+            holder.byMeAswell.setVisibility(View.VISIBLE);
+        } else {
+            holder.byMeAswell.setVisibility(View.GONE);
+        }
+
         holder.itemView.setOnClickListener(view -> {
             ActivityUtility.startProfileActivity(activity, KEY_FRAGMENT_PROFILE, false, parseUser);
         });
@@ -79,7 +84,7 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
         this.empty = empty;
     }
 
-    public void setData(List<ParseUser> mValues) {
+    public void setData(List<Fans> mValues) {
         this.mValues = new ArrayList<>();
         this.mValues = mValues;
         notifyDataSetChanged();
@@ -88,6 +93,7 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView userPic;
+        ImageView byMeAswell;
         TextView ageLocTV;
         TextView matchPercentTV;
         TextView distanceTV;
@@ -95,6 +101,7 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
         public ViewHolder(View view) {
             super(view);
             userPic = view.findViewById(R.id.user_pic);
+            byMeAswell = view.findViewById(R.id.by_me_aswell);
             ageLocTV = view.findViewById(R.id.age_loc_tv);
             matchPercentTV = view.findViewById(R.id.match_percent_tv);
             distanceTV = view.findViewById(R.id.distance_tv);

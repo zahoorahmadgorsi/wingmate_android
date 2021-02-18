@@ -27,7 +27,10 @@ import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
+import com.app.wingmate.events.RefreshFanList;
+import com.app.wingmate.events.RefreshFans;
 import com.app.wingmate.events.RefreshProfile;
+import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.TermsConditions;
 import com.app.wingmate.models.UserAnswer;
@@ -38,6 +41,8 @@ import com.app.wingmate.utils.AppConstants;
 import com.app.wingmate.utils.Utilities;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.parse.DeleteCallback;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
@@ -54,7 +59,13 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import me.tankery.lib.circularseekbar.CircularSeekBar;
 
+import static com.app.wingmate.utils.AppConstants.ERROR;
+import static com.app.wingmate.utils.AppConstants.FAN_TYPE_CRUSH;
+import static com.app.wingmate.utils.AppConstants.FAN_TYPE_LIKE;
+import static com.app.wingmate.utils.AppConstants.FAN_TYPE_MAY_BE;
+import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
+import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
@@ -119,6 +130,10 @@ public class ProfileFragment extends BaseFragment implements BaseView {
     private boolean isCurrentUser;
     private ParseUser parseUser;
 
+    private Fans maybeObject;
+    private Fans crushObject;
+    private Fans likeObject;
+
     public ProfileFragment() {
 
     }
@@ -146,7 +161,6 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         parseUser = getActivity().getIntent().getParcelableExtra(KEY_PARSE_USER);
         isCurrentUser = getActivity().getIntent().getBooleanExtra(KEY_IS_CURRENT_USER, true);
 
-
         if (isCurrentUser) {
             matchView.setVisibility(View.INVISIBLE);
             distanceTV.setVisibility(View.GONE);
@@ -162,6 +176,12 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         showProgress();
         presenter.queryUserAnswers(getContext(), parseUser);
         presenter.queryUserPhotosVideo(getContext(), parseUser);
+        if (!isCurrentUser) {
+            maybeObject = null;
+            crushObject = null;
+            likeObject = null;
+            presenter.queryUserFansStatus(requireContext(), parseUser);
+        }
 
         pic2Card.setVisibility(View.GONE);
         pic3Card.setVisibility(View.GONE);
@@ -188,6 +208,10 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         showProgress();
         presenter.queryUserAnswers(getContext(), parseUser);
         presenter.queryUserPhotosVideo(getContext(), parseUser);
+
+        if (!isCurrentUser) {
+            presenter.queryUserFansStatus(requireContext(), parseUser);
+        }
     }
 
     @Override
@@ -203,7 +227,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
     }
 
     @OnClick({R.id.back_btn, R.id.btn_edit, R.id.btn_edit_media, R.id.pic_1, R.id.pic2_card, R.id.pic3_card, R.id.video_card,
-            R.id.btn_may_be, R.id.btn_like, R.id.btn_crush, R.id.btn_msg})
+            R.id.btn_may_be, R.id.btn_like, R.id.btn_crush, R.id.btn_msg, R.id.btn_refresh})
     public void onViewClicked(View v) {
         if (v.getId() == R.id.back_btn) {
             getActivity().onBackPressed();
@@ -220,13 +244,59 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         } else if (v.getId() == R.id.video_card) {
             ActivityUtility.startVideoViewActivity(requireActivity(), KEY_FRAGMENT_VIDEO_VIEW, userProfileVideoOnly.get(0).getFile().getUrl());
         } else if (v.getId() == R.id.btn_may_be) {
-
+            showProgress();
+            if (maybeObject != null) {
+                maybeObject.deleteInBackground(e -> {
+                    dismissProgress();
+                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as Maybe";
+                    showToast(getActivity(), getContext(), msg, SUCCESS);
+                    EventBus.getDefault().post(new RefreshFanList());
+                    maybeObject = null;
+                    setBottomButtons();
+                });
+            } else {
+                presenter.setFan(requireContext(), parseUser, FAN_TYPE_MAY_BE);
+            }
         } else if (v.getId() == R.id.btn_like) {
-
+            showProgress();
+            if (likeObject != null) {
+                likeObject.deleteInBackground(e -> {
+                    dismissProgress();
+                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as Like";
+                    showToast(getActivity(), getContext(), msg, SUCCESS);
+                    EventBus.getDefault().post(new RefreshFanList());
+                    likeObject = null;
+                    setBottomButtons();
+                });
+            } else {
+                presenter.setFan(requireContext(), parseUser, FAN_TYPE_LIKE);
+            }
         } else if (v.getId() == R.id.btn_crush) {
-
+            showProgress();
+            if (crushObject != null) {
+                crushObject.deleteInBackground(e -> {
+                    dismissProgress();
+                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as Crush";
+                    showToast(getActivity(), getContext(), msg, SUCCESS);
+                    EventBus.getDefault().post(new RefreshFanList());
+                    crushObject = null;
+                    setBottomButtons();
+                });
+            } else {
+                presenter.setFan(requireContext(), parseUser, FAN_TYPE_CRUSH);
+            }
         } else if (v.getId() == R.id.btn_msg) {
 
+        } else if (v.getId() == R.id.btn_refresh) {
+            showProgress();
+            presenter.queryUserAnswers(getContext(), parseUser);
+            presenter.queryUserPhotosVideo(getContext(), parseUser);
+            if (!isCurrentUser) {
+                maybeObject = null;
+                crushObject = null;
+                likeObject = null;
+                presenter.queryUserFansStatus(requireContext(), parseUser);
+            }
         }
     }
 
@@ -262,6 +332,62 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         if (userProfilePhotoVideos != null && userProfilePhotoVideos.size() > 0)
             this.userProfilePhotoVideos = userProfilePhotoVideos;
         setMediaInViews();
+    }
+
+    @Override
+    public void setUserFanStatusSuccess(List<Fans> fansList) {
+        if (fansList != null && fansList.size() > 0) {
+            for (int i = 0; i < fansList.size(); i++) {
+                if (fansList.get(i).getFanType().equals(FAN_TYPE_CRUSH))
+                    crushObject = fansList.get(i);
+                else if (fansList.get(i).getFanType().equals(FAN_TYPE_LIKE))
+                    likeObject = fansList.get(i);
+                else if (fansList.get(i).getFanType().equals(FAN_TYPE_MAY_BE))
+                    maybeObject = fansList.get(i);
+            }
+        }
+        setBottomButtons();
+    }
+
+    @Override
+    public void setFanAddedSuccess(Fans fan) {
+        dismissProgress();
+        switch (fan.getFanType()) {
+            case FAN_TYPE_CRUSH:
+                crushObject = fan;
+                break;
+            case FAN_TYPE_LIKE:
+                likeObject = fan;
+                break;
+            case FAN_TYPE_MAY_BE:
+                maybeObject = fan;
+                break;
+        }
+        String msg = fan.getToUser().getString(PARAM_NICK) + " has been marked as " + fan.getFanType();
+        showToast(getActivity(), getContext(), msg, SUCCESS);
+        EventBus.getDefault().post(new RefreshFanList());
+
+        setBottomButtons();
+    }
+
+    private void setBottomButtons() {
+        if (crushObject != null) {
+
+        } else {
+
+        }
+
+        if (likeObject != null) {
+
+        } else {
+
+        }
+
+        if (maybeObject != null) {
+
+        } else {
+
+        }
     }
 
     private void setViews() {

@@ -2,6 +2,7 @@ package com.app.wingmate;
 
 import android.app.Application;
 
+import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.TermsConditions;
@@ -22,6 +23,7 @@ public class WingMateApplication extends Application {
         ParseObject.registerSubclass(UserAnswer.class);
         ParseObject.registerSubclass(TermsConditions.class);
         ParseObject.registerSubclass(UserProfilePhotoVideo.class);
+        ParseObject.registerSubclass(Fans.class);
 
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(getString(R.string.back4app_app_id))

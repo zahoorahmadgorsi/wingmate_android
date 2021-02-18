@@ -55,7 +55,7 @@ public class PhotoViewFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         imagePath = getActivity().getIntent().getStringExtra(KEY_IMAGE_LINK);
-        if (imagePath!=null && imagePath.length()>0) {
+        if (imagePath != null && imagePath.length() > 0) {
             Picasso.get().load(imagePath).placeholder(R.drawable.image_placeholder).into(zoomageView);
         } else {
             showToast(getActivity(), getContext(), "Unable to load photo!", ERROR);
@@ -79,9 +79,12 @@ public class PhotoViewFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({})
+    @OnClick({R.id.btn_cross})
     public void onViewClicked(View v) {
         switch (v.getId()) {
+            case R.id.btn_cross:
+                requireActivity().onBackPressed();
+                break;
             default:
                 break;
         }
