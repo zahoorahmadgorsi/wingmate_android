@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,12 +35,14 @@ import com.app.wingmate.events.RefreshFans;
 import com.app.wingmate.events.RefreshHome;
 import com.app.wingmate.events.RefreshSearch;
 import com.app.wingmate.models.Fans;
+import com.app.wingmate.models.MyCustomUser;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.ui.dialogs.OptionsSelectorDialog;
 import com.app.wingmate.utils.DateUtils;
+import com.app.wingmate.utils.Utilities;
 import com.app.wingmate.widgets.FadePageTransformer;
 import com.app.wingmate.widgets.NonSwappableViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -56,9 +60,13 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -130,8 +138,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     private MyPagerAdapter viewPagerAdapter;
 
     public List<Question> questions;
-    public List<ParseUser> searchedUsers;
-    public List<ParseUser> allUsers;
+    public List<MyCustomUser> searchedUsers;
+    public List<MyCustomUser> allUsers;
     public List<Fans> myFansList;
     public boolean homeProgress = false;
     public boolean searchProgress = false;
@@ -143,6 +151,9 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     private LocationManager locationManager;
 
+    private ExecutorService executor ;
+    private Handler handler;
+
     public DashboardFragment() {
 
     }
@@ -151,6 +162,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
+        executor = Executors.newSingleThreadExecutor();
+        handler = new Handler(Looper.getMainLooper());
         EventBus.getDefault().register(this);
     }
 
@@ -588,42 +601,24 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     @Override
     public void setAllUsersSuccess(List<ParseUser> parseUsers) {
-//        try {
-        ParseUser.getCurrentUser().fetchInBackground((object, e) -> {
-            if (object != null) {
-                List<UserAnswer> myUserAnswers = object.getList(PARAM_USER_OPTIONAL_ARRAY);
-                if (myUserAnswers != null && myUserAnswers.size() > 0) {
-                    for (int i = 0; i < myUserAnswers.size(); i++) {
-                        myUserAnswers.get(i).fetchInBackground((object1, e1) -> {
-                            if (object1 != null) {
-                                object1.getList(PARAM_OPTIONS_OBJ_ARRAY);
-                            }
-                        });
-                    }
-                    homeProgress = false;
-                    this.allUsers = parseUsers;
-                    EventBus.getDefault().post(new RefreshHome());
-                } else {
-                    homeProgress = false;
-                    this.allUsers = parseUsers;
-                    EventBus.getDefault().post(new RefreshHome());
+        executor.execute(() -> {
+            allUsers = new ArrayList<>();
+            if (parseUsers != null && parseUsers.size() > 0) {
+                for (int i = 0; i < parseUsers.size(); i++) {
+                    MyCustomUser myCustomUser = new MyCustomUser();
+                    myCustomUser.setParseUser(parseUsers.get(i));
+                    myCustomUser.setMatchPercent(Utilities.getMatchPercentage(parseUsers.get(i)));
+                    allUsers.add(myCustomUser);
                 }
-            } else {
-                homeProgress = false;
-                this.allUsers = parseUsers;
-                EventBus.getDefault().post(new RefreshHome());
             }
+            handler.post(() -> {
+                homeProgress = false;
+                EventBus.getDefault().post(new RefreshHome());
+            });
         });
 
-
-//        this.allUsers = parseUsers;
-//        if (this.allUsers != null && this.allUsers.size() > 0) {
-//            for (int i = 0; i < this.allUsers.size(); i++) {
-//
-//            }
-//        }
-//
 //        homeProgress = false;
+//        this.allUsers = parseUsers;
 //        EventBus.getDefault().post(new RefreshHome());
     }
 

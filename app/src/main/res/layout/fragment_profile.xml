@@ -287,7 +287,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="@dimen/_48ssp"
-                    android:src="@drawable/my_fans" />
+                    android:src="@drawable/profile_maybe" />
 
                 <ImageView
                     android:id="@+id/btn_like"
@@ -296,7 +296,7 @@
                     android:layout_height="@dimen/_48ssp"
                     android:layout_marginLeft="@dimen/_12ssp"
                     android:layout_marginStart="@dimen/_12ssp"
-                    android:src="@drawable/search" />
+                    android:src="@drawable/profile_like" />
 
                 <ImageView
                     android:id="@+id/btn_crush"
@@ -305,7 +305,7 @@
                     android:layout_height="@dimen/_48ssp"
                     android:layout_marginLeft="@dimen/_12ssp"
                     android:layout_marginStart="@dimen/_12ssp"
-                    android:src="@drawable/messages" />
+                    android:src="@drawable/profile_crush" />
 
                 <ImageView
                     android:id="@+id/btn_msg"
@@ -314,7 +314,7 @@
                     android:layout_height="@dimen/_48ssp"
                     android:layout_marginLeft="@dimen/_12ssp"
                     android:layout_marginStart="@dimen/_12ssp"
-                    android:src="@drawable/compatibility" />
+                    android:src="@drawable/profile_msg" />
 
             </LinearLayout>
 

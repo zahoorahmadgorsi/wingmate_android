@@ -22,11 +22,13 @@ import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
 import com.app.wingmate.events.RefreshSearch;
+import com.app.wingmate.models.MyCustomUser;
 import com.app.wingmate.ui.adapters.QuestionOptionsListAdapter;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.ui.adapters.UserViewAdapter;
 import com.app.wingmate.ui.dialogs.OptionsSelectorDialog;
+import com.app.wingmate.utils.Utilities;
 import com.parse.FindCallback;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -293,7 +295,11 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
             }
             if (count == totalNoOfSelectedQuestions) {
                 if (!userIds.contains(userId1)) {
-                    dashboardInstance.searchedUsers.add(allSearchedResults.get(y).getUserId());
+                    MyCustomUser myCustomUser = new MyCustomUser();
+                    myCustomUser.setParseUser(allSearchedResults.get(y).getUserId());
+                    myCustomUser.setMatchPercent(Utilities.getMatchPercentage(allSearchedResults.get(y).getUserId()));
+                    dashboardInstance.searchedUsers.add(myCustomUser);
+//                    dashboardInstance.searchedUsers.add(allSearchedResults.get(y).getUserId());
                     userIds.add(userId1);
                 }
             }
@@ -314,85 +320,85 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
         }
     }
 
-    private void manualSearch() {
-        List<Question> filledQuestions = new ArrayList<>();
-        for (int k = 0; k < dashboardInstance.questions.size(); k++) {
-            if (dashboardInstance.questions.get(k).getUserAnswer() != null
-                    && dashboardInstance.questions.get(k).getUserAnswer().getOptionsObjArray() != null
-                    && dashboardInstance.questions.get(k).getUserAnswer().getOptionsObjArray().size() > 0) {
-                filledQuestions.add(dashboardInstance.questions.get(k));
-            }
-        }
-
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereExists(PARAM_USER_MANDATORY_ARRAY);
-        query.include(PARAM_USER_MANDATORY_ARRAY);
-        query.include(PARAM_USER_OPTIONAL_ARRAY);
-        query.include(PARAM_QUESTION_ID);
-        query.include(PARAM_OPTIONS_OBJ_ARRAY);
-        query.setLimit(1000);
-        query.findInBackground((objects, e) -> {
-            if (e == null) {
-
-                List<ParseUser> filteredUsers = new ArrayList<>();
-
-                boolean queFound = false;
-                boolean hasAnyOption = false;
-                int matchCount = 0;
-
-                for (int i = 0; i < objects.size(); i++) {
-
-                    List<UserAnswer> userAnswers = objects.get(i).getList(PARAM_USER_MANDATORY_ARRAY);
-
-                    matchCount = 0;
-
-                    if (userAnswers != null && userAnswers.size() > 0) {
-
-                        for (int x = 0; x < filledQuestions.size(); x++) {
-
-                            queFound = false;
-                            hasAnyOption = false;
-
-                            for (int y = 0; y < userAnswers.size(); y++) {
-
-                                if (filledQuestions.get(x).getObjectId().equals(userAnswers.get(y).getQuestionId().getObjectId())) {
-
-                                    queFound = true;
-
-                                    for (int z = 0; z < filledQuestions.get(x).getUserAnswer().getOptionsObjArray().size(); z++) {
-
-                                        for (int a = 0; a < userAnswers.get(y).getOptionsObjArray().size(); a++) {
-
-                                            if (filledQuestions.get(x).getUserAnswer().getOptionsObjArray().get(z).getObjectId().equals(userAnswers.get(y).getOptionsObjArray().get(a).getObjectId())) {
-
-                                                hasAnyOption = true;
-
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (queFound && hasAnyOption) {
-                                matchCount++;
-                            }
-                        }
-                    }
-                    if (filledQuestions.size() > 0 && (matchCount == filledQuestions.size())) {
-                        filteredUsers.add(objects.get(i));
-                    }
-
-                }
-                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                dialog.setTitle("Alert")
-                        .setIcon(R.drawable.app_heart)
-                        .setMessage(filteredUsers.size() + " Results Found")
-                        .setNegativeButton("Ok", (dialoginterface, i) -> dialoginterface.cancel())
-                        .show();
-            } else {
-                System.out.println("====ee====" + e.getMessage());
-            }
-            dismissProgress();
-        });
-    }
+//    private void manualSearch() {
+//        List<Question> filledQuestions = new ArrayList<>();
+//        for (int k = 0; k < dashboardInstance.questions.size(); k++) {
+//            if (dashboardInstance.questions.get(k).getUserAnswer() != null
+//                    && dashboardInstance.questions.get(k).getUserAnswer().getOptionsObjArray() != null
+//                    && dashboardInstance.questions.get(k).getUserAnswer().getOptionsObjArray().size() > 0) {
+//                filledQuestions.add(dashboardInstance.questions.get(k));
+//            }
+//        }
+//
+//        ParseQuery<ParseUser> query = ParseUser.getQuery();
+//        query.whereExists(PARAM_USER_MANDATORY_ARRAY);
+//        query.include(PARAM_USER_MANDATORY_ARRAY);
+//        query.include(PARAM_USER_OPTIONAL_ARRAY);
+//        query.include(PARAM_QUESTION_ID);
+//        query.include(PARAM_OPTIONS_OBJ_ARRAY);
+//        query.setLimit(1000);
+//        query.findInBackground((objects, e) -> {
+//            if (e == null) {
+//
+//                List<ParseUser> filteredUsers = new ArrayList<>();
+//
+//                boolean queFound = false;
+//                boolean hasAnyOption = false;
+//                int matchCount = 0;
+//
+//                for (int i = 0; i < objects.size(); i++) {
+//
+//                    List<UserAnswer> userAnswers = objects.get(i).getList(PARAM_USER_MANDATORY_ARRAY);
+//
+//                    matchCount = 0;
+//
+//                    if (userAnswers != null && userAnswers.size() > 0) {
+//
+//                        for (int x = 0; x < filledQuestions.size(); x++) {
+//
+//                            queFound = false;
+//                            hasAnyOption = false;
+//
+//                            for (int y = 0; y < userAnswers.size(); y++) {
+//
+//                                if (filledQuestions.get(x).getObjectId().equals(userAnswers.get(y).getQuestionId().getObjectId())) {
+//
+//                                    queFound = true;
+//
+//                                    for (int z = 0; z < filledQuestions.get(x).getUserAnswer().getOptionsObjArray().size(); z++) {
+//
+//                                        for (int a = 0; a < userAnswers.get(y).getOptionsObjArray().size(); a++) {
+//
+//                                            if (filledQuestions.get(x).getUserAnswer().getOptionsObjArray().get(z).getObjectId().equals(userAnswers.get(y).getOptionsObjArray().get(a).getObjectId())) {
+//
+//                                                hasAnyOption = true;
+//
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//
+//                            if (queFound && hasAnyOption) {
+//                                matchCount++;
+//                            }
+//                        }
+//                    }
+//                    if (filledQuestions.size() > 0 && (matchCount == filledQuestions.size())) {
+//                        filteredUsers.add(objects.get(i));
+//                    }
+//
+//                }
+//                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+//                dialog.setTitle("Alert")
+//                        .setIcon(R.drawable.app_heart)
+//                        .setMessage(filteredUsers.size() + " Results Found")
+//                        .setNegativeButton("Ok", (dialoginterface, i) -> dialoginterface.cancel())
+//                        .show();
+//            } else {
+//                System.out.println("====ee====" + e.getMessage());
+//            }
+//            dismissProgress();
+//        });
+//    }
 }

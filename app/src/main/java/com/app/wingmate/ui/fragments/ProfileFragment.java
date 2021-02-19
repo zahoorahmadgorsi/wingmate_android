@@ -116,6 +116,14 @@ public class ProfileFragment extends BaseFragment implements BaseView {
     LinearLayout editProfileView;
     @BindView(R.id.others_buttons_view)
     LinearLayout othersBottomView;
+    @BindView(R.id.btn_may_be)
+    ImageView btnMaybe;
+    @BindView(R.id.btn_like)
+    ImageView btnLike;
+    @BindView(R.id.btn_crush)
+    ImageView btnCrush;
+    @BindView(R.id.btn_msg)
+    ImageView btnMsg;
 
     private BasePresenter presenter;
 
@@ -248,7 +256,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
             if (maybeObject != null) {
                 maybeObject.deleteInBackground(e -> {
                     dismissProgress();
-                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as Maybe";
+                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Maybe";
                     showToast(getActivity(), getContext(), msg, SUCCESS);
                     EventBus.getDefault().post(new RefreshFanList());
                     maybeObject = null;
@@ -262,7 +270,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
             if (likeObject != null) {
                 likeObject.deleteInBackground(e -> {
                     dismissProgress();
-                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as Like";
+                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Like";
                     showToast(getActivity(), getContext(), msg, SUCCESS);
                     EventBus.getDefault().post(new RefreshFanList());
                     likeObject = null;
@@ -276,7 +284,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
             if (crushObject != null) {
                 crushObject.deleteInBackground(e -> {
                     dismissProgress();
-                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as Crush";
+                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Crush";
                     showToast(getActivity(), getContext(), msg, SUCCESS);
                     EventBus.getDefault().post(new RefreshFanList());
                     crushObject = null;
@@ -363,7 +371,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 maybeObject = fan;
                 break;
         }
-        String msg = fan.getToUser().getString(PARAM_NICK) + " has been marked as " + fan.getFanType();
+        String msg = fan.getToUser().getString(PARAM_NICK) + " has been marked as your " + fan.getFanType();
         showToast(getActivity(), getContext(), msg, SUCCESS);
         EventBus.getDefault().post(new RefreshFanList());
 
@@ -372,21 +380,21 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 
     private void setBottomButtons() {
         if (crushObject != null) {
-
+            btnCrush.setAlpha(1.0f);
         } else {
-
+            btnCrush.setAlpha(0.4f);
         }
 
         if (likeObject != null) {
-
+            btnLike.setAlpha(1.0f);
         } else {
-
+            btnLike.setAlpha(0.4f);
         }
 
         if (maybeObject != null) {
-
+            btnMaybe.setAlpha(1.0f);
         } else {
-
+            btnMaybe.setAlpha(0.4f);
         }
     }
 

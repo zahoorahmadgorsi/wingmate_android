@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -149,8 +150,15 @@ public class HomeFragment extends BaseFragment {
                 dashboardInstance.setTab(3);
                 break;
             case R.id.btn_top_compatibility:
+                sortByCompatibility();
                 break;
         }
+    }
+
+    public void sortByCompatibility() {
+        Collections.sort(dashboardInstance.allUsers, (lhs, rhs) -> Integer.valueOf(rhs.getMatchPercent()).compareTo(lhs.getMatchPercent()));
+        userViewAdapter.setData(dashboardInstance.allUsers);
+        userViewAdapter.notifyDataSetChanged();
     }
 
     private void initView() {

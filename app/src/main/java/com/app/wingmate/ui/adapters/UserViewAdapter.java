@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
+import com.app.wingmate.models.MyCustomUser;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.Utilities;
 import com.parse.ParseUser;
@@ -33,9 +34,9 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
     Activity activity;
     Context context;
     private View empty;
-    private List<ParseUser> mValues;
+    private List<MyCustomUser> mValues;
 
-    public UserViewAdapter(Context context, List<ParseUser> mValues) {
+    public UserViewAdapter(Context context, List<MyCustomUser> mValues) {
         this.context = context;
         this.activity = (Activity) context;
         this.mValues = mValues;
@@ -50,7 +51,7 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final ParseUser parseUser = mValues.get(position);
+        final ParseUser parseUser = mValues.get(position).getParseUser();
         if (parseUser.getString(PARAM_PROFILE_PIC) != null && parseUser.getString(PARAM_PROFILE_PIC).length() > 0)
             Picasso.get().load(parseUser.getString(PARAM_PROFILE_PIC)).centerCrop().resize(500, 500).placeholder(R.drawable.image_placeholder).into(holder.userPic);
         else {
@@ -63,7 +64,8 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
         holder.ageLocTV.setText(txt);
 
         holder.distanceTV.setText(getDistanceBetweenUser(parseUser));
-        holder.matchPercentTV.setText(getMatchPercentage(parseUser) + "% Match");
+//        holder.matchPercentTV.setText(getMatchPercentage(parseUser) + "% Match");
+        holder.matchPercentTV.setText(mValues.get(position).getMatchPercent() + "% Match");
         holder.itemView.setOnClickListener(view -> {
             ActivityUtility.startProfileActivity(activity, KEY_FRAGMENT_PROFILE, false, parseUser);
         });
@@ -79,7 +81,7 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
         this.empty = empty;
     }
 
-    public void setData(List<ParseUser> mValues) {
+    public void setData(List<MyCustomUser> mValues) {
         this.mValues = new ArrayList<>();
         this.mValues = mValues;
         notifyDataSetChanged();
