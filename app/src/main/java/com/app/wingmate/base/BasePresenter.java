@@ -126,6 +126,12 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
         }
     }
 
+    public void queryMySpecificTypeFans(Context context, String type) {
+        if (baseView != null) {
+            interactor.fetchSpecificTypeFansFormParse(context, type, this);
+        }
+    }
+
     public void queryUserFansStatus(Context context, ParseUser parseUser) {
         if (baseView != null) {
             interactor.fetchUserFanStatusFormParse(context, parseUser, this);

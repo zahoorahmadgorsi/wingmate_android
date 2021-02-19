@@ -91,11 +91,32 @@ public class MyFansFragment extends BaseFragment {
     }
 
     private void setCountViewsClickListeners() {
-        ((MainActivity) getActivity()).getBtnLikesFilter().setOnClickListener(v -> setLikesFilterView());
+        ((MainActivity) getActivity()).getBtnLikesFilter().setOnClickListener(v -> {
+            pullToRefresh.setRefreshing(false);
+            dashboardInstance.myFansProgress = true;
+            showProgress();
+            dashboardInstance.myFansList = new ArrayList<>();
+            dashboardInstance.presenter.queryAllMyFans(getContext());
+            setLikesFilterView();
+        });
 
-        ((MainActivity) getActivity()).getBtnCrushFilter().setOnClickListener(v -> setCrushFilterView());
+        ((MainActivity) getActivity()).getBtnCrushFilter().setOnClickListener(v -> {
+            pullToRefresh.setRefreshing(false);
+            dashboardInstance.myFansProgress = true;
+            showProgress();
+            dashboardInstance.myFansList = new ArrayList<>();
+            dashboardInstance.presenter.queryAllMyFans(getContext());
+            setCrushFilterView();
+        });
 
-        ((MainActivity) getActivity()).getBtnMaybeFilter().setOnClickListener(v -> setMaybeFilterView());
+        ((MainActivity) getActivity()).getBtnMaybeFilter().setOnClickListener(v -> {
+            pullToRefresh.setRefreshing(false);
+            dashboardInstance.myFansProgress = true;
+            showProgress();
+            dashboardInstance.myFansList = new ArrayList<>();
+            dashboardInstance.presenter.queryAllMyFans(getContext());
+            setMaybeFilterView();
+        });
     }
 
     private void setLikesFilterView() {

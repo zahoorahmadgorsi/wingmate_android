@@ -608,6 +608,69 @@ public class BaseInteractor {
         }
     }
 
+    public void fetchSpecificTypeFansFormParse(final Context context, String type, final OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            ParseQuery queryUserToMe = ParseQuery.getQuery(CLASS_NAME_FANS);
+            queryUserToMe.whereEqualTo(PARAM_TO_USER, ParseUser.getCurrentUser());
+            queryUserToMe.whereEqualTo(PARAM_FAN_TYPE, type);
+
+            ParseQuery queryMeToUser = ParseQuery.getQuery(CLASS_NAME_FANS);
+            queryMeToUser.whereEqualTo(PARAM_FROM_USER, ParseUser.getCurrentUser());
+            queryMeToUser.whereEqualTo(PARAM_FAN_TYPE, type);
+
+            List<ParseQuery<Fans>> queries = new ArrayList<>();
+            queries.add(queryUserToMe);
+            queries.add(queryMeToUser);
+
+            ParseQuery<Fans> mainQuery = ParseQuery.or(queries);
+            mainQuery.include(PARAM_FROM_USER);
+            mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY);
+            mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+            mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_OPTIONAL_ARRAY);
+            mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+            mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            mainQuery.include(PARAM_TO_USER);
+            mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_MANDATORY_ARRAY);
+            mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+            mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY);
+            mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+            mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            mainQuery.findInBackground((objects, e) -> {
+                if (e == null) {
+                    if (objects == null) objects = new ArrayList<>();
+                    listener.onMyFansSuccess(objects);
+                } else {
+                    listener.onResponseError(e);
+                }
+            });
+
+//            ParseQuery query = ParseQuery.getQuery(CLASS_NAME_FANS);
+//            query.include(PARAM_FROM_USER);
+//            query.include(PARAM_TO_USER);
+//            query.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY);
+//            query.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY);
+//            query.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+//            query.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+//            query.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+//            query.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+//            query.whereEqualTo(PARAM_TO_USER, ParseUser.getCurrentUser());
+//            query.setLimit(1000);
+//            query.findInBackground((FindCallback<Fans>) (objects, e) -> {
+//                if (e == null) {
+//                    if (objects == null) objects = new ArrayList<>();
+//                    listener.onMyFansSuccess(objects);
+//                    System.out.println("====fans==="+objects.size());
+//                } else {
+//                    System.out.println("====fans==="+e.getMessage());
+//                    listener.onResponseError(e);
+//                }
+//            });
+        }
+    }
+
     public void fetchUserFanStatusFormParse(final Context context, ParseUser parseUser, final OnFinishedListener listener) {
         if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
         else {

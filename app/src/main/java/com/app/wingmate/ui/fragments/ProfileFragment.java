@@ -63,6 +63,7 @@ import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_CRUSH;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_LIKE;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_MAY_BE;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
@@ -252,46 +253,61 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         } else if (v.getId() == R.id.video_card) {
             ActivityUtility.startVideoViewActivity(requireActivity(), KEY_FRAGMENT_VIDEO_VIEW, userProfileVideoOnly.get(0).getFile().getUrl());
         } else if (v.getId() == R.id.btn_may_be) {
-            showProgress();
-            if (maybeObject != null) {
-                maybeObject.deleteInBackground(e -> {
-                    dismissProgress();
-                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Maybe";
-                    showToast(getActivity(), getContext(), msg, SUCCESS);
-                    EventBus.getDefault().post(new RefreshFanList());
-                    maybeObject = null;
-                    setBottomButtons();
-                });
+            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+                showProgress();
+                if (maybeObject != null) {
+                    maybeObject.deleteInBackground(e -> {
+                        dismissProgress();
+//                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Maybe";
+                        String msg = "Updated successfully";
+                        showToast(getActivity(), getContext(), msg, SUCCESS);
+                        EventBus.getDefault().post(new RefreshFanList());
+                        maybeObject = null;
+                        setBottomButtons();
+                    });
+                } else {
+                    presenter.setFan(requireContext(), parseUser, FAN_TYPE_MAY_BE);
+                }
             } else {
-                presenter.setFan(requireContext(), parseUser, FAN_TYPE_MAY_BE);
+                showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
             }
         } else if (v.getId() == R.id.btn_like) {
-            showProgress();
-            if (likeObject != null) {
-                likeObject.deleteInBackground(e -> {
-                    dismissProgress();
-                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Like";
-                    showToast(getActivity(), getContext(), msg, SUCCESS);
-                    EventBus.getDefault().post(new RefreshFanList());
-                    likeObject = null;
-                    setBottomButtons();
-                });
+            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+                showProgress();
+                if (likeObject != null) {
+                    likeObject.deleteInBackground(e -> {
+                        dismissProgress();
+//                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Like";
+                        String msg = "Updated successfully";
+                        showToast(getActivity(), getContext(), msg, SUCCESS);
+                        EventBus.getDefault().post(new RefreshFanList());
+                        likeObject = null;
+                        setBottomButtons();
+                    });
+                } else {
+                    presenter.setFan(requireContext(), parseUser, FAN_TYPE_LIKE);
+                }
             } else {
-                presenter.setFan(requireContext(), parseUser, FAN_TYPE_LIKE);
+                showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
             }
         } else if (v.getId() == R.id.btn_crush) {
-            showProgress();
-            if (crushObject != null) {
-                crushObject.deleteInBackground(e -> {
-                    dismissProgress();
-                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Crush";
-                    showToast(getActivity(), getContext(), msg, SUCCESS);
-                    EventBus.getDefault().post(new RefreshFanList());
-                    crushObject = null;
-                    setBottomButtons();
-                });
+            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+                showProgress();
+                if (crushObject != null) {
+                    crushObject.deleteInBackground(e -> {
+                        dismissProgress();
+//                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Crush";
+                        String msg = "Updated successfully";
+                        showToast(getActivity(), getContext(), msg, SUCCESS);
+                        EventBus.getDefault().post(new RefreshFanList());
+                        crushObject = null;
+                        setBottomButtons();
+                    });
+                } else {
+                    presenter.setFan(requireContext(), parseUser, FAN_TYPE_CRUSH);
+                }
             } else {
-                presenter.setFan(requireContext(), parseUser, FAN_TYPE_CRUSH);
+                showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
             }
         } else if (v.getId() == R.id.btn_msg) {
 
@@ -371,7 +387,8 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 maybeObject = fan;
                 break;
         }
-        String msg = fan.getToUser().getString(PARAM_NICK) + " has been marked as your " + fan.getFanType();
+//        String msg = fan.getToUser().getString(PARAM_NICK) + " has been marked as your " + fan.getFanType();
+        String msg = "Updated successfully";
         showToast(getActivity(), getContext(), msg, SUCCESS);
         EventBus.getDefault().post(new RefreshFanList());
 
