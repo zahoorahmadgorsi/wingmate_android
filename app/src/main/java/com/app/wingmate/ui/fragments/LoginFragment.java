@@ -321,6 +321,9 @@ public class LoginFragment extends BaseFragment implements BaseView {
         if (rememberCheckbox.isChecked()) {
             SharedPrefers.saveString(requireContext(), PREF_EMAIL, emailET.getText().toString());
             SharedPrefers.saveString(requireContext(), PREF_PASSWORD, passwordET.getText().toString());
+        } else {
+            SharedPrefers.saveString(requireContext(), PREF_EMAIL, "");
+            SharedPrefers.saveString(requireContext(), PREF_PASSWORD, "");
         }
         if (parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)
 //                && parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)

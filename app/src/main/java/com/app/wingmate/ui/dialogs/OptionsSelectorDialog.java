@@ -343,7 +343,7 @@ public class OptionsSelectorDialog extends DialogFragment implements View.OnClic
                 } else if (TAG.equalsIgnoreCase(PARAM_GENDER)) {
                     saveGenderData();
                 } else if (TAG.equalsIgnoreCase(PARAM_QUESTION_ID)) {
-                    if (!(questionType.equals(MANDATORY)) || (currentSelectedOptions != null && currentSelectedOptions.size() > 0)) {
+                    if (VIEW_TAG.equals(TAG_SEARCH) || !(questionType.equals(MANDATORY)) || (currentSelectedOptions != null && currentSelectedOptions.size() > 0)) {
                         saveQuestionsData();
                     } else
                         showToast(requireActivity(), requireContext(), "Please select option!", SUCCESS);

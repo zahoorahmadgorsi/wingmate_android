@@ -10,7 +10,6 @@
         android:id="@+id/zoom_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btn_cross"
         android:src="@drawable/image_placeholder"
         app:zoomage_restrictBounds="false"
         app:zoomage_animateOnReset="true"

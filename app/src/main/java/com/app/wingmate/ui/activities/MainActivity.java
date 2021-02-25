@@ -430,7 +430,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             if (((DashboardFragment) dashboardFragment).viewPager.getCurrentItem() > 0) {
                 ((DashboardFragment) dashboardFragment).viewPager.setCurrentItem(0, true);
                 ((DashboardFragment) dashboardFragment).setHomeView();
-                setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+//                setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
             } else {
                 super.onBackPressed();
                 overridePendingTransition(R.anim.blank_anim, R.anim.left_to_right);

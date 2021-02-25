@@ -132,7 +132,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     private HomeFragment homeFragment;
     private SearchFragment searchFragment;
     private MyFansFragment likesFragment;
-    private DummyFragment messagesFragment;
+    private MessagesFragment messagesFragment;
     private SettingsFragment settingsFragment;
 
     private MyPagerAdapter viewPagerAdapter;
@@ -228,7 +228,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         homeFragment = HomeFragment.newInstance(this);
         searchFragment = SearchFragment.newInstance(this);
         likesFragment = MyFansFragment.newInstance(this);
-        messagesFragment = DummyFragment.newInstance(this);
+        messagesFragment = MessagesFragment.newInstance(this);
         settingsFragment = SettingsFragment.newInstance(this);
 
         ((MainActivity) getActivity()).hideTopView();
@@ -273,6 +273,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         tvHome.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
 //        viewPager.setCurrentItem(0, true);
         ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+        btnHome.setAlpha(1.0f);
     }
 
     public void setAllInView() {

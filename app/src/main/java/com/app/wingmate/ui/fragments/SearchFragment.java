@@ -226,10 +226,13 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
         dialog.dismiss();
         if (selectedIndex > -1) {
             dashboardInstance.questions.set(selectedIndex, question);
+            dashboardInstance.questions.get(selectedIndex).setSearchedResults(new ArrayList<>());
             adapter.setData(dashboardInstance.questions);
             adapter.notifyDataSetChanged();
 
-            dashboardInstance.searchSpecificQuestion(dashboardInstance.questions.get(selectedIndex).getUserAnswer().getOptionsObjArray());
+            if (dashboardInstance.questions.get(selectedIndex).getUserAnswer().getOptionsObjArray() != null
+                    && dashboardInstance.questions.get(selectedIndex).getUserAnswer().getOptionsObjArray().size() > 0)
+                dashboardInstance.searchSpecificQuestion(dashboardInstance.questions.get(selectedIndex).getUserAnswer().getOptionsObjArray());
         }
     }
 

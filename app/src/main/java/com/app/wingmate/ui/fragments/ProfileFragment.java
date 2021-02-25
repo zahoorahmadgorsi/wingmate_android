@@ -482,15 +482,15 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 }
             }
 
-            if (userProfilePhotoOnly.size() > 0)
+            if (userProfilePhotoOnly.size() > 0) {
                 Picasso.get().load(userProfilePhotoOnly.get(0).getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(pic1);
-            if (userProfilePhotoOnly.size() > 1) {
+            } if (userProfilePhotoOnly.size() > 1) {
                 pic2Card.setVisibility(View.VISIBLE);
                 Picasso.get().load(userProfilePhotoOnly.get(1).getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(pic2);
             }
             if (userProfilePhotoOnly.size() > 2) {
                 pic3Card.setVisibility(View.VISIBLE);
-                Picasso.get().load(userProfilePhotoVideos.get(2).getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(pic3);
+                Picasso.get().load(userProfilePhotoOnly.get(2).getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(pic3);
             }
             if (userProfileVideoOnly.size() > 0) {
                 videoCard.setVisibility(View.VISIBLE);
