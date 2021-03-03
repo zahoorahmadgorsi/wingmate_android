@@ -325,20 +325,22 @@ public class LoginFragment extends BaseFragment implements BaseView {
             SharedPrefers.saveString(requireContext(), PREF_EMAIL, "");
             SharedPrefers.saveString(requireContext(), PREF_PASSWORD, "");
         }
-        if (parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)
-//                && parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)
-                && parseUser.getString(PARAM_PROFILE_PIC) != null
-                && !TextUtils.isEmpty(parseUser.getString(PARAM_PROFILE_PIC))) {
-            ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_DASHBOARD);
-        } else if (parseUser.getString(PARAM_PROFILE_PIC) == null
-                || TextUtils.isEmpty(parseUser.getString(PARAM_PROFILE_PIC))) {
-            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
-        } else if (!parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
-            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
-        }
-//        else if (!parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
-//            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+//        if (parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)
+////                && parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)
+//                && parseUser.getString(PARAM_PROFILE_PIC) != null
+//                && !TextUtils.isEmpty(parseUser.getString(PARAM_PROFILE_PIC))) {
+//            ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_DASHBOARD);
+//        } else if (parseUser.getString(PARAM_PROFILE_PIC) == null
+//                || TextUtils.isEmpty(parseUser.getString(PARAM_PROFILE_PIC))) {
+//            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
+//        } else if (!parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
+//            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
 //        }
+////        else if (!parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
+////            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+////        }
+
+        ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_DASHBOARD);
     }
 
     @Override

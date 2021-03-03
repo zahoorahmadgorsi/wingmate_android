@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.wingmate.R;
+import com.app.wingmate.base.BaseActivity;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.events.RefreshHome;
 import com.app.wingmate.events.RefreshSearch;
@@ -38,6 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
 
 public class HomeFragment extends BaseFragment {
 
@@ -135,7 +137,8 @@ public class HomeFragment extends BaseFragment {
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.profile_img:
-                ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+                ActivityUtility.startProfileActivity(requireActivity(), KEY_FRAGMENT_PROFILE, true, ParseUser.getCurrentUser());
+//                ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 break;
             case R.id.btn_top_fans:
 //                dashboardInstance.setAllInView();

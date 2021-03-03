@@ -38,16 +38,16 @@ public class SplashActivity extends AppCompatActivity {
                         ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_PRE_LOGIN);
 //                        ActivityUtility.startEmailVerifyActivity(SplashActivity.this, KEY_FRAGMENT_EMAIL_VERIFY, ParseUser.getCurrentUser().getEmail(), ParseUser.getCurrentUser().getString(PARAM_NICK));
                     }
-                    else if (ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC) == null
-                            || TextUtils.isEmpty(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))) {
-                        ActivityUtility.startProfileMediaActivity(SplashActivity.this, KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
-                    }
-                    else if (!ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
-                        ActivityUtility.startQuestionnaireActivity(SplashActivity.this, KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
-                    }
-//                    else if (!ParseUser.getCurrentUser().getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
-//                        ActivityUtility.startQuestionnaireActivity(SplashActivity.this, KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+//                    else if (ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC) == null
+//                            || TextUtils.isEmpty(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))) {
+//                        ActivityUtility.startProfileMediaActivity(SplashActivity.this, KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
 //                    }
+//                    else if (!ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
+//                        ActivityUtility.startQuestionnaireActivity(SplashActivity.this, KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
+//                    }
+////                    else if (!ParseUser.getCurrentUser().getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
+////                        ActivityUtility.startQuestionnaireActivity(SplashActivity.this, KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+////                    }
                      else {
                         ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_DASHBOARD);
                     }

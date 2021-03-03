@@ -8,6 +8,7 @@ import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.TermsConditions;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.models.UserProfilePhotoVideo;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
@@ -17,6 +18,8 @@ public class WingMateApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
 
         ParseObject.registerSubclass(Question.class);
         ParseObject.registerSubclass(QuestionOption.class);

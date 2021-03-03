@@ -1,4 +1,4 @@
-package com.app.wingmate.ui.fragments;
+ package com.app.wingmate.ui.fragments;
 
 import android.Manifest;
 import android.content.Context;
@@ -395,7 +395,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+//        ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
         checkPaidUser();
         saveCurrentGeoPoint();
     }

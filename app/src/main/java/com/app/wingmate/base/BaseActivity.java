@@ -19,6 +19,7 @@ import me.tankery.lib.circularseekbar.CircularSeekBar;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
 
 //public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 public class BaseActivity extends AppCompatActivity {
@@ -87,7 +88,11 @@ public class BaseActivity extends AppCompatActivity {
 
         profileImg = (CircleImageView) findViewById(R.id.profile_img);
 
-        profileImg.setOnClickListener(v -> ActivityUtility.startPhotoViewActivity(BaseActivity.this, KEY_FRAGMENT_PHOTO_VIEW, ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC)));
+        profileImg.setOnClickListener(v -> {
+            ActivityUtility.startProfileActivity(BaseActivity.this, KEY_FRAGMENT_PROFILE, true, ParseUser.getCurrentUser());
+//            ActivityUtility.startPhotoViewActivity(BaseActivity.this, KEY_FRAGMENT_PHOTO_VIEW, ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+
+        });
 
         hideTopView();
         hideStepView();

@@ -241,12 +241,12 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                 } else if (CURRENT_MODE == MODE_VIDEO) {
                     if (hasVideo) {
                         CURRENT_MODE = MODE_PHOTOS;
-                        if (!ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
-                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
-                        } else {
-                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
-                        }
-//                        getActivity().onBackPressed();
+//                        if (!ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
+//                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
+//                        } else {
+//                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+//                        }
+                        getActivity().onBackPressed();
                     } else {
                         showToast(getActivity(), getContext(), "Video is required!", ERROR);
                     }

@@ -1,6 +1,7 @@
 package com.app.wingmate.ui.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -133,7 +134,7 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
 
         searchET.setVisibility(View.GONE);
         backBtn.setVisibility(View.VISIBLE);
-        backBtn.setAlpha(0.5f);
+//        backBtn.setAlpha(0.5f);
 
         filteredOptionsList = new ArrayList<>();
         currentSelectedOptions = new ArrayList<>();
@@ -555,31 +556,31 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
             dismissProgress();
             showToast(requireActivity(), requireContext(), "You have successfully saved " + questionType + " questions.", SUCCESS);
 
-//            if (!ParseUser.getCurrentUser().getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
-//                ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+////            if (!ParseUser.getCurrentUser().getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
+////                ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+////            } else {
+////                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+////            }
+//
+//            if (questionType.equals(MANDATORY)) {
+//                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+//                dialog.setTitle(getString(R.string.app_name))
+//                        .setIcon(R.drawable.app_heart)
+//                        .setMessage("Do you want fill optional questionnaire?")
+//                        .setNegativeButton("Skip Now", (dialoginterface, i) -> {
+//                            dialoginterface.cancel();
+//                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+//                        })
+//                        .setPositiveButton("Yes", (dialoginterface, i) -> {
+//                            dialoginterface.cancel();
+//                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+//                        }).show();
 //            } else {
 //                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
 //            }
 
-            if (questionType.equals(MANDATORY)) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                dialog.setTitle(getString(R.string.app_name))
-                        .setIcon(R.drawable.app_heart)
-                        .setMessage("Do you want fill optional questionnaire?")
-                        .setNegativeButton("Skip Now", (dialoginterface, i) -> {
-                            dialoginterface.cancel();
-                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
-                        })
-                        .setPositiveButton("Yes", (dialoginterface, i) -> {
-                            dialoginterface.cancel();
-                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
-                        }).show();
-            } else {
-                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
-            }
 
-
-//            new Handler().postDelayed(() -> requireActivity().onBackPressed(), 1000);
+            new Handler().postDelayed(() -> requireActivity().onBackPressed(), 1000);
         });
 
     }
@@ -595,14 +596,14 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
             loadQuestion(questionnaire.get(selectedQuestionIndex), isMultiSelect);
             if (questionNo == 1) {
                 backBtn.setVisibility(View.VISIBLE);
-                backBtn.setAlpha(0.5f);
+//                backBtn.setAlpha(0.5f);
             } else {
                 backBtn.setVisibility(View.VISIBLE);
                 backBtn.setAlpha(1.0f);
             }
 
         } else {
-//            requireActivity().onBackPressed();
+            requireActivity().onBackPressed();
         }
     }
 }
