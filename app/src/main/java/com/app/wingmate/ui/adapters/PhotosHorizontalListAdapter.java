@@ -53,6 +53,7 @@ public class PhotosHorizontalListAdapter extends RecyclerView.Adapter<PhotosHori
             if (object.getFile() != null)
                 Picasso.get().load(object.getFile().getUrl()).resize(500, 500).placeholder(R.drawable.image_placeholder).into(holder.pic);
         }
+        holder.pic.setScaleType(ImageView.ScaleType.CENTER_CROP);
         holder.itemView.setOnClickListener(v -> {
             if (object.isDummyFile()) {
                 fragment.addImage();

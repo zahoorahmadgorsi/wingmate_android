@@ -34,6 +34,7 @@ import butterknife.Unbinder;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_CRUSH;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_LIKE;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_MAY_BE;
+import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 
 public class MyFansFragment extends BaseFragment {
 
@@ -191,6 +192,8 @@ public class MyFansFragment extends BaseFragment {
 //        } else {
 //            emptyView.setVisibility(View.GONE);
 //        }
+
+        ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
         setDataInGridView();
     }
 

@@ -10,10 +10,14 @@ import androidx.annotation.Nullable;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.ui.activities.MainActivity;
+import com.parse.ParseUser;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 
 public class MessagesFragment  extends BaseFragment {
 
@@ -59,6 +63,7 @@ public class MessagesFragment  extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
     }
 
     @Override

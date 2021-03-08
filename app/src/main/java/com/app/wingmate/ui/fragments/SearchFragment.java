@@ -23,6 +23,7 @@ import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
 import com.app.wingmate.events.RefreshSearch;
 import com.app.wingmate.models.MyCustomUser;
+import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.ui.adapters.QuestionOptionsListAdapter;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.UserAnswer;
@@ -48,6 +49,7 @@ import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_ANSWER;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
+import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_MANDATORY_ARRAY;
@@ -145,6 +147,8 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
         super.onResume();
         if (dashboardInstance.searchProgress) showProgress();
         else dismissProgress();
+
+        ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
 
         if (dashboardInstance.searchedUsers != null && dashboardInstance.searchedUsers.size() > 0) {
             searchView.setVisibility(View.VISIBLE);

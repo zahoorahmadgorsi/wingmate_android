@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.utils.ActivityUtility;
 import com.parse.ParseUser;
 
@@ -23,6 +24,7 @@ import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.OPTIONAL;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
+import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
@@ -69,6 +71,7 @@ public class SettingsFragment  extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
     }
 
     @Override

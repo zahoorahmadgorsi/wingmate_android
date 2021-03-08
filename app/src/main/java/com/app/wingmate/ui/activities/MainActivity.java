@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseActivity;
+import com.app.wingmate.events.RefreshDashboard;
 import com.app.wingmate.ui.fragments.DashboardFragment;
 import com.app.wingmate.events.RefreshProfile;
 import com.app.wingmate.ui.fragments.HomeFragment;
@@ -412,6 +413,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         } else if (editProfileFragment != null) {
             if (((EditProfileFragment) editProfileFragment).isAnyUpdate) {
+                EventBus.getDefault().post(new RefreshDashboard());
                 EventBus.getDefault().post(new RefreshProfile());
             }
             super.onBackPressed();

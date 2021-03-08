@@ -104,6 +104,15 @@ public class HomeFragment extends BaseFragment {
             userViewAdapter.setData(dashboardInstance.allUsers);
             userViewAdapter.notifyDataSetChanged();
         }
+
+        Picasso.get()
+                .load(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))
+                .centerCrop()
+                .resize(500, 500)
+                .placeholder(R.drawable.image_placeholder)
+                .into(profileImg);
+
+        dashboardInstance.saveCurrentGeoPoint();
     }
 
     @Subscribe
@@ -159,9 +168,11 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void sortByCompatibility() {
-        Collections.sort(dashboardInstance.allUsers, (lhs, rhs) -> Integer.valueOf(rhs.getMatchPercent()).compareTo(lhs.getMatchPercent()));
-        userViewAdapter.setData(dashboardInstance.allUsers);
-        userViewAdapter.notifyDataSetChanged();
+        if (dashboardInstance.allUsers!=null && dashboardInstance.allUsers.size()>0) {
+            Collections.sort(dashboardInstance.allUsers, (lhs, rhs) -> Integer.valueOf(rhs.getMatchPercent()).compareTo(lhs.getMatchPercent()));
+            userViewAdapter.setData(dashboardInstance.allUsers);
+            userViewAdapter.notifyDataSetChanged();
+        }
     }
 
     private void initView() {

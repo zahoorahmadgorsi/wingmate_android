@@ -1,16 +1,21 @@
- package com.app.wingmate.ui.fragments;
+package com.app.wingmate.ui.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,6 +35,7 @@ import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
+import com.app.wingmate.events.RefreshDashboard;
 import com.app.wingmate.events.RefreshFanList;
 import com.app.wingmate.events.RefreshFans;
 import com.app.wingmate.events.RefreshHome;
@@ -45,6 +51,14 @@ import com.app.wingmate.utils.DateUtils;
 import com.app.wingmate.utils.Utilities;
 import com.app.wingmate.widgets.FadePageTransformer;
 import com.app.wingmate.widgets.NonSwappableViewPager;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FunctionCallback;
 import com.parse.GetCallback;
@@ -86,9 +100,12 @@ import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.TAG_SEARCH;
 import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
+import static com.app.wingmate.utils.AppConstants.WARNING;
+import static com.app.wingmate.utils.Utilities.showGPSDialog;
 import static com.app.wingmate.utils.Utilities.showToast;
+import static com.google.android.gms.common.GooglePlayServicesUtilLight.isGooglePlayServicesAvailable;
 
-public class DashboardFragment extends BaseFragment implements BaseView, ViewPager.OnPageChangeListener {
+public class DashboardFragment extends BaseFragment implements BaseView, ViewPager.OnPageChangeListener, com.google.android.gms.location.LocationListener {
 
     public static final String TAG = DashboardFragment.class.getName();
 
@@ -137,7 +154,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     private MyPagerAdapter viewPagerAdapter;
 
-    public List<Question> questions;
+    public List<Question> questions = new ArrayList<>();
     public List<MyCustomUser> searchedUsers;
     public List<MyCustomUser> allUsers;
     public List<Fans> myFansList;
@@ -151,7 +168,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     private LocationManager locationManager;
 
-    private ExecutorService executor ;
+    private ExecutorService executor;
     private Handler handler;
 
     public DashboardFragment() {
@@ -272,7 +289,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
         tvHome.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
 //        viewPager.setCurrentItem(0, true);
-        ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+//        ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
         btnHome.setAlpha(1.0f);
     }
 
@@ -395,9 +412,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     @Override
     public void onResume() {
         super.onResume();
-//        ((MainActivity) getActivity()).setScreenTitle("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
         checkPaidUser();
-        saveCurrentGeoPoint();
+//        saveCurrentGeoPoint();
     }
 
     private void checkPaidUser() {
@@ -406,13 +422,89 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         }
     }
 
-    private void saveCurrentGeoPoint() {
-        if (getLastBestLocation() != null) {
-            ParseGeoPoint geoPoint = new ParseGeoPoint(getLastBestLocation().getLatitude(), getLastBestLocation().getLongitude());
-            ParseUser.getCurrentUser().put(PARAM_CURRENT_LOCATION, geoPoint);
-            ParseUser.getCurrentUser().saveInBackground(e -> {
-            });
+    public void saveCurrentGeoPoint() {
+        if (locationManager != null) {
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+//            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0f, location -> {
+//                    System.out.println("GPS_PROVIDER_LocationUpdates:: " + location.getLatitude() + ", " + location.getLongitude());
+//                    ParseGeoPoint geoPoint = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
+//                    ParseUser.getCurrentUser().put(PARAM_CURRENT_LOCATION, geoPoint);
+//                    ParseUser.getCurrentUser().saveInBackground(e -> {
+//                        handler.post(() -> {
+//                            homeProgress = false;
+//                            EventBus.getDefault().post(new RefreshHome());
+//                        });
+//                    });
+//                });
+//            } else if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+//                System.out.println("====hereee4");
+//
+//                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 0f, location -> {
+//                    System.out.println("NETWORK_PROVIDER_LocationUpdates:: " + location.getLatitude() + ", " + location.getLongitude());
+//                    ParseGeoPoint geoPoint = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
+//                    ParseUser.getCurrentUser().put(PARAM_CURRENT_LOCATION, geoPoint);
+//                    ParseUser.getCurrentUser().saveInBackground(e -> {
+//                        handler.post(() -> {
+//                            homeProgress = false;
+//                            EventBus.getDefault().post(new RefreshHome());
+//                        });
+//                    });
+//                });
+//            }
+
+
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                System.out.println("===GPS_PROVIDER==" + locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER));
+                System.out.println("===NETWORK_PROVIDER==" + locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));
+                if (getLastBestLocation() != null) {
+                    ParseGeoPoint geoPoint = new ParseGeoPoint(getLastBestLocation().getLatitude(), getLastBestLocation().getLongitude());
+                    ParseUser.getCurrentUser().put(PARAM_CURRENT_LOCATION, geoPoint);
+                    ParseUser.getCurrentUser().saveInBackground(e -> {
+                        handler.post(() -> {
+                            homeProgress = false;
+                            EventBus.getDefault().post(new RefreshHome());
+                        });
+                    });
+                    System.out.println("getLastBestLocation:: " + geoPoint.getLatitude() + ", " + geoPoint.getLongitude());
+                }
+            } else {
+                System.out.println("===GPS Connection Error!==");
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                dialog.setTitle("GPS Connection Error!")
+                        .setIcon(R.drawable.location_icon)
+                        .setCancelable(false)
+                        .setMessage("GPS is not enabled on your device.")
+//                        .setNegativeButton("No", (dialogInterface, i) -> {
+//                            dialogInterface.cancel();
+//                        })
+                        .setPositiveButton("Enable GPS", (dialogInterface, i) -> {
+                            dialogInterface.cancel();
+                            dialogInterface.dismiss();
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, 1234);
+                        }).show();
+            }
         }
+//        if (getLastBestLocation() != null) {
+//            ParseGeoPoint geoPoint = new ParseGeoPoint(getLastBestLocation().getLatitude(), getLastBestLocation().getLongitude());
+//            ParseUser.getCurrentUser().put(PARAM_CURRENT_LOCATION, geoPoint);
+//            ParseUser.getCurrentUser().saveInBackground(e -> {
+//            });
+//        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        saveCurrentGeoPoint();
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+
     }
 
     private Location getLastBestLocation() {
@@ -628,6 +720,13 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         myFansProgress = false;
         this.myFansList = fansList;
         EventBus.getDefault().post(new RefreshFans());
+    }
+
+    @Subscribe
+    public void refreshDashboardUsersList(RefreshDashboard refreshDashboard) {
+        homeProgress = true;
+        allUsers = new ArrayList<>();
+        presenter.queryAllUsers(getContext());
     }
 
     @Subscribe

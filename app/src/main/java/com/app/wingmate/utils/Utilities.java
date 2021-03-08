@@ -613,43 +613,52 @@ public class Utilities {
         int percent = 0;
         List<QuestionOption> myOptions = new ArrayList<>();
         List<QuestionOption> userOptions = new ArrayList<>();
-
         try {
             List<UserAnswer> myUserAnswers = ParseUser.getCurrentUser().fetchIfNeeded().getList(PARAM_USER_OPTIONAL_ARRAY);
             if (myUserAnswers != null && myUserAnswers.size() > 0) {
                 for (int i = 0; i < myUserAnswers.size(); i++) {
-                    if (myUserAnswers.get(i).fetchIfNeeded().getList(PARAM_OPTIONS_OBJ_ARRAY) != null && myUserAnswers.get(i).fetchIfNeeded().getList(PARAM_OPTIONS_OBJ_ARRAY).size() > 0) {
+                    if (myUserAnswers.get(i).fetchIfNeeded().getList(PARAM_OPTIONS_OBJ_ARRAY) != null && myUserAnswers.get(i).fetchIfNeeded().getList(PARAM_OPTIONS_OBJ_ARRAY).size() > 0)
                         myOptions.addAll(myUserAnswers.get(i).fetchIfNeeded().getList(PARAM_OPTIONS_OBJ_ARRAY));
-                    }
                 }
             }
         } catch (ParseException exception) {
             exception.printStackTrace();
         }
-
         List<UserAnswer> otherUserAnswers = parseUser.getList(PARAM_USER_OPTIONAL_ARRAY);
         if (otherUserAnswers != null && otherUserAnswers.size() > 0) {
             for (int i = 0; i < otherUserAnswers.size(); i++) {
-                if (otherUserAnswers.get(i).getOptionsObjArray() != null && otherUserAnswers.get(i).getOptionsObjArray().size() > 0) {
+                if (otherUserAnswers.get(i).getOptionsObjArray() != null && otherUserAnswers.get(i).getOptionsObjArray().size() > 0)
                     userOptions.addAll(otherUserAnswers.get(i).getOptionsObjArray());
-                }
             }
         }
-
         double count = 0;
         for (int i = 0; i < myOptions.size(); i++) {
             for (int j = 0; j < userOptions.size(); j++) {
-                if (myOptions.get(i).getObjectId().equals(userOptions.get(j).getObjectId())) {
+                if (myOptions.get(i).getObjectId().equals(userOptions.get(j).getObjectId()))
                     count++;
-                }
             }
         }
-
         if (myOptions.size() > 0) {
             double div = count / myOptions.size();
             double per = div * 100;
             percent = (int) per;
         }
         return percent;
+    }
+
+    public static void showGPSDialog(final Activity context) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setTitle("GPS Connection Error!")
+                .setIcon(R.drawable.location_icon)
+                .setCancelable(false)
+                .setMessage("GPS is not enabled on your device.")
+//                        .setNegativeButton("No", (dialogInterface, i) -> {
+//                            dialogInterface.cancel();
+//                        })
+                .setPositiveButton("Enable GPS", (dialogInterface, i) -> {
+                    dialogInterface.cancel();
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    context.startActivityForResult(intent, 1234);
+                }).show();
     }
 }

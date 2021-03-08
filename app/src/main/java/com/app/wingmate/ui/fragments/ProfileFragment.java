@@ -277,7 +277,6 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 if (likeObject != null) {
                     likeObject.deleteInBackground(e -> {
                         dismissProgress();
-//                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Like";
                         String msg = "Updated successfully";
                         showToast(getActivity(), getContext(), msg, SUCCESS);
                         EventBus.getDefault().post(new RefreshFanList());
@@ -387,7 +386,6 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 maybeObject = fan;
                 break;
         }
-//        String msg = fan.getToUser().getString(PARAM_NICK) + " has been marked as your " + fan.getFanType();
         String msg = "Updated successfully";
         showToast(getActivity(), getContext(), msg, SUCCESS);
         EventBus.getDefault().post(new RefreshFanList());
