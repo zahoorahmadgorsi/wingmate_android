@@ -75,7 +75,9 @@ public class DosDontsPhotosGridAdapter extends RecyclerView.Adapter<DosDontsPhot
             if (object.getTermsType().equalsIgnoreCase(KEY_VIDEO)) {
                 ActivityUtility.startVideoViewActivity(context, KEY_FRAGMENT_VIDEO_VIEW, object.getFile().getUrl());
             } else {
-                ActivityUtility.startPhotoViewActivity(context, KEY_FRAGMENT_PHOTO_VIEW, object.getFile().getUrl());
+                ArrayList<String> arrayList = new ArrayList<>();
+                arrayList.add(object.getFile().getUrl());
+                ActivityUtility.startPhotoViewActivity(context, KEY_FRAGMENT_PHOTO_VIEW, arrayList, 0);
             }
         });
     }

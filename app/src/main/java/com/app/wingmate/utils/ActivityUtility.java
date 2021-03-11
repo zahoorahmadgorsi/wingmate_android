@@ -9,6 +9,7 @@ import com.app.wingmate.ui.activities.MainActivity;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_EMAIL_TAG;
@@ -27,6 +28,8 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_SIGN_UP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_TERMS_AND_CONDITIONS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_VIDEO_VIEW;
+import static com.app.wingmate.utils.CommonKeys.KEY_IMAGES_ARRAY;
+import static com.app.wingmate.utils.CommonKeys.KEY_IMAGE_INDEX;
 import static com.app.wingmate.utils.CommonKeys.KEY_IMAGE_LINK;
 import static com.app.wingmate.utils.CommonKeys.KEY_IS_CURRENT_USER;
 import static com.app.wingmate.utils.CommonKeys.KEY_NICK_TAG;
@@ -81,10 +84,12 @@ public class ActivityUtility {
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }
 
-    public static void startPhotoViewActivity(Activity context, String tag, String path) {
+    public static void startPhotoViewActivity(Activity context, String tag, ArrayList<String> paths, int index) {
         Intent mainIntent = new Intent(context, MainActivity.class);
         mainIntent.putExtra(KEY_ACTIVITY_TAG, tag);
-        mainIntent.putExtra(KEY_IMAGE_LINK, path);
+        mainIntent.putExtra(KEY_IMAGE_LINK, paths.get(0));
+        mainIntent.putStringArrayListExtra(KEY_IMAGES_ARRAY, paths);
+        mainIntent.putExtra(KEY_IMAGE_INDEX, index);
         context.startActivity(mainIntent);
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }

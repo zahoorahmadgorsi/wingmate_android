@@ -125,6 +125,7 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
     }
 
     private void initQuestionsView() {
+        if (dashboardInstance.questions == null) dashboardInstance.questions = new ArrayList<>();
         gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         adapter = new QuestionOptionsListAdapter(getActivity(), this, dashboardInstance.questions);
         recyclerView.setHasFixedSize(false);
@@ -133,6 +134,7 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
     }
 
     private void initSearchView() {
+        if (dashboardInstance.searchedUsers == null) dashboardInstance.searchedUsers = new ArrayList<>();
         searchGridLayoutManager = new GridLayoutManager(getActivity(), 2);
         userViewAdapter = new UserViewAdapter(getActivity(), dashboardInstance.searchedUsers);
         userViewAdapter.setEmpty(emptyView);

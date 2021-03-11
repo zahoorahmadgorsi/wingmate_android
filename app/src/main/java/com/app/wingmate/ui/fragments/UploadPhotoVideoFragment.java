@@ -215,7 +215,10 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
             case R.id.take_photo_video_btn:
                 if (CURRENT_MODE == MODE_PHOTOS) {
                     if (user1stPhotoFile != null) {
-                        ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, user1stPhotoFile.getFile().getUrl());
+                        ArrayList<String> arrayList = new ArrayList<>();
+                        arrayList.add(user1stPhotoFile.getFile().getUrl());
+                        ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 0);
+//                        ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, user1stPhotoFile.getFile().getUrl());
                     } else {
                         CLICK_TAG = TAG_IMAGE;
                         easyImage.openChooser(this);

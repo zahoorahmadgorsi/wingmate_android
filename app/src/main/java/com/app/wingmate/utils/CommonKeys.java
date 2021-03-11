@@ -34,6 +34,8 @@ public class CommonKeys {
     public static final String KEY_WEB_LINK = "key_web_link";
     public static final String KEY_VIDEO_LINK = "key_video_link";
     public static final String KEY_IMAGE_LINK = "key_video_link";
+    public static final String KEY_IMAGES_ARRAY = "key_images_array";
+    public static final String KEY_IMAGE_INDEX = "key_image_index";
 
     public static final String PREF_USER = "wingmate_pref_user";
     public static final String PREF_EMAIL = "wingmate_pref_email";

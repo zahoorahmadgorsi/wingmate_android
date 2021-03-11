@@ -55,10 +55,11 @@ public class MyFansAdapter extends RecyclerView.Adapter<MyFansAdapter.ViewHolder
             holder.userPic.setImageResource(R.drawable.image_placeholder);
         }
         String name = parseUser.getString(PARAM_NICK);
-        String age = getUserAge(parseUser);
+//        String age = getUserAge(parseUser);
         String txt = name;
-        if (age != null && age.length() > 0) txt = name + ", " + age;
-        holder.ageLocTV.setText(txt);
+//        if (age != null && age.length() > 0) txt = name + ", " + age;
+        String[] split = txt.split(" ");
+        holder.ageLocTV.setText(split[0]);
 
         holder.distanceTV.setText(getDistanceBetweenUser(parseUser));
         holder.matchPercentTV.setText(getMatchPercentage(parseUser) + "% Match");

@@ -656,6 +656,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     public void setQuestionsResponseSuccess(List<Question> questions) {
         searchProgress = false;
         this.questions = questions;
+        if (this.questions==null) this.questions = new ArrayList<>();
         EventBus.getDefault().post(new RefreshSearch());
     }
 

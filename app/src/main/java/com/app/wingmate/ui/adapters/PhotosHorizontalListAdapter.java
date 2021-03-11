@@ -58,7 +58,10 @@ public class PhotosHorizontalListAdapter extends RecyclerView.Adapter<PhotosHori
             if (object.isDummyFile()) {
                 fragment.addImage();
             } else {
-                ActivityUtility.startPhotoViewActivity(context, KEY_FRAGMENT_PHOTO_VIEW, object.getFile().getUrl());
+                ArrayList<String> arrayList = new ArrayList<>();
+                arrayList.add(object.getFile().getUrl());
+                ActivityUtility.startPhotoViewActivity(context, KEY_FRAGMENT_PHOTO_VIEW, arrayList, 0);
+//                ActivityUtility.startPhotoViewActivity(context, KEY_FRAGMENT_PHOTO_VIEW, object.getFile().getUrl());
             }
         });
 

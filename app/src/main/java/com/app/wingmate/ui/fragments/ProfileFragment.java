@@ -245,11 +245,32 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         } else if (v.getId() == R.id.btn_edit_media) {
             ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
         } else if (v.getId() == R.id.pic_1) {
-            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(0).getFile().getUrl());
+            ArrayList<String> arrayList = new ArrayList<>();
+            if (userProfilePhotoOnly != null) {
+                for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
+                    arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
+                }
+            }
+            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 0);
+//            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(0).getFile().getUrl());
         } else if (v.getId() == R.id.pic2_card) {
-            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(1).getFile().getUrl());
+            ArrayList<String> arrayList = new ArrayList<>();
+            if (userProfilePhotoOnly != null) {
+                for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
+                    arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
+                }
+            }
+            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 1);
+//            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(1).getFile().getUrl());
         } else if (v.getId() == R.id.pic3_card) {
-            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(2).getFile().getUrl());
+            ArrayList<String> arrayList = new ArrayList<>();
+            if (userProfilePhotoOnly != null) {
+                for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
+                    arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
+                }
+            }
+            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 2);
+//            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(2).getFile().getUrl());
         } else if (v.getId() == R.id.video_card) {
             ActivityUtility.startVideoViewActivity(requireActivity(), KEY_FRAGMENT_VIDEO_VIEW, userProfileVideoOnly.get(0).getFile().getUrl());
         } else if (v.getId() == R.id.btn_may_be) {
@@ -354,7 +375,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         this.userProfilePhotoVideos = new ArrayList<>();
         if (userProfilePhotoVideos != null && userProfilePhotoVideos.size() > 0)
             this.userProfilePhotoVideos = userProfilePhotoVideos;
-        setMediaInViews();
+        if (requireActivity() != null) setMediaInViews();
     }
 
     @Override
@@ -482,7 +503,8 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 
             if (userProfilePhotoOnly.size() > 0) {
                 Picasso.get().load(userProfilePhotoOnly.get(0).getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(pic1);
-            } if (userProfilePhotoOnly.size() > 1) {
+            }
+            if (userProfilePhotoOnly.size() > 1) {
                 pic2Card.setVisibility(View.VISIBLE);
                 Picasso.get().load(userProfilePhotoOnly.get(1).getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(pic2);
             }
