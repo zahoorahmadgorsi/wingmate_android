@@ -193,6 +193,11 @@ public class BaseFragment extends Fragment implements BaseView {
     }
 
     @Override
+    public void setWithInKMUsersSuccess(List<ParseUser> parseUsers) {
+
+    }
+
+    @Override
     public void setAllUsersSuccess(List<ParseUser> parseUsers) {
 
     }

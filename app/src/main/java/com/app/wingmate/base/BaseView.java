@@ -54,6 +54,7 @@ public interface BaseView {
 
     // Search
     void setSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers);
+    void setWithInKMUsersSuccess(List<ParseUser> parseUsers);
 
     //Home
     void setAllUsersSuccess(List<ParseUser> parseUsers);

@@ -9,6 +9,7 @@ import com.app.wingmate.models.TermsConditions;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.models.UserProfilePhotoVideo;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -150,6 +151,12 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
         }
     }
 
+    public void getUsersWithInKM(Context context, ParseGeoPoint myGeoPoint, double distance) {
+        if (baseView != null) {
+            interactor.fetchUsersWithInKMFormParse(context, myGeoPoint, distance, this);
+        }
+    }
+
     public void setFan(Context context, ParseUser parseUser, String fanType) {
         if (baseView != null) {
             interactor.setUserAsFan(context, parseUser, fanType, this);
@@ -195,6 +202,13 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
     public void onAllUsersSuccess(List<ParseUser> parseUsers) {
         if (baseView != null) {
             baseView.setAllUsersSuccess(parseUsers);
+        }
+    }
+
+    @Override
+    public void onWithInKMUsersSuccess(List<ParseUser> parseUsers) {
+        if (baseView != null) {
+            baseView.setWithInKMUsersSuccess(parseUsers);
         }
     }
 

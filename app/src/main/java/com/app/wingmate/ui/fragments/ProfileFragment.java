@@ -250,8 +250,8 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
                     arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
                 }
+                ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 0);
             }
-            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 0);
 //            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(0).getFile().getUrl());
         } else if (v.getId() == R.id.pic2_card) {
             ArrayList<String> arrayList = new ArrayList<>();
@@ -259,8 +259,8 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
                     arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
                 }
+                ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 1);
             }
-            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 1);
 //            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(1).getFile().getUrl());
         } else if (v.getId() == R.id.pic3_card) {
             ArrayList<String> arrayList = new ArrayList<>();
@@ -268,8 +268,8 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
                     arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
                 }
+                ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 2);
             }
-            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 2);
 //            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(2).getFile().getUrl());
         } else if (v.getId() == R.id.video_card) {
             ActivityUtility.startVideoViewActivity(requireActivity(), KEY_FRAGMENT_VIDEO_VIEW, userProfileVideoOnly.get(0).getFile().getUrl());

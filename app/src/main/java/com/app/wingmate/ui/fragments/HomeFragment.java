@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,11 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.wingmate.R;
-import com.app.wingmate.base.BaseActivity;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.events.RefreshHome;
-import com.app.wingmate.events.RefreshSearch;
-import com.app.wingmate.ui.adapters.QuestionOptionsListAdapter;
 import com.app.wingmate.ui.adapters.UserViewAdapter;
 import com.app.wingmate.utils.ActivityUtility;
 import com.parse.ParseUser;
@@ -38,7 +33,6 @@ import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
-import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
 
 public class HomeFragment extends BaseFragment {

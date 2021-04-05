@@ -44,4 +44,53 @@
         android:textSize="@dimen/txt_size"
         app:drawableEndCompat="@drawable/ic_arrow_down" />
 
+    <LinearLayout
+        android:id="@+id/loc_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16ssp"
+            android:layout_marginLeft="@dimen/_16ssp"
+            android:layout_marginTop="@dimen/_8ssp"
+            android:layout_marginEnd="@dimen/_16ssp"
+            android:layout_marginRight="@dimen/_16ssp"
+            android:fontFamily="@font/open_sans_regular"
+            android:gravity="center"
+            android:text="@string/distance"
+            android:textColor="@color/text_color_grey"
+            android:textSize="@dimen/label_txt_size" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/loc_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8ssp"
+            android:layout_marginLeft="@dimen/_8ssp"
+            android:layout_marginTop="@dimen/_4ssp"
+            android:layout_marginEnd="@dimen/_8ssp"
+            android:layout_marginRight="@dimen/_8ssp"/>
+
+        <TextView
+            android:id="@+id/dis_value_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/_16ssp"
+            android:layout_marginLeft="@dimen/_16ssp"
+            android:layout_marginTop="@dimen/_4ssp"
+            android:layout_marginEnd="@dimen/_16ssp"
+            android:layout_marginRight="@dimen/_16ssp"
+            android:fontFamily="@font/open_sans_semibold"
+            android:gravity="center"
+            android:text="@string/no_distance_selected"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/label_txt_size" />
+    </LinearLayout>
+
+
 </LinearLayout>

@@ -31,6 +31,7 @@ import com.app.wingmate.ui.adapters.UserViewAdapter;
 import com.app.wingmate.ui.dialogs.OptionsSelectorDialog;
 import com.app.wingmate.utils.Utilities;
 import com.parse.FindCallback;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -39,6 +40,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,6 +50,8 @@ import butterknife.Unbinder;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_ANSWER;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
+import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
+import static com.app.wingmate.utils.AppConstants.PARAM_GENDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
@@ -86,6 +90,8 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
 
     private int selectedIndex = -1;
     private boolean onCrate = true;
+
+    private double selectedDistanceInKM = 0;
 
     public SearchFragment() {
 
@@ -134,7 +140,8 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
     }
 
     private void initSearchView() {
-        if (dashboardInstance.searchedUsers == null) dashboardInstance.searchedUsers = new ArrayList<>();
+        if (dashboardInstance.searchedUsers == null)
+            dashboardInstance.searchedUsers = new ArrayList<>();
         searchGridLayoutManager = new GridLayoutManager(getActivity(), 2);
         userViewAdapter = new UserViewAdapter(getActivity(), dashboardInstance.searchedUsers);
         userViewAdapter.setEmpty(emptyView);
@@ -205,6 +212,10 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
         }
     }
 
+    public void setDistanceValue(double distance) {
+        selectedDistanceInKM = distance / 1000;
+    }
+
     public void showOptionSelectionDialog(Question question, int index, String tag) {
         selectedIndex = index;
         OptionsSelectorDialog dialog = OptionsSelectorDialog.newInstance(this, getActivity(), question, tag, TAG_SEARCH);
@@ -245,11 +256,44 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
     public void setSpecificQuestionUserAnswers(List<UserAnswer> userAnswers) {
         dismissProgress();
         if (selectedIndex > -1) {
-            dashboardInstance.questions.get(selectedIndex).setSearchedResults(userAnswers);
+            List<UserAnswer> filter = new ArrayList<>();
+            for (int i = 0; i < userAnswers.size(); i++) {
+                if (!Objects.equals(ParseUser.getCurrentUser().getString(PARAM_GENDER), userAnswers.get(i).getUserId().getString(PARAM_GENDER))) {
+                    filter.add(userAnswers.get(i));
+                }
+            }
+//            dashboardInstance.questions.get(selectedIndex).setSearchedResults(userAnswers);
+            dashboardInstance.questions.get(selectedIndex).setSearchedResults(filter);
             adapter.setData(dashboardInstance.questions);
             adapter.notifyDataSetChanged();
         }
         selectedIndex = -1;
+    }
+
+    public void setSearchResultsFromWithInKm(List<ParseUser> users) {
+        dismissProgress();
+        if (users != null & users.size() > 0) {
+            for (int i = 0; i < users.size(); i++) {
+                MyCustomUser myCustomUser = new MyCustomUser();
+                myCustomUser.setParseUser(users.get(i));
+                myCustomUser.setMatchPercent(Utilities.getMatchPercentage(users.get(i)));
+                dashboardInstance.searchedUsers.add(myCustomUser);
+            }
+        }
+
+        searchView.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        userViewAdapter.setEmpty(emptyView);
+        userViewAdapter.setData(dashboardInstance.searchedUsers);
+        userViewAdapter.notifyDataSetChanged();
+        searchBtn.setText(getString(R.string.search_again));
+        resetBtn.setVisibility(View.VISIBLE);
+
+        if (dashboardInstance.searchedUsers == null || dashboardInstance.searchedUsers.size() == 0) {
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+        }
     }
 
     private void resetFilters() {
@@ -275,6 +319,8 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
     }
 
     private void searchUsers() {
+
+        ParseGeoPoint myGeoPoint = new ParseGeoPoint(dashboardInstance.getLastBestLocation().getLatitude(), dashboardInstance.getLastBestLocation().getLongitude());
 
         int totalNoOfSelectedQuestions = 0;
         List<UserAnswer> allSearchedResults = new ArrayList<>();
@@ -307,25 +353,33 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
                     MyCustomUser myCustomUser = new MyCustomUser();
                     myCustomUser.setParseUser(allSearchedResults.get(y).getUserId());
                     myCustomUser.setMatchPercent(Utilities.getMatchPercentage(allSearchedResults.get(y).getUserId()));
-                    dashboardInstance.searchedUsers.add(myCustomUser);
-//                    dashboardInstance.searchedUsers.add(allSearchedResults.get(y).getUserId());
-                    userIds.add(userId1);
+                    if (selectedDistanceInKM > 0) {
+                        ParseGeoPoint userGepPoint = allSearchedResults.get(y).getUserId().getParseGeoPoint(PARAM_CURRENT_LOCATION);
+                        if (myGeoPoint.distanceInKilometersTo(userGepPoint) <= selectedDistanceInKM) {
+                            dashboardInstance.searchedUsers.add(myCustomUser);
+                            userIds.add(userId1);
+                        }
+                    }
                 }
             }
         }
 
-        searchView.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
-        userViewAdapter.setEmpty(emptyView);
-        userViewAdapter.setData(dashboardInstance.searchedUsers);
-        userViewAdapter.notifyDataSetChanged();
-        searchBtn.setText(getString(R.string.search_again));
-        resetBtn.setVisibility(View.VISIBLE);
-
-        if (dashboardInstance.searchedUsers == null || dashboardInstance.searchedUsers.size() == 0) {
-            emptyView.setVisibility(View.VISIBLE);
+        if (selectedDistanceInKM > 0 && allSearchedResults.size() == 0) {
+            dashboardInstance.searchUsersWithInKM(myGeoPoint, selectedDistanceInKM);
         } else {
-            emptyView.setVisibility(View.GONE);
+            searchView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            userViewAdapter.setEmpty(emptyView);
+            userViewAdapter.setData(dashboardInstance.searchedUsers);
+            userViewAdapter.notifyDataSetChanged();
+            searchBtn.setText(getString(R.string.search_again));
+            resetBtn.setVisibility(View.VISIBLE);
+
+            if (dashboardInstance.searchedUsers == null || dashboardInstance.searchedUsers.size() == 0) {
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                emptyView.setVisibility(View.GONE);
+            }
         }
     }
 

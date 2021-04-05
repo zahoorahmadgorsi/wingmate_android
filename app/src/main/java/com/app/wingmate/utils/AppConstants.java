@@ -101,4 +101,16 @@ public class AppConstants {
 
     public static final String TAG_PROFILE_EDIT = "tag_profile_edit";
     public static final String TAG_SEARCH = "tag_search";
+
+    public static final String _5M = "5m";
+    public static final String _10M = "10m";
+    public static final String _50M = "50m";
+    public static final String _100M = "100m";
+    public static final String _250M = "250m";
+    public static final String _1KM = "1km";
+    public static final String _5KM = "5km";
+    public static final String _10KM = "10km";
+    public static final String _100KM = "100km";
+    public static final String _1000KM = "1000km";
+    public static final String _5000KM = "5000km";
 }

@@ -19,6 +19,7 @@ import com.parse.FunctionCallback;
 import com.parse.GetCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -47,6 +48,7 @@ import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_PROFILE_PHOTOS
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_VIDEO_LINK;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.INFO;
+import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
 import static com.app.wingmate.utils.AppConstants.PARAM_DISPLAY_ORDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_EMAIL_NEW;
 import static com.app.wingmate.utils.AppConstants.PARAM_EMAIL_WRONG;
@@ -130,6 +132,8 @@ public class BaseInteractor {
         void onSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers);
 
         void onAllUsersSuccess(List<ParseUser> parseUsers);
+
+        void onWithInKMUsersSuccess(List<ParseUser> parseUsers);
 
         void onMyFansSuccess(List<Fans> fans);
 
@@ -515,6 +519,33 @@ public class BaseInteractor {
                 if (e == null) {
                     if (objects == null) objects = new ArrayList<>();
                     listener.onSpecificQuestionUserAnswersSuccess(objects);
+                } else {
+                    listener.onResponseError(e);
+                }
+            });
+        }
+    }
+
+    public void fetchUsersWithInKMFormParse(final Context context, ParseGeoPoint myGeoPoint, double distance, final OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            ParseQuery<ParseUser> query = ParseUser.getQuery();
+            query.include(PARAM_USER_MANDATORY_ARRAY);
+            query.include(PARAM_USER_OPTIONAL_ARRAY);
+            query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.whereNotEqualTo(PARAM_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
+            query.whereNotEqualTo(PARAM_GENDER, ParseUser.getCurrentUser().getString(PARAM_GENDER));
+            query.whereWithinKilometers(PARAM_CURRENT_LOCATION, myGeoPoint, distance);
+            query.setLimit(1000);
+            query.findInBackground((objects, e) -> {
+                if (e == null) {
+                    if (objects == null || objects.size() == 0) {
+                        objects = new ArrayList<>();
+                    }
+                    listener.onWithInKMUsersSuccess(objects);
                 } else {
                     listener.onResponseError(e);
                 }

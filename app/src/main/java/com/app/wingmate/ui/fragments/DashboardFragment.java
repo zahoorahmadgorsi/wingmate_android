@@ -507,7 +507,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     }
 
-    private Location getLastBestLocation() {
+    public Location getLastBestLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null;
         }
@@ -687,10 +687,22 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         presenter.getSpecificQuestionUserAnswers(getContext(), optionsObjArray);
     }
 
+    public void searchUsersWithInKM(ParseGeoPoint myGeoPoint,double distance) {
+        showProgress();
+        searchedUsers = new ArrayList<>();
+        presenter.getUsersWithInKM(getContext(), myGeoPoint, distance);
+    }
+
     @Override
     public void setSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers) {
         dismissProgress();
         searchFragment.setSpecificQuestionUserAnswers(userAnswers);
+    }
+
+    @Override
+    public void setWithInKMUsersSuccess(List<ParseUser> users) {
+        dismissProgress();
+        searchFragment.setSearchResultsFromWithInKm(users);
     }
 
     @Override
