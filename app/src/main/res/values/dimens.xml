@@ -7,6 +7,7 @@
     <dimen name="header_size">@dimen/_18ssp</dimen>
     <dimen name="button_height">@dimen/_40ssp</dimen>
 
+    <dimen name="very_extra_small_txt_size">@dimen/_7ssp</dimen>
     <dimen name="extra_small_txt_size">@dimen/_8ssp</dimen>
     <dimen name="field_height">@dimen/_44ssp</dimen>
     <dimen name="card_elevation">@dimen/_4ssp</dimen>

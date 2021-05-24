@@ -28,7 +28,7 @@
             android:paddingLeft="@dimen/_12ssp"
             android:paddingEnd="@dimen/_12ssp"
             android:paddingRight="@dimen/_12ssp"
-            tools:listitem="@layout/grid_item_user"/>
+            tools:listitem="@layout/grid_item_user_new"/>
 
         <LinearLayout
             android:id="@+id/empty_view"

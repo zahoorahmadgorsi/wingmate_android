@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/bg_color_old"
+        android:layout_margin="@dimen/_4ssp"
+        app:cardCornerRadius="@dimen/_12ssp"
+        app:cardElevation="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/internal_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                app:cardBackgroundColor="@color/grey_light"
+                android:layout_margin="@dimen/_4ssp"
+                app:cardCornerRadius="@dimen/_12ssp"
+                app:cardElevation="0dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/user_pic"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:scaleType="centerCrop" />
+
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <RelativeLayout
+                android:id="@+id/bottom_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/internal_card_view"
+                android:background="@color/bg_color_old"
+                android:clipToPadding="true"
+                android:paddingBottom="@dimen/_6ssp"
+                >
+
+                <TextView
+                    android:id="@+id/age_loc_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="---"
+                    android:paddingLeft="@dimen/_8ssp"
+                    android:paddingStart="@dimen/_8ssp"
+                    android:paddingRight="@dimen/_8ssp"
+                    android:paddingEnd="@dimen/_8ssp"
+                    android:layout_toLeftOf="@+id/match_view"
+                    android:layout_toStartOf="@+id/match_view"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_margin="@dimen/_1ssp"
+                    android:fontFamily="@font/open_sans_semibold"
+                    android:textSize="@dimen/label_txt_size"
+                    android:textColor="@color/text_black_color" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2ssp"
+                    android:layout_below="@+id/age_loc_tv"
+                    android:paddingLeft="@dimen/_8ssp"
+                    android:paddingStart="@dimen/_8ssp"
+                    android:paddingRight="@dimen/_8ssp"
+                    android:paddingEnd="@dimen/_8ssp"
+                    android:layout_toLeftOf="@+id/match_view"
+                    android:layout_toStartOf="@+id/match_view"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/loc_icon"
+                        android:layout_width="@dimen/_10ssp"
+                        android:layout_height="@dimen/_10ssp"
+                        android:src="@drawable/location_icon"/>
+
+                    <TextView
+                        android:id="@+id/distance_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="---"
+                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:layout_marginLeft="@dimen/_4ssp"
+                        android:layout_marginStart="@dimen/_4ssp"
+                        android:fontFamily="@font/open_sans_regular"
+                        android:textSize="@dimen/extra_small_txt_size"
+                        android:textColor="@color/text_color" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/match_view"
+                    android:layout_width="@dimen/_40ssp"
+                    android:layout_height="@dimen/_36ssp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:visibility="visible">
+
+                    <me.tankery.lib.circularseekbar.CircularSeekBar
+                        android:id="@+id/match_progress"
+                        android:layout_width="@dimen/_26ssp"
+                        android:layout_height="@dimen/_26ssp"
+                        android:layout_centerInParent="true"
+                        app:cs_circle_color="@color/greenish_bg"
+                        app:cs_circle_fill="@color/transparent"
+                        app:cs_circle_progress_color="@color/colorPrimary"
+                        app:cs_circle_stroke_width="@dimen/_2ssp"
+                        app:cs_circle_x_radius="@dimen/_26ssp"
+                        app:cs_circle_y_radius="@dimen/_26ssp"
+                        app:cs_disable_pointer="true"
+                        app:cs_disable_progress_glow="true"
+                        app:cs_hide_progress_when_empty="true"
+                        app:cs_lock_enabled="true"
+                        app:cs_maintain_equal_circle="false"
+                        app:cs_max="100"
+                        app:cs_move_outside_circle="false"
+                        app:cs_negative_enabled="false"
+                        app:cs_progress="50"
+                        app:cs_use_custom_radii="false" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/match_percent_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/baloo_regular"
+                            android:gravity="center"
+                            android:text="50%"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/very_extra_small_txt_size" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/by_me_aswell"
+                android:layout_width="@dimen/_24ssp"
+                android:layout_height="@dimen/_24ssp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/_16ssp"
+                android:src="@drawable/ic_heart"
+                android:visibility="gone"
+                android:scaleType="centerCrop" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

@@ -40,6 +40,7 @@ public class QuestionOptionsListAdapter extends RecyclerView.Adapter<QuestionOpt
     private Activity context;
     private SearchFragment fragment;
     private List<Question> itemsList;
+    private boolean isReset = false;
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
@@ -82,6 +83,10 @@ public class QuestionOptionsListAdapter extends RecyclerView.Adapter<QuestionOpt
 
         if (position == itemsList.size() - 1) {
             holder.locLayout.setVisibility(View.VISIBLE);
+            if (isReset) {
+                holder.seekbar.setProgress(0);
+                isReset = false;
+            }
         } else {
             holder.locLayout.setVisibility(View.GONE);
         }
@@ -177,6 +182,11 @@ public class QuestionOptionsListAdapter extends RecyclerView.Adapter<QuestionOpt
     public void setData(List<Question> itemsList) {
         this.itemsList = new ArrayList<>();
         this.itemsList = itemsList;
+        notifyDataSetChanged();
+    }
+
+    public void setReset() {
+        isReset = true;
         notifyDataSetChanged();
     }
 

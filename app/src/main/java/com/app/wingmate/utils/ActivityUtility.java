@@ -21,6 +21,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_FORGOT_PASSWORD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_HOME;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
@@ -51,6 +52,7 @@ public class ActivityUtility {
             case KEY_FRAGMENT_HOME:
             case KEY_FRAGMENT_PRE_LOGIN:
             case KEY_FRAGMENT_QUESTIONNAIRE:
+            case KEY_FRAGMENT_PAYMENT:
                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             case KEY_FRAGMENT_CROP:
             case KEY_FRAGMENT_SIGN_UP:

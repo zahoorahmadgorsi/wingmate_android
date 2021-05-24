@@ -13,7 +13,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
-            tools:listitem="@layout/grid_item_user"
+            tools:listitem="@layout/grid_item_user_new"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingStart="@dimen/_12ssp"

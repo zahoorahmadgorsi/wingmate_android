@@ -47,9 +47,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_ANSWER;
+import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
+import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
 import static com.app.wingmate.utils.AppConstants.PARAM_GENDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
@@ -59,6 +62,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_MANDATORY_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
 import static com.app.wingmate.utils.AppConstants.TAG_SEARCH;
+import static com.app.wingmate.utils.Utilities.showToast;
 
 public class SearchFragment extends BaseFragment implements BaseView, OptionsSelectorDialog.OptionsSelectorDialogClickListener {
 
@@ -302,6 +306,7 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
         }
         dashboardInstance.searchedUsers = new ArrayList<>();
         adapter.setData(dashboardInstance.questions);
+        adapter.setReset();
         adapter.notifyDataSetChanged();
         recyclerView.setVisibility(View.VISIBLE);
         searchView.setVisibility(View.GONE);
@@ -319,8 +324,16 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
     }
 
     private void searchUsers() {
-
-        ParseGeoPoint myGeoPoint = new ParseGeoPoint(dashboardInstance.getLastBestLocation().getLatitude(), dashboardInstance.getLastBestLocation().getLongitude());
+        ParseGeoPoint myGeoPoint = null;
+        if (selectedDistanceInKM > 0) {
+            if (dashboardInstance.getLastBestLocation() != null) {
+                myGeoPoint = new ParseGeoPoint(dashboardInstance.getLastBestLocation().getLatitude(), dashboardInstance.getLastBestLocation().getLongitude());
+            } else {
+                showToast(getActivity(), getContext(), "Location permissions are denied!", ERROR);
+                ((MainActivity) getActivity()).checkPermissions();
+                return;
+            }
+        }
 
         int totalNoOfSelectedQuestions = 0;
         List<UserAnswer> allSearchedResults = new ArrayList<>();
@@ -349,22 +362,27 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
                 }
             }
             if (count == totalNoOfSelectedQuestions) {
-                if (!userIds.contains(userId1)) {
+                if (!userIds.contains(userId1)
+                        && allSearchedResults.get(y).getUserId().getInt(PARAM_ACCOUNT_STATUS) == ACTIVE
+                ) {
                     MyCustomUser myCustomUser = new MyCustomUser();
                     myCustomUser.setParseUser(allSearchedResults.get(y).getUserId());
                     myCustomUser.setMatchPercent(Utilities.getMatchPercentage(allSearchedResults.get(y).getUserId()));
                     if (selectedDistanceInKM > 0) {
                         ParseGeoPoint userGepPoint = allSearchedResults.get(y).getUserId().getParseGeoPoint(PARAM_CURRENT_LOCATION);
-                        if (myGeoPoint.distanceInKilometersTo(userGepPoint) <= selectedDistanceInKM) {
+                        if (myGeoPoint != null && myGeoPoint.distanceInKilometersTo(userGepPoint) <= selectedDistanceInKM) {
                             dashboardInstance.searchedUsers.add(myCustomUser);
                             userIds.add(userId1);
                         }
+                    } else {
+                        dashboardInstance.searchedUsers.add(myCustomUser);
+                        userIds.add(userId1);
                     }
                 }
             }
         }
 
-        if (selectedDistanceInKM > 0 && allSearchedResults.size() == 0) {
+        if (myGeoPoint != null && selectedDistanceInKM > 0 && allSearchedResults.size() == 0) {
             dashboardInstance.searchUsersWithInKM(myGeoPoint, selectedDistanceInKM);
         } else {
             searchView.setVisibility(View.VISIBLE);

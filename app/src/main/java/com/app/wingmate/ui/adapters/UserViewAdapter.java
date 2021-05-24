@@ -20,7 +20,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.tankery.lib.circularseekbar.CircularSeekBar;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
@@ -44,7 +46,7 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item_user, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item_user_new, parent, false);
         return new ViewHolder(view);
     }
 
@@ -66,7 +68,11 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
 
         holder.distanceTV.setText(getDistanceBetweenUser(parseUser));
 //        holder.matchPercentTV.setText(getMatchPercentage(parseUser) + "% Match");
-        holder.matchPercentTV.setText(mValues.get(position).getMatchPercent() + "% Match");
+        int percent = mValues.get(position).getMatchPercent();
+        holder.matchPercentTV.setText(percent + "%");
+        holder.matchProgress.setMax(100);
+        holder.matchProgress.setProgress(percent);
+//        holder.matchPercentTV.setText(mValues.get(position).getMatchPercent() + "% Match");
         holder.itemView.setOnClickListener(view -> {
             ActivityUtility.startProfileActivity(activity, KEY_FRAGMENT_PROFILE, false, parseUser);
         });
@@ -94,6 +100,7 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
         TextView ageLocTV;
         TextView matchPercentTV;
         TextView distanceTV;
+        CircularSeekBar matchProgress;
 
         public ViewHolder(View view) {
             super(view);
@@ -101,6 +108,7 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
             ageLocTV = view.findViewById(R.id.age_loc_tv);
             matchPercentTV = view.findViewById(R.id.match_percent_tv);
             distanceTV = view.findViewById(R.id.distance_tv);
+            matchProgress = view.findViewById(R.id.match_progress);
         }
     }
 }

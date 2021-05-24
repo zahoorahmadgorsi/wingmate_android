@@ -19,6 +19,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.tankery.lib.circularseekbar.CircularSeekBar;
+
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
@@ -41,7 +43,7 @@ public class MyFansAdapter extends RecyclerView.Adapter<MyFansAdapter.ViewHolder
 
     @Override
     public MyFansAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item_user, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item_user_new, parent, false);
         return new MyFansAdapter.ViewHolder(view);
     }
 
@@ -62,7 +64,10 @@ public class MyFansAdapter extends RecyclerView.Adapter<MyFansAdapter.ViewHolder
         holder.ageLocTV.setText(split[0]);
 
         holder.distanceTV.setText(getDistanceBetweenUser(parseUser));
-        holder.matchPercentTV.setText(getMatchPercentage(parseUser) + "% Match");
+        int percent = getMatchPercentage(parseUser);
+        holder.matchPercentTV.setText(percent + "%");
+        holder.matchProgress.setMax(100);
+        holder.matchProgress.setProgress(percent);
 
         if (mValues.get(position).getMySelectedType()!=null && mValues.get(position).getMySelectedType().equals(mValues.get(position).getFanType())) {
             holder.byMeAswell.setVisibility(View.VISIBLE);
@@ -98,6 +103,7 @@ public class MyFansAdapter extends RecyclerView.Adapter<MyFansAdapter.ViewHolder
         TextView ageLocTV;
         TextView matchPercentTV;
         TextView distanceTV;
+        CircularSeekBar matchProgress;
 
         public ViewHolder(View view) {
             super(view);
@@ -106,6 +112,7 @@ public class MyFansAdapter extends RecyclerView.Adapter<MyFansAdapter.ViewHolder
             ageLocTV = view.findViewById(R.id.age_loc_tv);
             matchPercentTV = view.findViewById(R.id.match_percent_tv);
             distanceTV = view.findViewById(R.id.distance_tv);
+            matchProgress = view.findViewById(R.id.match_progress);
         }
     }
 }

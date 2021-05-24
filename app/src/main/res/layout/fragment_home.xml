@@ -11,7 +11,7 @@
         android:id="@+id/top_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purple_theme"
+        android:background="@drawable/rounded_bottom_orange"
         android:padding="@dimen/_16ssp">
 
         <LinearLayout
@@ -116,7 +116,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
-            tools:listitem="@layout/grid_item_user"
+            tools:listitem="@layout/grid_item_user_new"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingStart="@dimen/_12ssp"

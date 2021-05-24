@@ -1,3 +1,49 @@
+var nodemailer = require('nodemailer');
+
+var mailer = {
+    from: 'appdeveloper1484@gmail.com',
+    options: {
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true, // use SSL
+        auth: {
+            user: 'appdeveloper1484@gmail.com',
+            pass: 'cymtdyomeejoyeus'
+        }
+    }
+};
+
+var smtpTransport = nodemailer.createTransport(mailer.options);
+
+// SEND EMAIL TO USER
+Parse.Cloud.define('sendEmailToUser', async (request) => {
+	var emailId = request.params.emailId;
+	var sub = request.params.subject;
+	var body = request.params.body;
+
+
+	console.log('====>>'+emailId);
+	console.log('====>>'+sub);
+	console.log('====>>'+body);
+
+
+	var mailOptions = {
+                    to: emailId,
+                    bcc: 'stubshq.appdeveloper@gmail.com',
+                    from: mailer.from,
+                    subject: sub,
+                    html: body,
+                };
+                console.log('===mailOptions=>>'+mailOptions);
+                smtpTransport.sendMail(mailOptions, function (err) {
+                    console.log('EMAIL SENDER ERR ===> ', err);
+                });
+});
+
+
+
+
 // RESEND VERIFICATION EMAIL
 Parse.Cloud.define('resendVerificationEmail', async (request) => {
 	var originalEmail = request.params.email;
@@ -39,17 +85,80 @@ Parse.Cloud.define('updateWrongEmail', async (request) => {
 });
 
 // GET SERVER CURRENT TIME
-
 Parse.Cloud.define("getServerDate", async (request) => {
     var dateToday = new Date();
     return dateToday.toISOString();
-    // return dateToday.toDateString();
-	// return dateToday.toISOString().substring(0, 10);
 });
 
-
-Parse.Cloud.define("getServerDateX", function(request, response) {
-    	var dateToday = new Date();
+Parse.Cloud.define("getServerDateSpecific", function(request, response) {
+    var dateToday = new Date();
 	response.success(dateToday.toISOString().substring(0, 10));
-    	//response.success(dateToday.toDateString());
 });
+
+
+// SEND PUSH NOTIFICATION TO USER
+Parse.Cloud.define("pushToUser", (request) => {
+	var userId = request.params.userId;
+	var alertTitle = request.params.alertTitle;
+	var alertText = request.params.alertText;
+
+	var pushQuery = new Parse.Query(Parse.Installation);
+  	pushQuery.equalTo("userId", userId);
+  	pushQuery.equalTo("isAdmin", false);
+
+    return Parse.Push.send({
+        // channels: ["News"],
+        where: pushQuery,
+        data: {
+            title: alertTitle,
+            alert: alertText,
+        }
+    }, { useMasterKey: true });
+});
+
+
+// SEND PUSH NOTIFICATION TO ADMIN
+Parse.Cloud.define("pushToAdmin", (request) => {
+	var alertTitle = request.params.alertTitle;
+	var alertText = request.params.alertText;
+
+	var pushQuery = new Parse.Query(Parse.Installation);
+  	pushQuery.equalTo("isAdmin", true);
+
+    return Parse.Push.send({
+        where: pushQuery,
+        data: {
+            title: alertTitle,
+            alert: alertText,
+        }
+    }, { useMasterKey: true });
+});
+
+// UPDATE USER DATA FROM ADMIN APP
+Parse.Cloud.define('updateUserData', async (request) => {
+	var userId = request.params.userId;
+	var category = request.params.category;
+	var status = request.params.status;
+	var reason = request.params.reason;
+	var comment = request.params.comment;
+	var isMediaApproved = request.params.isMediaApproved;
+
+	const User = Parse.Object.extend("User");
+
+	const query = new Parse.Query(User);
+	query.equalTo("objectId", userId);
+	var userObject = await query.first({useMasterKey: true});
+
+	if(userObject !=null)
+	{
+		userObject.set("groupCategory", category);
+		userObject.set("accountStatus", status);
+		userObject.set("rejectReason", reason);
+		userObject.set("rejectComment", comment);
+		userObject.set("isMediaApproved", isMediaApproved);
+		await userObject.save(null, {useMasterKey: true}).catch(error => {throw 'Something went wrong';});
+    	return 'success';
+	}
+});
+
+

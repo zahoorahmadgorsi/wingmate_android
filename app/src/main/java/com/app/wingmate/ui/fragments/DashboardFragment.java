@@ -39,6 +39,7 @@ import com.app.wingmate.events.RefreshDashboard;
 import com.app.wingmate.events.RefreshFanList;
 import com.app.wingmate.events.RefreshFans;
 import com.app.wingmate.events.RefreshHome;
+import com.app.wingmate.events.RefreshHomeWithNewLocation;
 import com.app.wingmate.events.RefreshSearch;
 import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.MyCustomUser;
@@ -46,7 +47,9 @@ import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.ui.activities.MainActivity;
+import com.app.wingmate.ui.activities.SplashActivity;
 import com.app.wingmate.ui.dialogs.OptionsSelectorDialog;
+import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.DateUtils;
 import com.app.wingmate.utils.Utilities;
 import com.app.wingmate.widgets.FadePageTransformer;
@@ -65,6 +68,7 @@ import com.parse.GetCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -91,16 +95,23 @@ import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_GET_SERVER
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.INFO;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
+import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
+import static com.app.wingmate.utils.AppConstants.PENDING;
+import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.TAG_SEARCH;
 import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
 import static com.app.wingmate.utils.AppConstants.WARNING;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.Utilities.showGPSDialog;
 import static com.app.wingmate.utils.Utilities.showToast;
 import static com.google.android.gms.common.GooglePlayServicesUtilLight.isGooglePlayServicesAvailable;
@@ -182,6 +193,16 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         executor = Executors.newSingleThreadExecutor();
         handler = new Handler(Looper.getMainLooper());
         EventBus.getDefault().register(this);
+
+        updateParseInstallation();
+    }
+
+    private void updateParseInstallation() {
+        if (ParseUser.getCurrentUser() != null) {
+            ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+            installation.put("userId", ParseUser.getCurrentUser().getObjectId());
+            installation.saveInBackground();
+        }
     }
 
     @Override
@@ -412,8 +433,31 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     @Override
     public void onResume() {
         super.onResume();
-        checkPaidUser();
+        fetchUpdatedCurrentUser();
+//        checkPaidUser();
 //        saveCurrentGeoPoint();
+    }
+
+    private void fetchUpdatedCurrentUser() {
+        ParseUser.getCurrentUser().fetchInBackground((GetCallback<ParseUser>) (parseUser, e) -> {
+            if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                dialog.setTitle(getString(R.string.app_name))
+                        .setIcon(R.drawable.app_heart)
+                        .setCancelable(false)
+                        .setMessage("Your profile has been rejected by the admin!")
+                        .setNegativeButton("OK", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                            ParseUser.logOut();
+                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
+                        }).show();
+            } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_MEDIA_APPROVED)) {
+                ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
+            } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+                System.out.println("===not paid===");
+                presenter.checkServerDate(getContext());
+            }
+        });
     }
 
     private void checkPaidUser() {
@@ -464,8 +508,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                     ParseUser.getCurrentUser().put(PARAM_CURRENT_LOCATION, geoPoint);
                     ParseUser.getCurrentUser().saveInBackground(e -> {
                         handler.post(() -> {
-                            homeProgress = false;
-                            EventBus.getDefault().post(new RefreshHome());
+//                            homeProgress = false;
+                            EventBus.getDefault().post(new RefreshHomeWithNewLocation());
                         });
                     });
                     System.out.println("getLastBestLocation:: " + geoPoint.getLatitude() + ", " + geoPoint.getLongitude());
@@ -656,29 +700,30 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     public void setQuestionsResponseSuccess(List<Question> questions) {
         searchProgress = false;
         this.questions = questions;
-        if (this.questions==null) this.questions = new ArrayList<>();
+        if (this.questions == null) this.questions = new ArrayList<>();
         EventBus.getDefault().post(new RefreshSearch());
     }
 
     @Override
     public void setTrialEnded(String msg) {
-        showToast(getActivity(), getContext(), "Trial period ended!", ERROR);
-        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-        dialog.setTitle(getString(R.string.app_name))
-                .setIcon(R.drawable.app_heart)
-                .setMessage("Your trial period has been ended!")
-                .setNegativeButton("Pay Now", (dialoginterface, i) -> {
-                    dialoginterface.cancel();
-                    ParseUser.getCurrentUser().put(PARAM_IS_PAID_USER, true);
-                    showToast(getActivity(), getContext(), "Processing...", INFO);
-                    ParseUser.getCurrentUser().saveInBackground(en -> {
-                        showToast(getActivity(), getContext(), "Congrats on becoming a paid user!", SUCCESS);
-                    });
-                })
-                .setPositiveButton("Cancel", (dialoginterface, i) -> {
-                    dialoginterface.cancel();
-                    getActivity().onBackPressed();
-                }).show();
+        ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PAYMENT);
+//        showToast(getActivity(), getContext(), "Trial period ended!", ERROR);
+//        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+//        dialog.setTitle(getString(R.string.app_name))
+//                .setIcon(R.drawable.app_heart)
+//                .setMessage("Your trial period has been ended!")
+//                .setNegativeButton("Pay Now", (dialoginterface, i) -> {
+//                    dialoginterface.cancel();
+//                    ParseUser.getCurrentUser().put(PARAM_IS_PAID_USER, true);
+//                    showToast(getActivity(), getContext(), "Processing...", INFO);
+//                    ParseUser.getCurrentUser().saveInBackground(en -> {
+//                        showToast(getActivity(), getContext(), "Congrats on becoming a paid user!", SUCCESS);
+//                    });
+//                })
+//                .setPositiveButton("Cancel", (dialoginterface, i) -> {
+//                    dialoginterface.cancel();
+//                    getActivity().onBackPressed();
+//                }).show();
     }
 
     public void searchSpecificQuestion(List<QuestionOption> optionsObjArray) {
@@ -687,7 +732,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         presenter.getSpecificQuestionUserAnswers(getContext(), optionsObjArray);
     }
 
-    public void searchUsersWithInKM(ParseGeoPoint myGeoPoint,double distance) {
+    public void searchUsersWithInKM(ParseGeoPoint myGeoPoint, double distance) {
         showProgress();
         searchedUsers = new ArrayList<>();
         presenter.getUsersWithInKM(getContext(), myGeoPoint, distance);

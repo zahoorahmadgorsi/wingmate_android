@@ -1,10 +1,13 @@
 package com.app.wingmate.ui.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -24,6 +27,7 @@ import com.app.wingmate.events.RefreshDashboard;
 import com.app.wingmate.ui.fragments.DashboardFragment;
 import com.app.wingmate.events.RefreshProfile;
 import com.app.wingmate.ui.fragments.HomeFragment;
+import com.app.wingmate.ui.fragments.PaymentFragment;
 import com.app.wingmate.ui.fragments.ProfileFragment;
 import com.app.wingmate.ui.fragments.EditProfileFragment;
 import com.app.wingmate.ui.fragments.EditProfileTextFieldFragment;
@@ -44,6 +48,7 @@ import com.parse.ParseUser;
 
 import org.greenrobot.eventbus.EventBus;
 
+import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.PARAM_ABOUT_ME;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
@@ -57,6 +62,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_FORGOT_PASSWORD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_HOME;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
@@ -67,6 +73,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_VIDEO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_WEB_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_TITLE;
+import static com.app.wingmate.utils.Utilities.showToast;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -102,6 +109,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Fragment uploadPhotosVideoFragment;
     private Fragment videoViewFragment;
     private Fragment photoViewFragment;
+    private Fragment paymentFragment;
 
     private String fragmentTag;
 
@@ -169,6 +177,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case KEY_FRAGMENT_EDIT_PROFILE:
                 beginEditProfileFragment();
+                break;
+                case KEY_FRAGMENT_PAYMENT:
+                beginPaymentFragment();
                 break;
             case KEY_FRAGMENT_EDIT_PROFILE_TEXT_FIELDS:
                 beginEditProfileFieldsFragment();
@@ -312,6 +323,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (editProfileFragment == null)
             editProfileFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), EditProfileFragment.TAG);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, editProfileFragment, EditProfileFragment.TAG).commit();
+    }
+
+    private void beginPaymentFragment() {
+//        showTopView();
+//        setScreenTitle("Pay");
+        paymentFragment = getSupportFragmentManager().findFragmentByTag(PaymentFragment.TAG);
+        if (paymentFragment == null)
+            paymentFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), PaymentFragment.TAG);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, paymentFragment, PaymentFragment.TAG).commit();
     }
 
     private void beginEditProfileFieldsFragment() {

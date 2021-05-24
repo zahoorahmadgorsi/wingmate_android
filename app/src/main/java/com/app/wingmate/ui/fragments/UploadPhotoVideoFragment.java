@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +43,7 @@ import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -70,11 +72,15 @@ import static com.app.wingmate.utils.AppConstants.KEY_VIDEO_TEXT;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.MODE_PHOTOS;
 import static com.app.wingmate.utils.AppConstants.MODE_VIDEO;
+import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_FILE;
+import static com.app.wingmate.utils.AppConstants.PARAM_FILE_STATUS;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
+import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
@@ -210,7 +216,35 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.del_main_img_btn:
-                deleteMainImageVideo(CURRENT_MODE);
+                if (CURRENT_MODE == MODE_VIDEO) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                    dialog.setTitle(getString(R.string.app_name))
+                            .setIcon(R.drawable.app_heart)
+                            .setCancelable(false)
+                            .setMessage("Are you sure to delete this video. Please note that this will make your profile in pending state.")
+                            .setNegativeButton("Yes, Delete", (dialoginterface, i) -> {
+                                dialoginterface.cancel();
+                                deleteMainImageVideo(CURRENT_MODE);
+                            })
+                            .setPositiveButton("Dismiss", (dialoginterface, i) -> {
+                                dialoginterface.cancel();
+                            }).show();
+                } else if (CURRENT_MODE == MODE_PHOTOS && (userProfilePhotoOnly == null || userProfilePhotoOnly.size() == 0 || userProfilePhotoOnly.size() == 1)) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                    dialog.setTitle(getString(R.string.app_name))
+                            .setIcon(R.drawable.app_heart)
+                            .setCancelable(false)
+                            .setMessage("Are you sure to delete this photo. Please note that this will make your profile in pending state.")
+                            .setNegativeButton("Yes, Delete", (dialoginterface, i) -> {
+                                dialoginterface.cancel();
+                                deleteMainImageVideo(CURRENT_MODE);
+                            })
+                            .setPositiveButton("Dismiss", (dialoginterface, i) -> {
+                                dialoginterface.cancel();
+                            }).show();
+                } else {
+                    deleteMainImageVideo(CURRENT_MODE);
+                }
                 break;
             case R.id.take_photo_video_btn:
                 if (CURRENT_MODE == MODE_PHOTOS) {
@@ -295,7 +329,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 
     //this function returns null when using IO file manager
     public String getPath(Uri uri) {
-        String[] projection = { MediaStore.Video.Media.DATA };
+        String[] projection = {MediaStore.Video.Media.DATA};
         Cursor cursor = requireActivity().getContentResolver().query(uri, projection, null, null, null);
         if (cursor != null) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
@@ -444,7 +478,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
     }
 
     public void setPhotosView() {
-        ((MainActivity) Objects.requireNonNull(getActivity())).setScreenTitle("Upload Photos");
+        ((MainActivity) requireActivity()).setScreenTitle("Upload Photos");
 
         photoVideoPic1.setImageResource(android.R.color.transparent);
         CURRENT_MODE = MODE_PHOTOS;
@@ -480,7 +514,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
     }
 
     public void setVideoView() {
-        ((MainActivity) Objects.requireNonNull(getActivity())).setScreenTitle("Upload Video");
+        ((MainActivity) requireActivity()).setScreenTitle("Upload Video");
 
         photoVideoPic1.setImageResource(android.R.color.transparent);
         CURRENT_MODE = MODE_VIDEO;
@@ -659,6 +693,11 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                         } else {
                             userProfilePhotoOnly = new ArrayList<>();
                             photosRV.setVisibility(View.GONE);
+                            ParseUser.getCurrentUser().put(PARAM_ACCOUNT_STATUS, PENDING);
+                            ParseUser.getCurrentUser().put(PARAM_IS_MEDIA_APPROVED, false);
+                            ParseUser.getCurrentUser().saveInBackground(e12 -> {
+
+                            });
                         }
                         userPhotosListAdapter.setData(userProfilePhotoOnly);
                         userPhotosListAdapter.notifyDataSetChanged();
@@ -684,6 +723,10 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                             playIcon.setVisibility(View.GONE);
                             delMainImgBtn.setVisibility(View.GONE);
                             hasChange = true;
+                            ParseUser.getCurrentUser().put(PARAM_ACCOUNT_STATUS, PENDING);
+                            ParseUser.getCurrentUser().put(PARAM_IS_MEDIA_APPROVED, false);
+                            ParseUser.getCurrentUser().saveInBackground(e12 -> {
+                            });
                         } else {
                             showToast(requireActivity(), getContext(), e.getMessage(), ERROR);
                         }
@@ -737,34 +780,16 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 //                        ParseFile vidFile = new ParseFile("video.mp4", convertVideoToBytes(videoURI));
 //                        vidFile.saveInBackground((SaveCallback) e -> {
 //                            if(null == e) {
-                                final UserProfilePhotoVideo userProfilePhotoVideo = new UserProfilePhotoVideo();
-                                userProfilePhotoVideo.put(PARAM_USER_ID, ParseUser.getCurrentUser().getObjectId());
-                                userProfilePhotoVideo.put(PARAM_FILE, vidFile);
-                                userProfilePhotoVideo.put(PARAM_IS_PHOTO, false);
-                                userProfilePhotoVideo.saveInBackground(ea -> {
-                                    if (ea == null) {
-                                        if (user1stVideoFile != null) {
-                                            user1stVideoFile.deleteInBackground(e12 -> {
-                                                if (e12==null) {
-                                                    user1stVideoFile = userProfilePhotoVideo;
-                                                    try {
-                                                        setVideoImage(user1stVideoFile.getFile().getFile().getPath(), user1stVideoFile.getFile().getUrl());
-                                                    } catch (ParseException exception) {
-                                                        exception.printStackTrace();
-                                                    }
-                                                    hasVideo = true;
-                                                    addView.setVisibility(View.GONE);
-                                                    delMainImgBtn.setVisibility(View.VISIBLE);
-                                                    playIcon.setVisibility(View.VISIBLE);
-                                                    hasChange = true;
-                                                    showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
-                                                } else {
-                                                    showToast(requireActivity(), getContext(), e12.getMessage(), ERROR);
-                                                    System.out.println("====e12==="+e12.getMessage());
-                                                }
-                                                dismissProgress();
-                                            });
-                                        } else {
+                        final UserProfilePhotoVideo userProfilePhotoVideo = new UserProfilePhotoVideo();
+                        userProfilePhotoVideo.put(PARAM_USER_ID, ParseUser.getCurrentUser().getObjectId());
+                        userProfilePhotoVideo.put(PARAM_FILE, vidFile);
+                        userProfilePhotoVideo.put(PARAM_IS_PHOTO, false);
+                        userProfilePhotoVideo.put(PARAM_FILE_STATUS, 0);
+                        userProfilePhotoVideo.saveInBackground(ea -> {
+                            if (ea == null) {
+                                if (user1stVideoFile != null) {
+                                    user1stVideoFile.deleteInBackground(e12 -> {
+                                        if (e12 == null) {
                                             user1stVideoFile = userProfilePhotoVideo;
                                             try {
                                                 setVideoImage(user1stVideoFile.getFile().getFile().getPath(), user1stVideoFile.getFile().getUrl());
@@ -777,14 +802,33 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                             playIcon.setVisibility(View.VISIBLE);
                                             hasChange = true;
                                             showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
-                                            dismissProgress();
+                                        } else {
+                                            showToast(requireActivity(), getContext(), e12.getMessage(), ERROR);
+                                            System.out.println("====e12===" + e12.getMessage());
                                         }
-                                    } else {
-                                        showToast(requireActivity(), getContext(), ea.getMessage(), ERROR);
-                                        System.out.println("==ea====="+ea.getMessage());
                                         dismissProgress();
+                                    });
+                                } else {
+                                    user1stVideoFile = userProfilePhotoVideo;
+                                    try {
+                                        setVideoImage(user1stVideoFile.getFile().getFile().getPath(), user1stVideoFile.getFile().getUrl());
+                                    } catch (ParseException exception) {
+                                        exception.printStackTrace();
                                     }
-                                });
+                                    hasVideo = true;
+                                    addView.setVisibility(View.GONE);
+                                    delMainImgBtn.setVisibility(View.VISIBLE);
+                                    playIcon.setVisibility(View.VISIBLE);
+                                    hasChange = true;
+                                    showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
+                                    dismissProgress();
+                                }
+                            } else {
+                                showToast(requireActivity(), getContext(), ea.getMessage(), ERROR);
+                                System.out.println("==ea=====" + ea.getMessage());
+                                dismissProgress();
+                            }
+                        });
 //                            } else {
 //                                showToast(requireActivity(), getContext(), e.getMessage(), ERROR);
 //                                System.out.println("==e====="+e.getMessage());
@@ -811,13 +855,14 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                     userProfilePhotoVideo.put(PARAM_USER_ID, ParseUser.getCurrentUser().getObjectId());
                     userProfilePhotoVideo.put(PARAM_FILE, new ParseFile(imageFiles[0].getFile()));
                     userProfilePhotoVideo.put(PARAM_IS_PHOTO, false);
+                    userProfilePhotoVideo.put(PARAM_FILE_STATUS, 0);
                     showProgress();
                     userProfilePhotoVideo.saveInBackground(e -> {
                         if (e == null) {
                             if (user1stVideoFile != null) {
 //                                user1stVideoFile.deleteEventually();
                                 user1stVideoFile.deleteInBackground(e12 -> {
-                                    if (e12==null) {
+                                    if (e12 == null) {
                                         user1stVideoFile = userProfilePhotoVideo;
                                         try {
                                             setVideoImage(user1stVideoFile.getFile().getFile().getPath(), user1stVideoFile.getFile().getUrl());
@@ -879,6 +924,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                 userProfilePhotoVideo.put(PARAM_USER_ID, ParseUser.getCurrentUser().getObjectId());
                 userProfilePhotoVideo.put(PARAM_FILE, new ParseFile(file));
                 userProfilePhotoVideo.put(PARAM_IS_PHOTO, true);
+                userProfilePhotoVideo.put(PARAM_FILE_STATUS, 0);
                 showProgress();
                 userProfilePhotoVideo.saveInBackground(e -> {
                     if (e == null) {
@@ -888,7 +934,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 //                                    user1stPhotoFile.deleteEventually();
 //                                    showProgress();
                                     user1stPhotoFile.deleteInBackground(e13 -> {
-                                        if (e13==null) {
+                                        if (e13 == null) {
                                             user1stPhotoFile = userProfilePhotoVideo;
                                             System.out.println("===url====" + user1stPhotoFile.getFile().getUrl());
                                             ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());

@@ -45,6 +45,9 @@ public class AppConstants {
     public static final String PARAM_USER_NATIONALITY = "nationality";
     public static final String PARAM_USER_AGE = "age";
     public static final String PARAM_CURRENT_LOCATION = "currentLocation";
+    public static final String PARAM_ACCOUNT_STATUS = "accountStatus";
+    public static final String PARAM_GROUP_CATEGORY = "groupCategory";
+    public static final String PARAM_IS_MEDIA_APPROVED = "isMediaApproved";
 
     public static final String PARAM_EMAIL_NEW = "emailNew";
     public static final String PARAM_EMAIL_WRONG = "emailWrong";
@@ -72,6 +75,7 @@ public class AppConstants {
     public static final String PARAM_TEXT = "text";
     public static final String PARAM_IS_DO = "isDo";
     public static final String PARAM_FILE = "file";
+    public static final String PARAM_FILE_STATUS = "fileStatus";
 
     public static final String CLASS_NAME_FANS = "Fans";
     public static final String PARAM_FROM_USER = "fromUser";
@@ -113,4 +117,12 @@ public class AppConstants {
     public static final String _100KM = "100km";
     public static final String _1000KM = "1000km";
     public static final String _5000KM = "5000km";
+
+    public static final int PENDING = 0;
+    public static final int ACTIVE = 1;
+    public static final int REJECTED = 2;
+
+    public static final String GROUP_A = "A";
+    public static final String GROUP_B = "B";
+    public static final String GROUP_NEW = "N";
 }

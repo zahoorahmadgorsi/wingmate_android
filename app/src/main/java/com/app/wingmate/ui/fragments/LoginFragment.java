@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -25,6 +26,7 @@ import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
+import com.app.wingmate.ui.activities.SplashActivity;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.SharedPrefers;
 import com.app.wingmate.utils.Utilities;
@@ -38,10 +40,15 @@ import butterknife.Unbinder;
 
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
+import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
+import static com.app.wingmate.utils.AppConstants.PENDING;
+import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_FORGOT_PASSWORD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.PREF_EMAIL;
@@ -318,13 +325,34 @@ public class LoginFragment extends BaseFragment implements BaseView {
     @Override
     public void setLoginSuccess(ParseUser parseUser) {
         dismissProgress();
-        if (rememberCheckbox.isChecked()) {
-            SharedPrefers.saveString(requireContext(), PREF_EMAIL, emailET.getText().toString());
-            SharedPrefers.saveString(requireContext(), PREF_PASSWORD, passwordET.getText().toString());
+
+        if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
+//            showToast(requireActivity(), requireContext(), "Your profile has been rejected by the admin. Logging out...", ERROR);
+//            ParseUser.logOut();
+//            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
+
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setTitle(getString(R.string.app_name))
+                    .setIcon(R.drawable.app_heart)
+                    .setCancelable(false)
+                    .setMessage("Your profile has been rejected by the admin!")
+                    .setNegativeButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ParseUser.logOut();
+                        ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
+                    }).show();
+
+        } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_MEDIA_APPROVED)) {
+            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
         } else {
-            SharedPrefers.saveString(requireContext(), PREF_EMAIL, "");
-            SharedPrefers.saveString(requireContext(), PREF_PASSWORD, "");
-        }
+
+            if (rememberCheckbox.isChecked()) {
+                SharedPrefers.saveString(requireContext(), PREF_EMAIL, emailET.getText().toString());
+                SharedPrefers.saveString(requireContext(), PREF_PASSWORD, passwordET.getText().toString());
+            } else {
+                SharedPrefers.saveString(requireContext(), PREF_EMAIL, "");
+                SharedPrefers.saveString(requireContext(), PREF_PASSWORD, "");
+            }
 //        if (parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)
 ////                && parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)
 //                && parseUser.getString(PARAM_PROFILE_PIC) != null
@@ -339,8 +367,8 @@ public class LoginFragment extends BaseFragment implements BaseView {
 ////        else if (!parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
 ////            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
 ////        }
-
-        ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_DASHBOARD);
+            ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_DASHBOARD);
+        }
     }
 
     @Override

@@ -37,6 +37,7 @@ import java.util.Objects;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_GET_SERVER_TIME;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_RESEND_EMAIL;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_UPDATE_WRONG_EMAIL;
+import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.BOTH;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_FANS;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUESTION;
@@ -47,7 +48,9 @@ import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_ANSWER;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_PROFILE_PHOTOS_VIDEO;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_VIDEO_LINK;
 import static com.app.wingmate.utils.AppConstants.ERROR;
+import static com.app.wingmate.utils.AppConstants.GROUP_NEW;
 import static com.app.wingmate.utils.AppConstants.INFO;
+import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
 import static com.app.wingmate.utils.AppConstants.PARAM_DISPLAY_ORDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_EMAIL_NEW;
@@ -55,6 +58,8 @@ import static com.app.wingmate.utils.AppConstants.PARAM_EMAIL_WRONG;
 import static com.app.wingmate.utils.AppConstants.PARAM_FAN_TYPE;
 import static com.app.wingmate.utils.AppConstants.PARAM_FROM_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_GENDER;
+import static com.app.wingmate.utils.AppConstants.PARAM_GROUP_CATEGORY;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
@@ -71,6 +76,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_USER_MANDATORY_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_USER_MANDATORY_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_USER_OPTIONAL_ARRAY;
+import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
 import static com.app.wingmate.utils.AppConstants.VALID_PASSWORD_MIN_LENGTH;
@@ -169,6 +175,9 @@ public class BaseInteractor {
             user.put(PARAM_GENDER, gender);
             user.put(PARAM_NICK, nick);
             user.put(PARAM_IS_PAID_USER, false);
+            user.put(PARAM_IS_MEDIA_APPROVED, false);
+            user.put(PARAM_ACCOUNT_STATUS, PENDING);
+            user.put(PARAM_GROUP_CATEGORY, GROUP_NEW);
             user.put(PARAM_MANDATORY_QUESTIONNAIRE_FILLED, false);
             user.put(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED, false);
             user.signUpInBackground(new SignUpCallback() {
@@ -530,6 +539,7 @@ public class BaseInteractor {
         if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
         else {
             ParseQuery<ParseUser> query = ParseUser.getQuery();
+            query.whereEqualTo(PARAM_ACCOUNT_STATUS, ACTIVE);
             query.include(PARAM_USER_MANDATORY_ARRAY);
             query.include(PARAM_USER_OPTIONAL_ARRAY);
             query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
@@ -563,6 +573,7 @@ public class BaseInteractor {
             query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
             query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
             query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.whereEqualTo(PARAM_ACCOUNT_STATUS, ACTIVE);
             query.whereNotEqualTo(PARAM_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
             query.setLimit(1000);
             query.findInBackground((objects, e) -> {

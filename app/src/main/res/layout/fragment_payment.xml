@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btn_pay_now"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginStart="@dimen/_60ssp"
+        android:layout_marginLeft="@dimen/_60ssp"
+        android:layout_marginEnd="@dimen/_60ssp"
+        android:layout_marginRight="@dimen/_60ssp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/button_pressed"
+        android:fontFamily="@font/baloo_regular"
+        android:text="Pay Now"
+        android:onClick="onClick"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/txt_size" />
+
+</RelativeLayout>

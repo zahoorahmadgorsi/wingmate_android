@@ -15,6 +15,8 @@ import com.parse.ParseObject;
 
 public class WingMateApplication extends Application {
 
+    private String GCM_SENDER_ID = "537652241854";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -35,6 +37,9 @@ public class WingMateApplication extends Application {
                 .build()
         );
 
-        ParseInstallation.getCurrentInstallation().saveInBackground();
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("GCMSenderId", GCM_SENDER_ID);
+        installation.put("isAdmin", false);
+        installation.saveInBackground();
     }
 }

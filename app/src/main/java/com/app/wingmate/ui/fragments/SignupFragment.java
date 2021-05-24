@@ -631,8 +631,10 @@ public class SignupFragment extends BaseFragment implements BaseView, ViewPager.
         if (requestCode == REQUEST_CODE_TERMS && resultCode == Activity.RESULT_OK) {
             showProgress();
             if (ParseUser.getCurrentUser() != null) {
+                System.out.println("====updateEmailViaParse===");
                 signupPresenter.updateEmailViaParse(getContext(), nickET.getText().toString(), gender, emailET.getText().toString().trim(), passwordET.getText().toString().trim());
             } else {
+                System.out.println("====signUpMeViaParse===");
                 signupPresenter.signUpMeViaParse(getContext(), nickET.getText().toString(), gender, emailET.getText().toString().trim(), passwordET.getText().toString().trim());
             }
         }

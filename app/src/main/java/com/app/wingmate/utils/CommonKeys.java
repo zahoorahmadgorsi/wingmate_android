@@ -25,6 +25,7 @@ public class CommonKeys {
     public static final String KEY_FRAGMENT_HOME = "HomeFragment";
     public static final String KEY_FRAGMENT_DUMMY = "DummyFragment";
     public static final String KEY_FRAGMENT_WEB_VIEW = "WebViewFragment";
+    public static final String KEY_FRAGMENT_PAYMENT = "PaymentFragment";
 
     public static final String KEY_TITLE = "key_title";
     public static final String KEY_QUESTION_TYPE = "QuestionType";

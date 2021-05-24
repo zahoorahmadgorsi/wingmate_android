@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -142,6 +143,7 @@ public class PhotoViewFragment extends BaseFragment implements ViewPager.OnPageC
             // TODO Auto-generated method stub
             ZoomageView zoomageView1 = new ZoomageView(container.getContext());
             zoomageView1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            zoomageView1.setScaleType(ImageView.ScaleType.CENTER_CROP);
             container.addView(zoomageView1);
             imagePath = imagesPath.get(position);
             if (imagePath != null && imagePath.length() > 0) {

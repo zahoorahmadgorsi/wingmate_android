@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.events.RefreshHome;
+import com.app.wingmate.events.RefreshHomeWithNewLocation;
 import com.app.wingmate.ui.adapters.UserViewAdapter;
 import com.app.wingmate.utils.ActivityUtility;
 import com.parse.ParseUser;
@@ -122,6 +123,13 @@ public class HomeFragment extends BaseFragment {
         } else {
             emptyView.setVisibility(View.GONE);
         }
+    }
+
+    @Subscribe
+    public void onHomeRefreshWithNewLocation(RefreshHomeWithNewLocation refreshHome) {
+        pullToRefresh.setRefreshing(false);
+        userViewAdapter.setData(dashboardInstance.allUsers);
+        userViewAdapter.notifyDataSetChanged();
     }
 
     @Override
