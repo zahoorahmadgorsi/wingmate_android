@@ -59,10 +59,12 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import me.tankery.lib.circularseekbar.CircularSeekBar;
 
+import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_CRUSH;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_LIKE;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_MAY_BE;
+import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
@@ -274,7 +276,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         } else if (v.getId() == R.id.video_card) {
             ActivityUtility.startVideoViewActivity(requireActivity(), KEY_FRAGMENT_VIDEO_VIEW, userProfileVideoOnly.get(0).getFile().getUrl());
         } else if (v.getId() == R.id.btn_may_be) {
-            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) && ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == ACTIVE) {
                 showProgress();
                 if (maybeObject != null) {
                     maybeObject.deleteInBackground(e -> {
@@ -290,10 +292,13 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_MAY_BE);
                 }
             } else {
-                showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
+                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER))
+                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
+                else
+                    showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
             }
         } else if (v.getId() == R.id.btn_like) {
-            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) && ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == ACTIVE) {
                 showProgress();
                 if (likeObject != null) {
                     likeObject.deleteInBackground(e -> {
@@ -308,10 +313,13 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_LIKE);
                 }
             } else {
-                showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
+                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER))
+                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
+                else
+                    showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
             }
         } else if (v.getId() == R.id.btn_crush) {
-            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) && ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == ACTIVE) {
                 showProgress();
                 if (crushObject != null) {
                     crushObject.deleteInBackground(e -> {
@@ -327,7 +335,10 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_CRUSH);
                 }
             } else {
-                showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
+                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER))
+                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
+                else
+                    showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
             }
         } else if (v.getId() == R.id.btn_msg) {
 

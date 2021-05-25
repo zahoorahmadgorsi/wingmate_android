@@ -56,6 +56,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_DISPLAY_ORDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_EMAIL_NEW;
 import static com.app.wingmate.utils.AppConstants.PARAM_EMAIL_WRONG;
 import static com.app.wingmate.utils.AppConstants.PARAM_FAN_TYPE;
+import static com.app.wingmate.utils.AppConstants.PARAM_FILE_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_FROM_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_GENDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_GROUP_CATEGORY;
@@ -77,6 +78,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_USER_MANDATORY_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_USER_OPTIONAL_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PENDING;
+import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
 import static com.app.wingmate.utils.AppConstants.VALID_PASSWORD_MIN_LENGTH;
@@ -400,6 +402,7 @@ public class BaseInteractor {
             ParseQuery query = ParseQuery.getQuery(CLASS_NAME_USER_PROFILE_PHOTOS_VIDEO);
             query.setLimit(1000);
             query.whereEqualTo(PARAM_USER_ID, parseUser.getObjectId());
+            query.whereNotEqualTo(PARAM_FILE_STATUS, REJECTED);
 //            query.findInBackground(getAllRemainingProfilePhotosRecords(context, parseUser, listener));
             query.findInBackground((FindCallback<UserProfilePhotoVideo>) (objects, e) -> {
                 if (e != null) {
@@ -422,6 +425,7 @@ public class BaseInteractor {
                     query.setSkip(skip);
                     query.setLimit(limit);
                     query.whereEqualTo(PARAM_USER_ID, parseUser.getObjectId());
+                    query.whereNotEqualTo(PARAM_FILE_STATUS, REJECTED);
                     query.findInBackground(getAllRemainingProfilePhotosRecords(context, parseUser, listener));
                 } else {
                     if (photosResults == null) photosResults = new ArrayList<>();
