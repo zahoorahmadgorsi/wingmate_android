@@ -5,17 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,41 +44,22 @@ import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.ui.activities.MainActivity;
-import com.app.wingmate.ui.activities.SplashActivity;
-import com.app.wingmate.ui.dialogs.OptionsSelectorDialog;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.DateUtils;
+import com.app.wingmate.utils.SharedPrefers;
 import com.app.wingmate.utils.Utilities;
-import com.app.wingmate.widgets.FadePageTransformer;
 import com.app.wingmate.widgets.NonSwappableViewPager;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.FunctionCallback;
 import com.parse.GetCallback;
-import com.parse.ParseCloud;
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -91,30 +69,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_GET_SERVER_TIME;
-import static com.app.wingmate.utils.AppConstants.ERROR;
-import static com.app.wingmate.utils.AppConstants.INFO;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
-import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
-import static com.app.wingmate.utils.AppConstants.PARAM_USER_OPTIONAL_ARRAY;
-import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
-import static com.app.wingmate.utils.AppConstants.SUCCESS;
-import static com.app.wingmate.utils.AppConstants.TAG_SEARCH;
-import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
-import static com.app.wingmate.utils.AppConstants.WARNING;
+import static com.app.wingmate.utils.AppConstants.UPDATE_INTERVAL_MINS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
-import static com.app.wingmate.utils.Utilities.showGPSDialog;
-import static com.app.wingmate.utils.Utilities.showToast;
-import static com.google.android.gms.common.GooglePlayServicesUtilLight.isGooglePlayServicesAvailable;
+import static com.app.wingmate.utils.CommonKeys.PREF_LAST_UPDATE_TIME;
 
 public class DashboardFragment extends BaseFragment implements BaseView, ViewPager.OnPageChangeListener, com.google.android.gms.location.LocationListener {
 
@@ -433,12 +400,25 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     @Override
     public void onResume() {
         super.onResume();
-        fetchUpdatedCurrentUser();
 //        checkPaidUser();
 //        saveCurrentGeoPoint();
     }
 
+    public void performUserUpdateAction() {
+        if (ParseUser.getCurrentUser()!=null) {
+            System.out.println("===>performing action...");
+            long time1 = SharedPrefers.getLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
+            Date lastUpdateTime = new Date(time1);
+            Date currentTime = new Date();
+            if (DateUtils.greaterThanXMins(lastUpdateTime, currentTime, UPDATE_INTERVAL_MINS)) {
+                SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, new Date().getTime());
+                fetchUpdatedCurrentUser();
+            }
+        }
+    }
+
     private void fetchUpdatedCurrentUser() {
+        System.out.println("===>checking user...");
         ParseUser.getCurrentUser().fetchInBackground((GetCallback<ParseUser>) (parseUser, e) -> {
             if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());

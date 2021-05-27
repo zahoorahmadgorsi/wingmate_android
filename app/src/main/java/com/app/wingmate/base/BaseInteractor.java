@@ -402,7 +402,11 @@ public class BaseInteractor {
             ParseQuery query = ParseQuery.getQuery(CLASS_NAME_USER_PROFILE_PHOTOS_VIDEO);
             query.setLimit(1000);
             query.whereEqualTo(PARAM_USER_ID, parseUser.getObjectId());
-            query.whereNotEqualTo(PARAM_FILE_STATUS, REJECTED);
+            if (parseUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                query.whereNotEqualTo(PARAM_FILE_STATUS, REJECTED);
+            } else {
+                query.whereEqualTo(PARAM_FILE_STATUS, ACTIVE);
+            }
 //            query.findInBackground(getAllRemainingProfilePhotosRecords(context, parseUser, listener));
             query.findInBackground((FindCallback<UserProfilePhotoVideo>) (objects, e) -> {
                 if (e != null) {

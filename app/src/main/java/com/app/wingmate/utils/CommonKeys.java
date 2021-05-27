@@ -41,5 +41,6 @@ public class CommonKeys {
     public static final String PREF_USER = "wingmate_pref_user";
     public static final String PREF_EMAIL = "wingmate_pref_email";
     public static final String PREF_PASSWORD = "wingmate_pref_password";
+    public static final String PREF_LAST_UPDATE_TIME = "wingmate_pref_last_update_time";
 
 }

@@ -108,6 +108,8 @@ public class HomeFragment extends BaseFragment {
                 .into(profileImg);
 
         dashboardInstance.saveCurrentGeoPoint();
+
+        dashboardInstance.performUserUpdateAction();
     }
 
     @Subscribe

@@ -19,7 +19,7 @@ import butterknife.Unbinder;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 
-public class MessagesFragment  extends BaseFragment {
+public class MessagesFragment extends BaseFragment {
 
     public static final String TAG = MessagesFragment.class.getName();
 
@@ -64,6 +64,7 @@ public class MessagesFragment  extends BaseFragment {
     public void onResume() {
         super.onResume();
         ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+        dashboardInstance.performUserUpdateAction();
     }
 
     @Override

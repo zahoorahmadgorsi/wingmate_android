@@ -178,6 +178,8 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
             searchBtn.setText(getString(R.string.search));
             resetBtn.setVisibility(View.GONE);
         }
+
+        dashboardInstance.performUserUpdateAction();
     }
 
     @Subscribe

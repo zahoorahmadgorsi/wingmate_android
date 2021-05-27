@@ -72,6 +72,7 @@ public class SettingsFragment  extends BaseFragment {
     public void onResume() {
         super.onResume();
         ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
+        dashboardInstance.performUserUpdateAction();
     }
 
     @Override
