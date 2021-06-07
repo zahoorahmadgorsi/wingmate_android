@@ -42,6 +42,8 @@ import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO_SUBMITTED;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_VIDEO_SUBMITTED;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PENDING;
@@ -327,10 +329,6 @@ public class LoginFragment extends BaseFragment implements BaseView {
         dismissProgress();
 
         if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
-//            showToast(requireActivity(), requireContext(), "Your profile has been rejected by the admin. Logging out...", ERROR);
-//            ParseUser.logOut();
-//            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
-
             AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
             dialog.setTitle(getString(R.string.app_name))
                     .setIcon(R.drawable.app_heart)
@@ -342,10 +340,13 @@ public class LoginFragment extends BaseFragment implements BaseView {
                         ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
                     }).show();
 
-        } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_MEDIA_APPROVED)) {
+        } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED) || !ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED)) {
             ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
-        } else {
-
+        }
+//        else if (!ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
+//            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
+//        }
+        else {
             if (rememberCheckbox.isChecked()) {
                 SharedPrefers.saveString(requireContext(), PREF_EMAIL, emailET.getText().toString());
                 SharedPrefers.saveString(requireContext(), PREF_PASSWORD, passwordET.getText().toString());
@@ -353,20 +354,6 @@ public class LoginFragment extends BaseFragment implements BaseView {
                 SharedPrefers.saveString(requireContext(), PREF_EMAIL, "");
                 SharedPrefers.saveString(requireContext(), PREF_PASSWORD, "");
             }
-//        if (parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)
-////                && parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)
-//                && parseUser.getString(PARAM_PROFILE_PIC) != null
-//                && !TextUtils.isEmpty(parseUser.getString(PARAM_PROFILE_PIC))) {
-//            ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_DASHBOARD);
-//        } else if (parseUser.getString(PARAM_PROFILE_PIC) == null
-//                || TextUtils.isEmpty(parseUser.getString(PARAM_PROFILE_PIC))) {
-//            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
-//        } else if (!parseUser.getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
-//            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
-//        }
-////        else if (!parseUser.getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
-////            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
-////        }
             ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_DASHBOARD);
         }
     }

@@ -23,6 +23,8 @@ import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_EMAIL_VERIFIED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO_SUBMITTED;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_VIDEO_SUBMITTED;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONAL_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
@@ -46,15 +48,10 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (ParseUser.getCurrentUser() != null) {
-                    System.out.println("====current user status1111==="+ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS));
                     ParseUser.getCurrentUser().fetchInBackground((GetCallback<ParseUser>) (parseUser, e) -> {
-                        System.out.println("====current user status==="+parseUser.getInt(PARAM_ACCOUNT_STATUS));
-                        System.out.println("====current user status222==="+ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS));
-
                         if (!ParseUser.getCurrentUser().getBoolean(PARAM_EMAIL_VERIFIED)) {
                             ParseUser.logOut();
                             ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_PRE_LOGIN);
-//                        ActivityUtility.startEmailVerifyActivity(SplashActivity.this, KEY_FRAGMENT_EMAIL_VERIFY, ParseUser.getCurrentUser().getEmail(), ParseUser.getCurrentUser().getString(PARAM_NICK));
                         } else if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
                             AlertDialog.Builder dialog = new AlertDialog.Builder(SplashActivity.this);
                             dialog.setTitle(getString(R.string.app_name))
@@ -66,20 +63,12 @@ public class SplashActivity extends AppCompatActivity {
                                         ParseUser.logOut();
                                         ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_PRE_LOGIN);
                                     }).show();
-                        } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_MEDIA_APPROVED)) {
+                        } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED) || !ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED)) {
                             ActivityUtility.startProfileMediaActivity(SplashActivity.this, KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
-//                            SplashActivity.this.finish();
                         }
-//                    else if (ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC) == null
-//                            || TextUtils.isEmpty(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))) {
-//                        ActivityUtility.startProfileMediaActivity(SplashActivity.this, KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
-//                    }
-//                    else if (!ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
-//                        ActivityUtility.startQuestionnaireActivity(SplashActivity.this, KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
-//                    }
-////                    else if (!ParseUser.getCurrentUser().getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
-////                        ActivityUtility.startQuestionnaireActivity(SplashActivity.this, KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
-////                    }
+//                        else if (!ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
+//                            ActivityUtility.startQuestionnaireActivity(SplashActivity.this, KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
+//                        }
                         else {
                             ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_DASHBOARD);
                         }

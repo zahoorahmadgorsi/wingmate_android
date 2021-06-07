@@ -562,25 +562,24 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
 ////                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
 ////            }
 //
-//            if (questionType.equals(MANDATORY)) {
-//                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-//                dialog.setTitle(getString(R.string.app_name))
-//                        .setIcon(R.drawable.app_heart)
-//                        .setMessage("Do you want fill optional questionnaire?")
-//                        .setNegativeButton("Skip Now", (dialoginterface, i) -> {
-//                            dialoginterface.cancel();
-//                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
-//                        })
-//                        .setPositiveButton("Yes", (dialoginterface, i) -> {
-//                            dialoginterface.cancel();
-//                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
-//                        }).show();
-//            } else {
-//                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
-//            }
+            if (questionType.equals(MANDATORY)) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                dialog.setTitle(getString(R.string.app_name))
+                        .setIcon(R.drawable.app_heart)
+                        .setMessage("Do you want to fill optional questionnaires?")
+                        .setNegativeButton("No", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                        })
+                        .setPositiveButton("Yes", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+                        }).show();
+            } else {
+                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+            }
 
-
-            new Handler().postDelayed(() -> requireActivity().onBackPressed(), 1000);
+//            new Handler().postDelayed(() -> requireActivity().onBackPressed(), 1000);
         });
 
     }

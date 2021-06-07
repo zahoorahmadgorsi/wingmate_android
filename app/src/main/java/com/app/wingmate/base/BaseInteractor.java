@@ -62,6 +62,8 @@ import static com.app.wingmate.utils.AppConstants.PARAM_GENDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_GROUP_CATEGORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO_SUBMITTED;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_VIDEO_SUBMITTED;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_OBJECT_ID;
@@ -182,6 +184,8 @@ public class BaseInteractor {
             user.put(PARAM_GROUP_CATEGORY, GROUP_NEW);
             user.put(PARAM_MANDATORY_QUESTIONNAIRE_FILLED, false);
             user.put(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED, false);
+            user.put(PARAM_IS_PHOTO_SUBMITTED, false);
+            user.put(PARAM_IS_VIDEO_SUBMITTED, false);
             user.signUpInBackground(new SignUpCallback() {
                 @Override
                 public void done(ParseException e1) {

@@ -134,7 +134,7 @@ public class ActivityUtility {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(KEY_ACTIVITY_TAG, tag);
         intent.putExtra(KEY_QUESTION_TYPE, questionType);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }

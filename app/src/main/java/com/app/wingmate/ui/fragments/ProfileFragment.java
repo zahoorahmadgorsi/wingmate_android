@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,13 +65,18 @@ import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_CRUSH;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_LIKE;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_MAY_BE;
+import static com.app.wingmate.utils.AppConstants.OPTIONAL;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
+import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_VIDEO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_IS_CURRENT_USER;
@@ -243,9 +249,37 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         if (v.getId() == R.id.back_btn) {
             getActivity().onBackPressed();
         } else if (v.getId() == R.id.btn_edit) {
-            ActivityUtility.startEditProfileActivity(requireActivity(), KEY_FRAGMENT_EDIT_PROFILE, (ArrayList<UserAnswer>) userAnswers);
+            if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                dialog.setTitle(getString(R.string.app_name))
+                        .setIcon(R.drawable.app_heart)
+                        .setMessage("You need to pay first to edit your profile. Do you want to pay now?")
+                        .setNegativeButton("No", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                        })
+                        .setPositiveButton("Yes", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PAYMENT);
+                        }).show();
+            } else {
+                ActivityUtility.startEditProfileActivity(requireActivity(), KEY_FRAGMENT_EDIT_PROFILE, (ArrayList<UserAnswer>) userAnswers);
+            }
         } else if (v.getId() == R.id.btn_edit_media) {
-            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
+             if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                dialog.setTitle(getString(R.string.app_name))
+                        .setIcon(R.drawable.app_heart)
+                        .setMessage("You need to pay first to edit your profile. Do you want to pay now?")
+                        .setNegativeButton("No", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                        })
+                        .setPositiveButton("Yes", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PAYMENT);
+                        }).show();
+            } else {
+                 ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
+             }
         } else if (v.getId() == R.id.pic_1) {
             ArrayList<String> arrayList = new ArrayList<>();
             if (userProfilePhotoOnly != null) {
@@ -292,9 +326,20 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_MAY_BE);
                 }
             } else {
-                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER))
+                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+//                    AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+//                    dialog.setTitle(getString(R.string.app_name))
+//                            .setIcon(R.drawable.app_heart)
+//                            .setMessage("You need to pay first to perform this action. Do you want to pay now?")
+//                            .setNegativeButton("No", (dialoginterface, i) -> {
+//                                dialoginterface.cancel();
+//                            })
+//                            .setPositiveButton("Yes", (dialoginterface, i) -> {
+//                                dialoginterface.cancel();
+//                                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PAYMENT);
+//                            }).show();
                     showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
-                else
+                }else
                     showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
             }
         } else if (v.getId() == R.id.btn_like) {
@@ -313,9 +358,20 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_LIKE);
                 }
             } else {
-                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER))
+                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+//                    AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+//                    dialog.setTitle(getString(R.string.app_name))
+//                            .setIcon(R.drawable.app_heart)
+//                            .setMessage("You need to pay first to perform this action. Do you want to pay now?")
+//                            .setNegativeButton("No", (dialoginterface, i) -> {
+//                                dialoginterface.cancel();
+//                            })
+//                            .setPositiveButton("Yes", (dialoginterface, i) -> {
+//                                dialoginterface.cancel();
+//                                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PAYMENT);
+//                            }).show();
                     showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
-                else
+                } else
                     showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
             }
         } else if (v.getId() == R.id.btn_crush) {
@@ -335,9 +391,20 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_CRUSH);
                 }
             } else {
-                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER))
+                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+//                    AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+//                    dialog.setTitle(getString(R.string.app_name))
+//                            .setIcon(R.drawable.app_heart)
+//                            .setMessage("You need to pay first to perform this action. Do you want to pay now?")
+//                            .setNegativeButton("No", (dialoginterface, i) -> {
+//                                dialoginterface.cancel();
+//                            })
+//                            .setPositiveButton("Yes", (dialoginterface, i) -> {
+//                                dialoginterface.cancel();
+//                                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PAYMENT);
+//                            }).show();
                     showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
-                else
+                } else
                     showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
             }
         } else if (v.getId() == R.id.btn_msg) {

@@ -77,6 +77,8 @@ import static com.app.wingmate.utils.AppConstants.PARAM_FILE;
 import static com.app.wingmate.utils.AppConstants.PARAM_FILE_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO_SUBMITTED;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_VIDEO_SUBMITTED;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
@@ -221,12 +223,12 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                     dialog.setTitle(getString(R.string.app_name))
                             .setIcon(R.drawable.app_heart)
                             .setCancelable(false)
-                            .setMessage("Are you sure to delete this video. Please note that this will make your profile in pending state.")
+                            .setMessage("Are you sure you want to delete it? Please note that your profile will go into pending state.")
                             .setNegativeButton("Yes, Delete", (dialoginterface, i) -> {
                                 dialoginterface.cancel();
                                 deleteMainImageVideo(CURRENT_MODE);
                             })
-                            .setPositiveButton("Dismiss", (dialoginterface, i) -> {
+                            .setPositiveButton("No", (dialoginterface, i) -> {
                                 dialoginterface.cancel();
                             }).show();
                 } else if (CURRENT_MODE == MODE_PHOTOS && (userProfilePhotoOnly == null || userProfilePhotoOnly.size() == 0 || userProfilePhotoOnly.size() == 1)) {
@@ -234,12 +236,12 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                     dialog.setTitle(getString(R.string.app_name))
                             .setIcon(R.drawable.app_heart)
                             .setCancelable(false)
-                            .setMessage("Are you sure to delete this photo. Please note that this will make your profile in pending state.")
+                            .setMessage("Are you sure you want to delete it? Please note that your profile will go into pending state.")
                             .setNegativeButton("Yes, Delete", (dialoginterface, i) -> {
                                 dialoginterface.cancel();
                                 deleteMainImageVideo(CURRENT_MODE);
                             })
-                            .setPositiveButton("Dismiss", (dialoginterface, i) -> {
+                            .setPositiveButton("No", (dialoginterface, i) -> {
                                 dialoginterface.cancel();
                             }).show();
                 } else {
@@ -281,9 +283,9 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 //                        if (!ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
 //                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
 //                        } else {
-//                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
 //                        }
-                        getActivity().onBackPressed();
+//                        getActivity().onBackPressed();
                     } else {
                         showToast(getActivity(), getContext(), "Video is required!", ERROR);
                     }
@@ -695,6 +697,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                             photosRV.setVisibility(View.GONE);
                             ParseUser.getCurrentUser().put(PARAM_ACCOUNT_STATUS, PENDING);
                             ParseUser.getCurrentUser().put(PARAM_IS_MEDIA_APPROVED, false);
+                            ParseUser.getCurrentUser().put(PARAM_IS_PHOTO_SUBMITTED, false);
                             ParseUser.getCurrentUser().saveInBackground(e12 -> {
 
                             });
@@ -725,6 +728,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                             hasChange = true;
                             ParseUser.getCurrentUser().put(PARAM_ACCOUNT_STATUS, PENDING);
                             ParseUser.getCurrentUser().put(PARAM_IS_MEDIA_APPROVED, false);
+                            ParseUser.getCurrentUser().put(PARAM_IS_VIDEO_SUBMITTED, false);
                             ParseUser.getCurrentUser().saveInBackground(e12 -> {
                             });
                         } else {
@@ -823,6 +827,9 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                     showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
                                     dismissProgress();
                                 }
+                                ParseUser.getCurrentUser().put(PARAM_IS_VIDEO_SUBMITTED, true);
+                                ParseUser.getCurrentUser().saveInBackground(e12 -> {
+                                });
                             } else {
                                 showToast(requireActivity(), getContext(), ea.getMessage(), ERROR);
                                 System.out.println("==ea=====" + ea.getMessage());
@@ -895,6 +902,9 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                 showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
                                 dismissProgress();
                             }
+                            ParseUser.getCurrentUser().put(PARAM_IS_VIDEO_SUBMITTED, true);
+                            ParseUser.getCurrentUser().saveInBackground(e12 -> {
+                            });
                         } else {
                             showToast(requireActivity(), getContext(), e.getMessage(), ERROR);
                             dismissProgress();
@@ -989,6 +999,10 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                         hasPhotos = true;
                         hasChange = true;
                         showToast(getActivity(), getContext(), "Updated successfully", SUCCESS);
+
+                        ParseUser.getCurrentUser().put(PARAM_IS_PHOTO_SUBMITTED, true);
+                        ParseUser.getCurrentUser().saveInBackground(e12 -> {
+                        });
                     } else {
                         showToast(requireActivity(), getContext(), e.getMessage(), ERROR);
                     }

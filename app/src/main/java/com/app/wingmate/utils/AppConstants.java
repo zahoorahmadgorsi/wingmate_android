@@ -50,6 +50,8 @@ public class AppConstants {
     public static final String PARAM_ACCOUNT_STATUS = "accountStatus";
     public static final String PARAM_GROUP_CATEGORY = "groupCategory";
     public static final String PARAM_IS_MEDIA_APPROVED = "isMediaApproved";
+    public static final String PARAM_IS_PHOTO_SUBMITTED = "isPhotosSubmitted";
+    public static final String PARAM_IS_VIDEO_SUBMITTED = "isVideoSubmitted";
 
     public static final String PARAM_EMAIL_NEW = "emailNew";
     public static final String PARAM_EMAIL_WRONG = "emailWrong";
