@@ -569,14 +569,18 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
                         .setMessage("Do you want to fill optional questionnaires?")
                         .setNegativeButton("No", (dialoginterface, i) -> {
                             dialoginterface.cancel();
+//                            requireActivity().onBackPressed();
                             ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
                         })
                         .setPositiveButton("Yes", (dialoginterface, i) -> {
                             dialoginterface.cancel();
-                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
+//                            requireActivity().finish();
+                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL, true);
                         }).show();
             } else {
-                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                new Handler().postDelayed(() -> ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD), 1000);
+//                new Handler().postDelayed(() -> requireActivity().onBackPressed(), 1000);
+//                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
             }
 
 //            new Handler().postDelayed(() -> requireActivity().onBackPressed(), 1000);

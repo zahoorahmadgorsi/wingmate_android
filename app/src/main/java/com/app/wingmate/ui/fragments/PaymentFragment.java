@@ -21,10 +21,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.INFO;
+import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
 import static com.app.wingmate.utils.Utilities.showToast;
 
 public class PaymentFragment extends BaseFragment implements BaseView {
@@ -70,16 +74,27 @@ public class PaymentFragment extends BaseFragment implements BaseView {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.btn_pay_now})
+    @OnClick({R.id.btn_pay_now, R.id.logout, R.id.btn_back})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.btn_pay_now:
                 ParseUser.getCurrentUser().put(PARAM_IS_PAID_USER, true);
-                showToast(getActivity(), getContext(), "Processing...", INFO);
+                showToast(requireActivity(), getContext(), "Processing...", INFO);
                 ParseUser.getCurrentUser().saveInBackground(en -> {
-                    showToast(getActivity(), getContext(), "Congrats on becoming a paid user!", SUCCESS);
-                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                    showToast(requireActivity(), getContext(), "Congrats on becoming a paid user!", SUCCESS);
+                    ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, true);
+
+//                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
                 });
+                break;
+            case R.id.logout:
+                showToast(requireActivity(), getContext(), "Logging out...", ERROR);
+                ParseUser.logOutInBackground(e -> {
+                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
+                });
+                break;
+            case R.id.btn_back:
+                requireActivity().onBackPressed();
                 break;
         }
     }

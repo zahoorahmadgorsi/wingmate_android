@@ -74,12 +74,16 @@ import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO_SUBMITTED;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_VIDEO_SUBMITTED;
+import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.UPDATE_INTERVAL_MINS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.PREF_LAST_UPDATE_TIME;
 
@@ -405,8 +409,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     }
 
     public void performUserUpdateAction() {
-        if (ParseUser.getCurrentUser()!=null) {
-            System.out.println("===>performing action...");
+        if (ParseUser.getCurrentUser() != null) {
             long time1 = SharedPrefers.getLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
             Date lastUpdateTime = new Date(time1);
             Date currentTime = new Date();
@@ -418,7 +421,6 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     }
 
     private void fetchUpdatedCurrentUser() {
-        System.out.println("===>checking user...");
         ParseUser.getCurrentUser().fetchInBackground((GetCallback<ParseUser>) (parseUser, e) -> {
             if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
@@ -431,10 +433,12 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                             ParseUser.logOut();
                             ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
                         }).show();
-            } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_MEDIA_APPROVED)) {
-                ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
+            } else if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) &&
+                    !ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
+                            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, false);
+            } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED) || !ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED)) {
+                ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false);
             } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-                System.out.println("===not paid===");
                 presenter.checkServerDate(getContext());
             }
         });
@@ -686,7 +690,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     @Override
     public void setTrialEnded(String msg) {
-        ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PAYMENT);
+        ActivityUtility.startPaymentActivity(requireActivity(), KEY_FRAGMENT_PAYMENT, true);
 //        showToast(getActivity(), getContext(), "Trial period ended!", ERROR);
 //        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
 //        dialog.setTitle(getString(R.string.app_name))

@@ -43,6 +43,7 @@ import com.app.wingmate.utils.Utilities;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.parse.DeleteCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
@@ -65,9 +66,13 @@ import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_CRUSH;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_LIKE;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_MAY_BE;
+import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.OPTIONAL;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO_SUBMITTED;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_VIDEO_SUBMITTED;
+import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
@@ -76,6 +81,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_VIDEO_VIEW;
@@ -210,6 +216,25 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
+
+        refreshCurrentUser();
+    }
+
+    private void refreshCurrentUser() {
+        ParseUser.getCurrentUser().fetchInBackground((GetCallback<ParseUser>) (parseUser, e) -> {
+            if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                dialog.setTitle(getString(R.string.app_name))
+                        .setIcon(R.drawable.app_heart)
+                        .setCancelable(false)
+                        .setMessage("Your profile has been rejected by the admin!")
+                        .setNegativeButton("OK", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                            ParseUser.logOut();
+                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
+                        }).show();
+            }
+        });
     }
 
     @Override
@@ -243,6 +268,20 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         unbinder.unbind();
     }
 
+    private void showPaymentAlert(String msg) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+        dialog.setTitle(getString(R.string.app_name))
+                .setIcon(R.drawable.app_heart)
+                .setMessage(msg)
+                .setNegativeButton("No", (dialoginterface, i) -> {
+                    dialoginterface.cancel();
+                })
+                .setPositiveButton("Yes", (dialoginterface, i) -> {
+                    dialoginterface.cancel();
+                    ActivityUtility.startPaymentActivity(requireActivity(), KEY_FRAGMENT_PAYMENT, false);
+                }).show();
+    }
+
     @OnClick({R.id.back_btn, R.id.btn_edit, R.id.btn_edit_media, R.id.pic_1, R.id.pic2_card, R.id.pic3_card, R.id.video_card,
             R.id.btn_may_be, R.id.btn_like, R.id.btn_crush, R.id.btn_msg, R.id.btn_refresh})
     public void onViewClicked(View v) {
@@ -250,33 +289,13 @@ public class ProfileFragment extends BaseFragment implements BaseView {
             getActivity().onBackPressed();
         } else if (v.getId() == R.id.btn_edit) {
             if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                dialog.setTitle(getString(R.string.app_name))
-                        .setIcon(R.drawable.app_heart)
-                        .setMessage("You need to pay first to edit your profile. Do you want to pay now?")
-                        .setNegativeButton("No", (dialoginterface, i) -> {
-                            dialoginterface.cancel();
-                        })
-                        .setPositiveButton("Yes", (dialoginterface, i) -> {
-                            dialoginterface.cancel();
-                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PAYMENT);
-                        }).show();
+                showPaymentAlert("You need to pay first to edit your profile. Do you want to pay now?");
             } else {
                 ActivityUtility.startEditProfileActivity(requireActivity(), KEY_FRAGMENT_EDIT_PROFILE, (ArrayList<UserAnswer>) userAnswers);
             }
         } else if (v.getId() == R.id.btn_edit_media) {
              if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                dialog.setTitle(getString(R.string.app_name))
-                        .setIcon(R.drawable.app_heart)
-                        .setMessage("You need to pay first to edit your profile. Do you want to pay now?")
-                        .setNegativeButton("No", (dialoginterface, i) -> {
-                            dialoginterface.cancel();
-                        })
-                        .setPositiveButton("Yes", (dialoginterface, i) -> {
-                            dialoginterface.cancel();
-                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PAYMENT);
-                        }).show();
+                 showPaymentAlert("You need to pay first to edit your profile. Do you want to pay now?");
             } else {
                  ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
              }
@@ -321,25 +340,16 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                         EventBus.getDefault().post(new RefreshFanList());
                         maybeObject = null;
                         setBottomButtons();
+                        setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Un-marked Maybe", "You have been un-marked as maybe by " + ParseUser.getCurrentUser().getString(PARAM_NICK));
                     });
                 } else {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_MAY_BE);
                 }
             } else {
                 if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-//                    AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-//                    dialog.setTitle(getString(R.string.app_name))
-//                            .setIcon(R.drawable.app_heart)
-//                            .setMessage("You need to pay first to perform this action. Do you want to pay now?")
-//                            .setNegativeButton("No", (dialoginterface, i) -> {
-//                                dialoginterface.cancel();
-//                            })
-//                            .setPositiveButton("Yes", (dialoginterface, i) -> {
-//                                dialoginterface.cancel();
-//                                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PAYMENT);
-//                            }).show();
-                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
-                }else
+                    showPaymentAlert("You need to pay first to perform this action. Do you want to pay now?");
+//                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
+                } else
                     showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
             }
         } else if (v.getId() == R.id.btn_like) {
@@ -353,24 +363,16 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                         EventBus.getDefault().post(new RefreshFanList());
                         likeObject = null;
                         setBottomButtons();
+                        setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Unliked", "You have been marked as unlike by " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+
                     });
                 } else {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_LIKE);
                 }
             } else {
                 if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-//                    AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-//                    dialog.setTitle(getString(R.string.app_name))
-//                            .setIcon(R.drawable.app_heart)
-//                            .setMessage("You need to pay first to perform this action. Do you want to pay now?")
-//                            .setNegativeButton("No", (dialoginterface, i) -> {
-//                                dialoginterface.cancel();
-//                            })
-//                            .setPositiveButton("Yes", (dialoginterface, i) -> {
-//                                dialoginterface.cancel();
-//                                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PAYMENT);
-//                            }).show();
-                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
+                    showPaymentAlert("You need to pay first to perform this action. Do you want to pay now?");
+//                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
                 } else
                     showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
             }
@@ -386,24 +388,15 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                         EventBus.getDefault().post(new RefreshFanList());
                         crushObject = null;
                         setBottomButtons();
+                        setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Un-mark Crush", "You have been un-marked as crush by " + ParseUser.getCurrentUser().getString(PARAM_NICK));
                     });
                 } else {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_CRUSH);
                 }
             } else {
                 if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-//                    AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-//                    dialog.setTitle(getString(R.string.app_name))
-//                            .setIcon(R.drawable.app_heart)
-//                            .setMessage("You need to pay first to perform this action. Do you want to pay now?")
-//                            .setNegativeButton("No", (dialoginterface, i) -> {
-//                                dialoginterface.cancel();
-//                            })
-//                            .setPositiveButton("Yes", (dialoginterface, i) -> {
-//                                dialoginterface.cancel();
-//                                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PAYMENT);
-//                            }).show();
-                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
+                    showPaymentAlert("You need to pay first to perform this action. Do you want to pay now?");
+//                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
                 } else
                     showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
             }
@@ -477,12 +470,15 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         switch (fan.getFanType()) {
             case FAN_TYPE_CRUSH:
                 crushObject = fan;
+                setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Crush", "You have been marked as crush by " + ParseUser.getCurrentUser().getString(PARAM_NICK));
                 break;
             case FAN_TYPE_LIKE:
                 likeObject = fan;
+                setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Liked", "You have been marked as liked by " + ParseUser.getCurrentUser().getString(PARAM_NICK));
                 break;
             case FAN_TYPE_MAY_BE:
                 maybeObject = fan;
+                setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Maybe", "You have been marked as maybe by " + ParseUser.getCurrentUser().getString(PARAM_NICK));
                 break;
         }
         String msg = "Updated successfully";

@@ -1,5 +1,7 @@
 package com.app.wingmate.base;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -12,16 +14,25 @@ import com.app.wingmate.models.TermsConditions;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.models.UserProfilePhotoVideo;
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.util.HashMap;
 import java.util.List;
 
 import pl.aprilapps.easyphotopicker.ChooserType;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
+import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_EMAIL_TO_USER;
+import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_PUSH_TO_ADMIN;
+import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_PUSH_TO_USER;
 import static com.app.wingmate.utils.AppConstants.ERROR;
+import static com.app.wingmate.utils.AppConstants.PARAM_ALERT_TEXT;
+import static com.app.wingmate.utils.AppConstants.PARAM_ALERT_TITLE;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
+import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.WARNING;
 import static com.app.wingmate.utils.Utilities.showToast;
 
@@ -211,4 +222,46 @@ public class BaseFragment extends Fragment implements BaseView {
     public void setFanAddedSuccess(Fans fan) {
 
     }
+
+    public void setPushToUser(Activity activity, Context context, String userId, String alertTitle, String alertText) {
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(PARAM_USER_ID, userId);
+        params.put(PARAM_ALERT_TITLE, alertTitle);
+        params.put(PARAM_ALERT_TEXT, alertText);
+        ParseCloud.callFunctionInBackground(PARSE_CLOUD_FUNCTION_PUSH_TO_USER, params, (response, exc) -> {
+            if (exc != null) {
+//                showToast(activity, context, exc.getMessage(), ERROR);
+            } else {
+                showToast(activity, context, "Push notification has been sent to user", SUCCESS);
+            }
+        });
+    }
+
+    public void setPushToAdmin(Activity activity, Context context, String alertTitle, String alertText) {
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(PARAM_ALERT_TITLE, alertTitle);
+        params.put(PARAM_ALERT_TEXT, alertText);
+        ParseCloud.callFunctionInBackground(PARSE_CLOUD_FUNCTION_PUSH_TO_ADMIN, params, (response, exc) -> {
+//            if (exc != null) {
+//                showToast(activity, context, exc.getMessage(), ERROR);
+//            } else {
+////                showToast(activity, context, "Push notification has been sent to user", SUCCESS);
+//            }
+        });
+    }
+
+    public void sendEmailToUser(Activity activity, Context context, String emailId, String subject, String body) {
+        final HashMap<String, String> params = new HashMap<>();
+        params.put("emailId", emailId);
+        params.put("subject", subject);
+        params.put("body", body);
+        ParseCloud.callFunctionInBackground(PARSE_CLOUD_FUNCTION_EMAIL_TO_USER, params, (response, exc) -> {
+//            if (exc != null) {
+//                showToast(activity, context, exc.getMessage(), ERROR);
+//            } else {
+//                System.out.println("====email sent====");
+//            }
+        });
+    }
+
 }

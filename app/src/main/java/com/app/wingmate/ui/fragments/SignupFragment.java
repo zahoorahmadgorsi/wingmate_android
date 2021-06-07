@@ -609,6 +609,9 @@ public class SignupFragment extends BaseFragment implements BaseView, ViewPager.
         dismissProgress();
         System.out.println("=============" + ParseUser.getCurrentUser().getEmail());
         System.out.println("=============" + ParseUser.getCurrentUser().getUsername());
+        String title = "New User Signup";
+        String body = "A new user " + nickET.getText().toString() + " has been signed up just now.";
+        setPushToAdmin(requireActivity(), requireContext(), title, body);
         ActivityUtility.startEmailVerifyActivity(getActivity(), KEY_FRAGMENT_EMAIL_VERIFY, emailET.getText().toString(), nickET.getText().toString());
     }
 

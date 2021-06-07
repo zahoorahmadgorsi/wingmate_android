@@ -130,19 +130,30 @@ public class ActivityUtility {
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }
 
-    public static void startQuestionnaireActivity(Activity context, String tag, String questionType) {
+    public static void startQuestionnaireActivity(Activity context, String tag, String questionType, boolean isClear) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(KEY_ACTIVITY_TAG, tag);
         intent.putExtra(KEY_QUESTION_TYPE, questionType);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (isClear)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }
 
-    public static void startProfileMediaActivity(Activity context, String tag) {
+    public static void startProfileMediaActivity(Activity context, String tag, boolean isClear) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(KEY_ACTIVITY_TAG, tag);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (isClear)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+
+    public static void startPaymentActivity(Activity context, String tag, boolean isClear) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG, tag);
+        if (isClear)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }

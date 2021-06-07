@@ -283,9 +283,9 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 //                        if (!ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
 //                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
 //                        } else {
-                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+//                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
 //                        }
-//                        getActivity().onBackPressed();
+                        getActivity().onBackPressed();
                     } else {
                         showToast(getActivity(), getContext(), "Video is required!", ERROR);
                     }

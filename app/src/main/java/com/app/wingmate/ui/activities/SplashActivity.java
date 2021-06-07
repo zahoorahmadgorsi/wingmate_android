@@ -63,9 +63,10 @@ public class SplashActivity extends AppCompatActivity {
                                         ParseUser.logOut();
                                         ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_PRE_LOGIN);
                                     }).show();
-                        } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED) || !ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED)) {
-                            ActivityUtility.startProfileMediaActivity(SplashActivity.this, KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
                         }
+//                        else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED) || !ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED)) {
+//                            ActivityUtility.startProfileMediaActivity(SplashActivity.this, KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
+//                        }
 //                        else if (!ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
 //                            ActivityUtility.startQuestionnaireActivity(SplashActivity.this, KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
 //                        }
