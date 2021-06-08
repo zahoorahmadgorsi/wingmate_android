@@ -430,6 +430,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                         .setMessage("Your profile has been rejected by the admin!")
                         .setNegativeButton("OK", (dialoginterface, i) -> {
                             dialoginterface.cancel();
+                            SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
                             ParseUser.logOut();
                             ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
                         }).show();

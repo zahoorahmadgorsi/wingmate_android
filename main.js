@@ -161,4 +161,23 @@ Parse.Cloud.define('updateUserData', async (request) => {
 	}
 });
 
+// UPDATE USER PIC FROM ADMIN APP
+Parse.Cloud.define('updateUserPic', async (request) => {
+	var userId = request.params.userId;
+	var pic = request.params.profilePic;
+
+	const User = Parse.Object.extend("User");
+
+	const query = new Parse.Query(User);
+	query.equalTo("objectId", userId);
+	var userObject = await query.first({useMasterKey: true});
+
+	if(userObject !=null)
+	{
+		userObject.set("profilePic", pic);
+		await userObject.save(null, {useMasterKey: true}).catch(error => {throw 'Something went wrong';});
+    	return 'success';
+	}
+});
+
 

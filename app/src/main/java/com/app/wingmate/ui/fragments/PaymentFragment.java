@@ -15,7 +15,10 @@ import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
 import com.app.wingmate.ui.activities.SplashActivity;
 import com.app.wingmate.utils.ActivityUtility;
+import com.app.wingmate.utils.SharedPrefers;
 import com.parse.ParseUser;
+
+import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -29,6 +32,7 @@ import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
+import static com.app.wingmate.utils.CommonKeys.PREF_LAST_UPDATE_TIME;
 import static com.app.wingmate.utils.Utilities.showToast;
 
 public class PaymentFragment extends BaseFragment implements BaseView {
@@ -89,6 +93,7 @@ public class PaymentFragment extends BaseFragment implements BaseView {
                 break;
             case R.id.logout:
                 showToast(requireActivity(), getContext(), "Logging out...", ERROR);
+                SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
                 ParseUser.logOutInBackground(e -> {
                     ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
                 });

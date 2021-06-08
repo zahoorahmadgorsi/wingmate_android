@@ -217,7 +217,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
 
-        refreshCurrentUser();
+//        refreshCurrentUser();
     }
 
     private void refreshCurrentUser() {

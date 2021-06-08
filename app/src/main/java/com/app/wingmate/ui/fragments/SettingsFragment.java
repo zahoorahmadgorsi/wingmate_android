@@ -12,6 +12,7 @@ import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.utils.ActivityUtility;
+import com.app.wingmate.utils.SharedPrefers;
 import com.parse.ParseUser;
 
 import butterknife.ButterKnife;
@@ -30,6 +31,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
+import static com.app.wingmate.utils.CommonKeys.PREF_LAST_UPDATE_TIME;
 import static com.app.wingmate.utils.Utilities.showToast;
 
 public class SettingsFragment  extends BaseFragment {
@@ -111,6 +113,7 @@ public class SettingsFragment  extends BaseFragment {
             }
         } else if (v.getId() == R.id.logout) {
             showToast(getActivity(), getContext(), "Logging out...", ERROR);
+            SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
             ParseUser.logOutInBackground(e -> {
                 ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
             });
