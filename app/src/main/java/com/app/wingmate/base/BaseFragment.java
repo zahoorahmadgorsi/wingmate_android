@@ -232,7 +232,7 @@ public class BaseFragment extends Fragment implements BaseView {
             if (exc != null) {
 //                showToast(activity, context, exc.getMessage(), ERROR);
             } else {
-                showToast(activity, context, "Push notification has been sent to user", SUCCESS);
+//                showToast(activity, context, "Push notification has been sent to user", SUCCESS);
             }
         });
     }

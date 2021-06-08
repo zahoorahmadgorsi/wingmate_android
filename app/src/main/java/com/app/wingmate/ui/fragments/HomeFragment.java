@@ -99,6 +99,11 @@ public class HomeFragment extends BaseFragment {
             userViewAdapter.setData(dashboardInstance.allUsers);
             userViewAdapter.notifyDataSetChanged();
         }
+        if (dashboardInstance.allUsers==null || dashboardInstance.allUsers.size()==0) {
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+        }
 
         Picasso.get()
                 .load(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))

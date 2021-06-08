@@ -606,7 +606,42 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
             }
 
         } else {
-            requireActivity().onBackPressed();
+//            if (questionType.equals(MANDATORY)) {
+//                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+//                dialog.setTitle(getString(R.string.app_name))
+//                        .setIcon(R.drawable.app_heart)
+//                        .setMessage("Please fill mandatory questionnaires to proceed")
+//                        .setNegativeButton("OK", (dialoginterface, i) -> {
+//                            dialoginterface.cancel();
+//                        })
+////                        .setPositiveButton("Yes", (dialoginterface, i) -> {
+////                            dialoginterface.cancel();
+//////                            requireActivity().finish();
+////                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL, true);
+////                        })
+//                        .show();
+//            } else {
+//                new Handler().postDelayed(() -> ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD), 1000);
+//            }
+
+            backBtnPress();
+
+//            requireActivity().onBackPressed();
+        }
+    }
+
+    public void backBtnPress() {
+        if (questionType.equals(MANDATORY)) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setTitle(getString(R.string.app_name))
+                    .setIcon(R.drawable.app_heart)
+                    .setMessage("Please fill mandatory questionnaires to proceed")
+                    .setNegativeButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                    })
+                    .show();
+        } else {
+            new Handler().postDelayed(() -> ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD), 1000);
         }
     }
 }

@@ -448,6 +448,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 super.onBackPressed();
                 overridePendingTransition(R.anim.blank_anim, R.anim.left_to_right);
 //            }
+        } else if (questionnaireFragment != null) {
+            ((QuestionnaireFragment) questionnaireFragment).backBtnPress();
         } else if (dashboardFragment != null) {
             if (((DashboardFragment) dashboardFragment).viewPager.getCurrentItem() > 0) {
                 ((DashboardFragment) dashboardFragment).viewPager.setCurrentItem(0, true);

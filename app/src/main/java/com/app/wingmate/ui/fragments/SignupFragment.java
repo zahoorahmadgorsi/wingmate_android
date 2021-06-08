@@ -53,6 +53,7 @@ import butterknife.Unbinder;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.FEMALE;
 import static com.app.wingmate.utils.AppConstants.MALE;
+import static com.app.wingmate.utils.AppConstants.NOTI_MSG_SIGNUP;
 import static com.app.wingmate.utils.AppConstants.PARAM_VIDEO_LINK;
 import static com.app.wingmate.utils.AppConstants.REQUEST_CODE_TERMS;
 import static com.app.wingmate.utils.AppConstants.WARNING;
@@ -609,9 +610,7 @@ public class SignupFragment extends BaseFragment implements BaseView, ViewPager.
         dismissProgress();
         System.out.println("=============" + ParseUser.getCurrentUser().getEmail());
         System.out.println("=============" + ParseUser.getCurrentUser().getUsername());
-        String title = "New User Signup";
-        String body = "A new user " + nickET.getText().toString() + " has been signed up just now.";
-        setPushToAdmin(requireActivity(), requireContext(), title, body);
+        setPushToAdmin(requireActivity(), requireContext(), "Wing Mate", NOTI_MSG_SIGNUP);
         ActivityUtility.startEmailVerifyActivity(getActivity(), KEY_FRAGMENT_EMAIL_VERIFY, emailET.getText().toString(), nickET.getText().toString());
     }
 

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.SharedPrefers;
 import com.parse.ParseUser;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -41,6 +43,9 @@ public class SettingsFragment  extends BaseFragment {
     Unbinder unbinder;
 
     private DashboardFragment dashboardInstance;
+
+    @BindView(R.id.buy_btn)
+    Button buyBtn;
 
     public SettingsFragment() {
 
@@ -76,6 +81,13 @@ public class SettingsFragment  extends BaseFragment {
         super.onResume();
         ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
         dashboardInstance.performUserUpdateAction();
+
+        if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+            buyBtn.setVisibility(View.INVISIBLE);
+        } else {
+            buyBtn.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override

@@ -132,4 +132,12 @@ public class AppConstants {
     public static final String GROUP_A = "A";
     public static final String GROUP_B = "B";
     public static final String GROUP_NEW = "N";
+
+    public static final String NOTI_MSG_CRUSH = "You are marked as crush by ";
+    public static final String NOTI_MSG_UN_CRUSH = "You are unmarked as crush by ";
+    public static final String NOTI_MSG_LIKED = " liked you.";
+    public static final String NOTI_MSG_UN_LIKED = " unliked you.";
+    public static final String NOTI_MSG_MAYBE = "You are marked as maybe by ";
+    public static final String NOTI_MSG_UN_MAYBE = "You are unmarked as maybe by ";
+    public static final String NOTI_MSG_SIGNUP = "A new user has just registered to Wing Mate.";
 }

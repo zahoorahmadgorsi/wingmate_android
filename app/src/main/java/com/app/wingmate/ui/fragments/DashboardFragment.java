@@ -410,6 +410,29 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     public void performUserUpdateAction() {
         if (ParseUser.getCurrentUser() != null) {
+
+            if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                dialog.setTitle(getString(R.string.app_name))
+                        .setIcon(R.drawable.app_heart)
+                        .setCancelable(false)
+                        .setMessage("Your profile has been rejected by the admin!")
+                        .setNegativeButton("OK", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                            SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
+                            ParseUser.logOut();
+                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
+                        }).show();
+            } else if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) &&
+                    !ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
+                ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, false);
+            } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED) || !ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED)) {
+                ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false);
+            }
+            if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+                presenter.checkServerDate(getContext());
+            }
+
             long time1 = SharedPrefers.getLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
             Date lastUpdateTime = new Date(time1);
             Date currentTime = new Date();
@@ -439,7 +462,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                             ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, false);
             } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED) || !ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED)) {
                 ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false);
-            } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+            }
+            if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
                 presenter.checkServerDate(getContext());
             }
         });

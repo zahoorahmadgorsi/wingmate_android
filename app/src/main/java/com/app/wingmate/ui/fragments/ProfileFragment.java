@@ -67,6 +67,12 @@ import static com.app.wingmate.utils.AppConstants.FAN_TYPE_CRUSH;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_LIKE;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_MAY_BE;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
+import static com.app.wingmate.utils.AppConstants.NOTI_MSG_CRUSH;
+import static com.app.wingmate.utils.AppConstants.NOTI_MSG_LIKED;
+import static com.app.wingmate.utils.AppConstants.NOTI_MSG_MAYBE;
+import static com.app.wingmate.utils.AppConstants.NOTI_MSG_UN_CRUSH;
+import static com.app.wingmate.utils.AppConstants.NOTI_MSG_UN_LIKED;
+import static com.app.wingmate.utils.AppConstants.NOTI_MSG_UN_MAYBE;
 import static com.app.wingmate.utils.AppConstants.OPTIONAL;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
@@ -294,11 +300,11 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 ActivityUtility.startEditProfileActivity(requireActivity(), KEY_FRAGMENT_EDIT_PROFILE, (ArrayList<UserAnswer>) userAnswers);
             }
         } else if (v.getId() == R.id.btn_edit_media) {
-             if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-                 showPaymentAlert("You need to pay first to edit your profile. Do you want to pay now?");
-            } else {
+//             if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+//                 showPaymentAlert("You need to pay first to edit your profile. Do you want to pay now?");
+//            } else {
                  ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
-             }
+//             }
         } else if (v.getId() == R.id.pic_1) {
             ArrayList<String> arrayList = new ArrayList<>();
             if (userProfilePhotoOnly != null) {
@@ -340,7 +346,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                         EventBus.getDefault().post(new RefreshFanList());
                         maybeObject = null;
                         setBottomButtons();
-                        setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Un-marked Maybe", "You have been un-marked as maybe by " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+                        setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Wing Mate", NOTI_MSG_UN_MAYBE + ParseUser.getCurrentUser().getString(PARAM_NICK));
                     });
                 } else {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_MAY_BE);
@@ -363,7 +369,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                         EventBus.getDefault().post(new RefreshFanList());
                         likeObject = null;
                         setBottomButtons();
-                        setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Unliked", "You have been marked as unlike by " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+                        setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Wing Mate", ParseUser.getCurrentUser().getString(PARAM_NICK) + NOTI_MSG_UN_LIKED);
 
                     });
                 } else {
@@ -388,7 +394,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                         EventBus.getDefault().post(new RefreshFanList());
                         crushObject = null;
                         setBottomButtons();
-                        setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Un-mark Crush", "You have been un-marked as crush by " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+                        setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Wing Mate", NOTI_MSG_UN_CRUSH + ParseUser.getCurrentUser().getString(PARAM_NICK));
                     });
                 } else {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_CRUSH);
@@ -470,15 +476,15 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         switch (fan.getFanType()) {
             case FAN_TYPE_CRUSH:
                 crushObject = fan;
-                setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Crush", "You have been marked as crush by " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+                setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Wing Mate", NOTI_MSG_CRUSH + ParseUser.getCurrentUser().getString(PARAM_NICK));
                 break;
             case FAN_TYPE_LIKE:
                 likeObject = fan;
-                setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Liked", "You have been marked as liked by " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+                setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Wing Mate",  ParseUser.getCurrentUser().getString(PARAM_NICK) + NOTI_MSG_LIKED);
                 break;
             case FAN_TYPE_MAY_BE:
                 maybeObject = fan;
-                setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Maybe", "You have been marked as maybe by " + ParseUser.getCurrentUser().getString(PARAM_NICK));
+                setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Wing Mate", NOTI_MSG_MAYBE + ParseUser.getCurrentUser().getString(PARAM_NICK));
                 break;
         }
         String msg = "Updated successfully";
