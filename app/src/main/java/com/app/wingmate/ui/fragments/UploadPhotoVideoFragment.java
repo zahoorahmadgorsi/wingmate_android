@@ -85,6 +85,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
+import static com.app.wingmate.utils.CommonKeys.KEY_BACK_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
@@ -151,6 +152,8 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 
     private BasePresenter presenter;
 
+    public boolean isClear = false;
+
     public UploadPhotoVideoFragment() {
 
     }
@@ -173,6 +176,8 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
         super.onViewCreated(view, savedInstanceState);
 
         presenter = new BasePresenter(this, new BaseInteractor());
+
+        isClear = requireActivity().getIntent().getBooleanExtra(KEY_BACK_TAG, false);
 
         CURRENT_MODE = MODE_PHOTOS;
 
@@ -285,7 +290,12 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 //                        } else {
 //                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
 //                        }
-                        getActivity().onBackPressed();
+
+                        if (isClear) {
+                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                        } else {
+                            getActivity().onBackPressed();
+                        }
                     } else {
                         showToast(getActivity(), getContext(), "Video is required!", ERROR);
                     }
@@ -296,6 +306,14 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                 break;
             default:
                 break;
+        }
+    }
+
+    public boolean canBack() {
+        if (isClear) {
+            return false;
+        } else {
+            return true;
         }
     }
 

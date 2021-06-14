@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.app.wingmate.events.RefreshHome;
 import com.app.wingmate.events.RefreshHomeWithNewLocation;
 import com.app.wingmate.ui.adapters.UserViewAdapter;
 import com.app.wingmate.utils.ActivityUtility;
+import com.app.wingmate.utils.Utilities;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
@@ -50,6 +52,8 @@ public class HomeFragment extends BaseFragment {
     LinearLayout emptyView;
     @BindView(R.id.profile_img)
     CircleImageView profileImg;
+    @BindView(R.id.banner_tv)
+    TextView bannerTV;
 
     private UserViewAdapter userViewAdapter;
     private GridLayoutManager gridLayoutManager;
@@ -99,7 +103,7 @@ public class HomeFragment extends BaseFragment {
             userViewAdapter.setData(dashboardInstance.allUsers);
             userViewAdapter.notifyDataSetChanged();
         }
-        if (dashboardInstance.allUsers==null || dashboardInstance.allUsers.size()==0) {
+        if (dashboardInstance.allUsers == null || dashboardInstance.allUsers.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
         } else {
             emptyView.setVisibility(View.GONE);
@@ -113,8 +117,6 @@ public class HomeFragment extends BaseFragment {
                 .into(profileImg);
 
         dashboardInstance.saveCurrentGeoPoint();
-
-        dashboardInstance.performUserUpdateAction();
     }
 
     @Subscribe
@@ -125,7 +127,7 @@ public class HomeFragment extends BaseFragment {
         pullToRefresh.setRefreshing(false);
         userViewAdapter.setData(dashboardInstance.allUsers);
         userViewAdapter.notifyDataSetChanged();
-        if (dashboardInstance.allUsers==null || dashboardInstance.allUsers.size()==0) {
+        if (dashboardInstance.allUsers == null || dashboardInstance.allUsers.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
         } else {
             emptyView.setVisibility(View.GONE);
@@ -151,9 +153,16 @@ public class HomeFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-    @OnClick({R.id.profile_img, R.id.btn_top_fans, R.id.btn_top_search , R.id.btn_top_msg , R.id.btn_top_compatibility})
+    @OnClick({R.id.banner_tv, R.id.profile_img, R.id.btn_top_fans, R.id.btn_top_search, R.id.btn_top_msg, R.id.btn_top_compatibility})
     public void onViewClicked(View v) {
         switch (v.getId()) {
+            case R.id.banner_tv:
+                if (!Utilities.isInternetAvailable(requireContext())) {
+                    setInternetError();
+                } else {
+                    dashboardInstance.performUserUpdateAction(true);
+                }
+                break;
             case R.id.profile_img:
                 ActivityUtility.startProfileActivity(requireActivity(), KEY_FRAGMENT_PROFILE, true, ParseUser.getCurrentUser());
 //                ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
@@ -177,7 +186,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void sortByCompatibility() {
-        if (dashboardInstance.allUsers!=null && dashboardInstance.allUsers.size()>0) {
+        if (dashboardInstance.allUsers != null && dashboardInstance.allUsers.size() > 0) {
             Collections.sort(dashboardInstance.allUsers, (lhs, rhs) -> Integer.valueOf(rhs.getMatchPercent()).compareTo(lhs.getMatchPercent()));
             userViewAdapter.setData(dashboardInstance.allUsers);
             userViewAdapter.notifyDataSetChanged();
@@ -206,5 +215,16 @@ public class HomeFragment extends BaseFragment {
             dashboardInstance.allUsers = new ArrayList<>();
             dashboardInstance.presenter.queryAllUsers(getContext());
         });
+
+        dashboardInstance.performUserUpdateAction(false);
+    }
+
+    public void setBannerTV(String text) {
+        bannerTV.setVisibility(View.VISIBLE);
+        bannerTV.setText(text);
+    }
+
+    public void hideBannerTV() {
+        bannerTV.setVisibility(View.GONE);
     }
 }

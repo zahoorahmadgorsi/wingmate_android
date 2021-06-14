@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
+import static com.app.wingmate.utils.CommonKeys.KEY_BACK_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_EMAIL_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DUMMY;
@@ -134,6 +135,7 @@ public class ActivityUtility {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(KEY_ACTIVITY_TAG, tag);
         intent.putExtra(KEY_QUESTION_TYPE, questionType);
+        intent.putExtra(KEY_BACK_TAG, isClear);
         if (isClear)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -143,6 +145,7 @@ public class ActivityUtility {
     public static void startProfileMediaActivity(Activity context, String tag, boolean isClear) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(KEY_ACTIVITY_TAG, tag);
+        intent.putExtra(KEY_BACK_TAG, isClear);
         if (isClear)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -152,6 +155,7 @@ public class ActivityUtility {
     public static void startPaymentActivity(Activity context, String tag, boolean isClear) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(KEY_ACTIVITY_TAG, tag);
+        intent.putExtra(KEY_BACK_TAG, isClear);
         if (isClear)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);

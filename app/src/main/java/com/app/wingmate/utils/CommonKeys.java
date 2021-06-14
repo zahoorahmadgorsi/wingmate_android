@@ -3,6 +3,7 @@ package com.app.wingmate.utils;
 public class CommonKeys {
 
     public static final String KEY_ACTIVITY_TAG = "key_activity_tag";
+    public static final String KEY_BACK_TAG = "key_back_tag";
 
     public static final String KEY_EMAIL_TAG = "key_email_tag";
     public static final String KEY_NICK_TAG = "key_nick_tag";

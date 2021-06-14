@@ -23,6 +23,7 @@ import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
+import com.app.wingmate.events.RefreshUserStatus;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.UserAnswer;
@@ -32,6 +33,8 @@ import com.app.wingmate.utils.ActivityUtility;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;

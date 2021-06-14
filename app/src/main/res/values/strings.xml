@@ -63,4 +63,8 @@
     <string name="try_later">Hmmm, We’re not getting any result.</string>
     <string name="no_distance_selected">No distance selected</string>
     <string name="distance">Distance</string>
+    <string name="pending_msg">Please allow up to 24 hours for approval. Upon verification, we will send you an email and get you to the next step closer to being a Wing Mate member!</string>
+    <string name="please_wait">Please wait</string>
+    <string name="hurrah_">Hurrah!!! Now you are Pro member for Wing Mate</string>
+    <string name="payment_success_msg"><![CDATA[For better result we need to know more about you. please provide few answers about you & your interests.]]></string>
 </resources>

@@ -139,9 +139,9 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
         }
     }
 
-    public void checkServerDate(Context context) {
+    public void checkServerDate(Context context, boolean showLoader) {
         if (baseView != null) {
-            interactor.fetchServerDateFormParse(context, this);
+            interactor.fetchServerDateFormParse(context, showLoader, this);
         }
     }
 
@@ -185,9 +185,16 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
     }
 
     @Override
-    public void onTrialEnded(String msg) {
+    public void onTrialEnded(String msg, boolean showLoader) {
         if (baseView != null) {
-            baseView.setTrialEnded(msg);
+            baseView.setTrialEnded(msg, showLoader);
+        }
+    }
+
+    @Override
+    public void onHasTrial(int days, boolean showLoader) {
+        if (baseView != null) {
+            baseView.setHasTrial(days, showLoader);
         }
     }
 

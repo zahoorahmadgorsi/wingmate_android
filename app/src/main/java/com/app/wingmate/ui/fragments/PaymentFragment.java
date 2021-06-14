@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.parse.ParseUser;
 
 import java.util.Date;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -29,6 +31,7 @@ import static com.app.wingmate.utils.AppConstants.INFO;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
+import static com.app.wingmate.utils.CommonKeys.KEY_BACK_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
@@ -42,6 +45,11 @@ public class PaymentFragment extends BaseFragment implements BaseView {
     private BasePresenter presenter;
 
     Unbinder unbinder;
+
+    @BindView(R.id.payment_success_view)
+    RelativeLayout paymentSuccessView;
+
+    public boolean isClear = false;
 
     public PaymentFragment() {
 
@@ -65,6 +73,10 @@ public class PaymentFragment extends BaseFragment implements BaseView {
         super.onViewCreated(view, savedInstanceState);
 
         presenter = new BasePresenter(this, new BaseInteractor());
+
+        isClear = requireActivity().getIntent().getBooleanExtra(KEY_BACK_TAG, false);
+
+        paymentSuccessView.setVisibility(View.GONE);
     }
 
     @Override
@@ -78,17 +90,18 @@ public class PaymentFragment extends BaseFragment implements BaseView {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.btn_pay_now, R.id.logout, R.id.btn_back})
+    @OnClick({R.id.btn_pay_now, R.id.logout, R.id.btn_back, R.id.btn_continue})
     public void onViewClicked(View v) {
         switch (v.getId()) {
+            case R.id.btn_continue:
+                ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, true);
+                break;
             case R.id.btn_pay_now:
                 ParseUser.getCurrentUser().put(PARAM_IS_PAID_USER, true);
                 showToast(requireActivity(), getContext(), "Processing...", INFO);
                 ParseUser.getCurrentUser().saveInBackground(en -> {
-                    showToast(requireActivity(), getContext(), "Congrats on becoming a paid user!", SUCCESS);
-                    ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, true);
-
-//                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                    isClear = true;
+                    paymentSuccessView.setVisibility(View.VISIBLE);
                 });
                 break;
             case R.id.logout:
@@ -101,6 +114,14 @@ public class PaymentFragment extends BaseFragment implements BaseView {
             case R.id.btn_back:
                 requireActivity().onBackPressed();
                 break;
+        }
+    }
+
+    public boolean canBack() {
+        if (isClear) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

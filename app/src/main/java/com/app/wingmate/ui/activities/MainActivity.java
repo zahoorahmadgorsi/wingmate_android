@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentManager;
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseActivity;
 import com.app.wingmate.events.RefreshDashboard;
+import com.app.wingmate.events.RefreshUserStatus;
 import com.app.wingmate.ui.fragments.DashboardFragment;
 import com.app.wingmate.events.RefreshProfile;
 import com.app.wingmate.ui.fragments.HomeFragment;
@@ -178,7 +179,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case KEY_FRAGMENT_EDIT_PROFILE:
                 beginEditProfileFragment();
                 break;
-                case KEY_FRAGMENT_PAYMENT:
+            case KEY_FRAGMENT_PAYMENT:
                 beginPaymentFragment();
                 break;
             case KEY_FRAGMENT_EDIT_PROFILE_TEXT_FIELDS:
@@ -442,12 +443,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //            if (((UploadPhotoVideoFragment) uploadPhotosVideoFragment).CURRENT_MODE == MODE_VIDEO) {
 //                ((UploadPhotoVideoFragment) uploadPhotosVideoFragment).setPhotosView();
 //            } else {
+
+            if (((UploadPhotoVideoFragment) uploadPhotosVideoFragment).canBack()) {
                 if (((UploadPhotoVideoFragment) uploadPhotosVideoFragment).hasChange) {
                     EventBus.getDefault().post(new RefreshProfile());
+                    EventBus.getDefault().post(new RefreshUserStatus());
                 }
                 super.onBackPressed();
                 overridePendingTransition(R.anim.blank_anim, R.anim.left_to_right);
+            } else {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                dialog.setTitle(getString(R.string.app_name))
+                        .setIcon(R.drawable.app_heart)
+                        .setCancelable(false)
+                        .setMessage("Please submit your photos/video to proceed")
+                        .setPositiveButton("OK", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                        }).show();
+            }
 //            }
+        }  else if (paymentFragment != null) {
+            if (((PaymentFragment) paymentFragment).canBack()) {
+                super.onBackPressed();
+                overridePendingTransition(R.anim.blank_anim, R.anim.left_to_right);
+            }
         } else if (questionnaireFragment != null) {
             ((QuestionnaireFragment) questionnaireFragment).backBtnPress();
         } else if (dashboardFragment != null) {

@@ -196,7 +196,7 @@ public class MyFansFragment extends BaseFragment {
         ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
         setDataInGridView();
 
-        dashboardInstance.performUserUpdateAction();
+//        dashboardInstance.performUserUpdateAction();
     }
 
     private void setDataInGridView() {

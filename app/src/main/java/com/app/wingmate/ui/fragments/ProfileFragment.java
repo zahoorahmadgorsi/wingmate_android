@@ -7,6 +7,7 @@ import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
+import com.app.wingmate.events.RefreshDashboardView;
 import com.app.wingmate.events.RefreshFanList;
 import com.app.wingmate.events.RefreshFans;
 import com.app.wingmate.events.RefreshProfile;
@@ -39,6 +41,7 @@ import com.app.wingmate.models.UserProfilePhotoVideo;
 import com.app.wingmate.ui.adapters.ProfileOptionsListAdapter;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.AppConstants;
+import com.app.wingmate.utils.SharedPrefers;
 import com.app.wingmate.utils.Utilities;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -81,6 +84,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_IS_VIDEO_SUBMITTED;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
+import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
@@ -93,6 +97,8 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_VIDEO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_IS_CURRENT_USER;
 import static com.app.wingmate.utils.CommonKeys.KEY_PARSE_USER;
+import static com.app.wingmate.utils.CommonKeys.PREF_LAST_UPDATE_TIME;
+import static com.app.wingmate.utils.Utilities.print;
 import static com.app.wingmate.utils.Utilities.showToast;
 
 public class ProfileFragment extends BaseFragment implements BaseView {
@@ -223,24 +229,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
 
-//        refreshCurrentUser();
-    }
-
-    private void refreshCurrentUser() {
-        ParseUser.getCurrentUser().fetchInBackground((GetCallback<ParseUser>) (parseUser, e) -> {
-            if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                dialog.setTitle(getString(R.string.app_name))
-                        .setIcon(R.drawable.app_heart)
-                        .setCancelable(false)
-                        .setMessage("Your profile has been rejected by the admin!")
-                        .setNegativeButton("OK", (dialoginterface, i) -> {
-                            dialoginterface.cancel();
-                            ParseUser.logOut();
-                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
-                        }).show();
-            }
-        });
+        fetchUpdatedCurrentUser();
     }
 
     @Override
@@ -288,26 +277,86 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 }).show();
     }
 
+    private boolean canInteractWithUser() {
+
+        int accountStatus = ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS);
+        boolean isPaid = ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER);
+        boolean isPhotoSubmitted = ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED);
+        boolean isVideoSubmitted = ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED);
+        boolean isMandatoryQuestionnaireFilled = ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED);
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+
+        if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
+            dialog.setTitle(getString(R.string.app_name))
+                    .setIcon(R.drawable.app_heart)
+                    .setMessage("Please upload your photos and video and become a paid user to avail this feature. Do you want to upload photos and video?")
+                    .setNegativeButton("Upload Later", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                    })
+                    .setPositiveButton("Upload Now", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false);
+                    }).show();
+            return false;
+        } else if (accountStatus == PENDING) {
+            dialog.setTitle(getString(R.string.app_name))
+                    .setIcon(R.drawable.app_heart)
+                    .setMessage("Your account is under review. Only approved and paid accounts can avail this feature.")
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                    }).show();
+            return false;
+        } else if (!isPaid && accountStatus == ACTIVE) {
+            dialog.setTitle(getString(R.string.app_name))
+                    .setIcon(R.drawable.app_heart)
+                    .setMessage("Please become a paid user to avail this feature. Do you want to pay?")
+                    .setNegativeButton("Pay Later", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                    })
+                    .setPositiveButton("Pay Now", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);
+                    }).show();
+            return false;
+        } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
+            dialog.setTitle(getString(R.string.app_name))
+                    .setIcon(R.drawable.app_heart)
+                    .setMessage("Please fill-up your mandatory questionnaire to avail this feature.")
+                    .setNegativeButton("Fill Later", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                    })
+                    .setPositiveButton("Fill Now", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, false);
+                    }).show();
+            return false;
+        } else return true;
+    }
+
     @OnClick({R.id.back_btn, R.id.btn_edit, R.id.btn_edit_media, R.id.pic_1, R.id.pic2_card, R.id.pic3_card, R.id.video_card,
             R.id.btn_may_be, R.id.btn_like, R.id.btn_crush, R.id.btn_msg, R.id.btn_refresh})
     public void onViewClicked(View v) {
         if (v.getId() == R.id.back_btn) {
             getActivity().onBackPressed();
         } else if (v.getId() == R.id.btn_edit) {
-            if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-                showPaymentAlert("You need to pay first to edit your profile. Do you want to pay now?");
-            } else {
+//            if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+//                showPaymentAlert("You need to pay first to edit your profile. Do you want to pay now?");
+//            } else {
+//                ActivityUtility.startEditProfileActivity(requireActivity(), KEY_FRAGMENT_EDIT_PROFILE, (ArrayList<UserAnswer>) userAnswers);
+//            }
+            if (canInteractWithUser()) {
                 ActivityUtility.startEditProfileActivity(requireActivity(), KEY_FRAGMENT_EDIT_PROFILE, (ArrayList<UserAnswer>) userAnswers);
             }
         } else if (v.getId() == R.id.btn_edit_media) {
 //             if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
 //                 showPaymentAlert("You need to pay first to edit your profile. Do you want to pay now?");
 //            } else {
-                 ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
+            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE);
 //             }
         } else if (v.getId() == R.id.pic_1) {
             ArrayList<String> arrayList = new ArrayList<>();
-            if (userProfilePhotoOnly != null) {
+            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size()>0) {
                 for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
                     arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
                 }
@@ -316,7 +365,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 //            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(0).getFile().getUrl());
         } else if (v.getId() == R.id.pic2_card) {
             ArrayList<String> arrayList = new ArrayList<>();
-            if (userProfilePhotoOnly != null) {
+            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size()>0) {
                 for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
                     arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
                 }
@@ -325,7 +374,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 //            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(1).getFile().getUrl());
         } else if (v.getId() == R.id.pic3_card) {
             ArrayList<String> arrayList = new ArrayList<>();
-            if (userProfilePhotoOnly != null) {
+            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size()>0) {
                 for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
                     arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
                 }
@@ -333,9 +382,35 @@ public class ProfileFragment extends BaseFragment implements BaseView {
             }
 //            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(2).getFile().getUrl());
         } else if (v.getId() == R.id.video_card) {
-            ActivityUtility.startVideoViewActivity(requireActivity(), KEY_FRAGMENT_VIDEO_VIEW, userProfileVideoOnly.get(0).getFile().getUrl());
+            if (userProfileVideoOnly != null && userProfileVideoOnly.size()>0) {
+                ActivityUtility.startVideoViewActivity(requireActivity(), KEY_FRAGMENT_VIDEO_VIEW, userProfileVideoOnly.get(0).getFile().getUrl());
+            }
         } else if (v.getId() == R.id.btn_may_be) {
-            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) && ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == ACTIVE) {
+//            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) && ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == ACTIVE) {
+//                showProgress();
+//                if (maybeObject != null) {
+//                    maybeObject.deleteInBackground(e -> {
+//                        dismissProgress();
+////                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Maybe";
+//                        String msg = "Updated successfully";
+//                        showToast(getActivity(), getContext(), msg, SUCCESS);
+//                        EventBus.getDefault().post(new RefreshFanList());
+//                        maybeObject = null;
+//                        setBottomButtons();
+//                        setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Wing Mate", NOTI_MSG_UN_MAYBE + ParseUser.getCurrentUser().getString(PARAM_NICK));
+//                    });
+//                } else {
+//                    presenter.setFan(requireContext(), parseUser, FAN_TYPE_MAY_BE);
+//                }
+//            } else {
+//                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+//                    showPaymentAlert("You need to pay first to perform this action. Do you want to pay now?");
+////                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
+//                } else
+//                    showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
+//            }
+
+            if (canInteractWithUser()) {
                 showProgress();
                 if (maybeObject != null) {
                     maybeObject.deleteInBackground(e -> {
@@ -351,15 +426,33 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 } else {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_MAY_BE);
                 }
-            } else {
-                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-                    showPaymentAlert("You need to pay first to perform this action. Do you want to pay now?");
-//                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
-                } else
-                    showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
             }
         } else if (v.getId() == R.id.btn_like) {
-            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) && ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == ACTIVE) {
+//            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) && ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == ACTIVE) {
+//                showProgress();
+//                if (likeObject != null) {
+//                    likeObject.deleteInBackground(e -> {
+//                        dismissProgress();
+//                        String msg = "Updated successfully";
+//                        showToast(getActivity(), getContext(), msg, SUCCESS);
+//                        EventBus.getDefault().post(new RefreshFanList());
+//                        likeObject = null;
+//                        setBottomButtons();
+//                        setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Wing Mate", ParseUser.getCurrentUser().getString(PARAM_NICK) + NOTI_MSG_UN_LIKED);
+//
+//                    });
+//                } else {
+//                    presenter.setFan(requireContext(), parseUser, FAN_TYPE_LIKE);
+//                }
+//            } else {
+//                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+//                    showPaymentAlert("You need to pay first to perform this action. Do you want to pay now?");
+////                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
+//                } else
+//                    showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
+//            }
+
+            if (canInteractWithUser()) {
                 showProgress();
                 if (likeObject != null) {
                     likeObject.deleteInBackground(e -> {
@@ -375,15 +468,33 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 } else {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_LIKE);
                 }
-            } else {
-                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-                    showPaymentAlert("You need to pay first to perform this action. Do you want to pay now?");
-//                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
-                } else
-                    showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
             }
         } else if (v.getId() == R.id.btn_crush) {
-            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) && ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == ACTIVE) {
+//            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) && ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == ACTIVE) {
+//                showProgress();
+//                if (crushObject != null) {
+//                    crushObject.deleteInBackground(e -> {
+//                        dismissProgress();
+////                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Crush";
+//                        String msg = "Updated successfully";
+//                        showToast(getActivity(), getContext(), msg, SUCCESS);
+//                        EventBus.getDefault().post(new RefreshFanList());
+//                        crushObject = null;
+//                        setBottomButtons();
+//                        setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Wing Mate", NOTI_MSG_UN_CRUSH + ParseUser.getCurrentUser().getString(PARAM_NICK));
+//                    });
+//                } else {
+//                    presenter.setFan(requireContext(), parseUser, FAN_TYPE_CRUSH);
+//                }
+//            } else {
+//                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
+//                    showPaymentAlert("You need to pay first to perform this action. Do you want to pay now?");
+////                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
+//                } else
+//                    showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
+//            }
+
+            if (canInteractWithUser()) {
                 showProgress();
                 if (crushObject != null) {
                     crushObject.deleteInBackground(e -> {
@@ -399,12 +510,6 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 } else {
                     presenter.setFan(requireContext(), parseUser, FAN_TYPE_CRUSH);
                 }
-            } else {
-                if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-                    showPaymentAlert("You need to pay first to perform this action. Do you want to pay now?");
-//                    showToast(getActivity(), getContext(), "You need to buy subscription first", ERROR);
-                } else
-                    showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
             }
         } else if (v.getId() == R.id.btn_msg) {
 
@@ -452,6 +557,10 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         this.userProfilePhotoVideos = new ArrayList<>();
         if (userProfilePhotoVideos != null && userProfilePhotoVideos.size() > 0)
             this.userProfilePhotoVideos = userProfilePhotoVideos;
+
+        System.out.println("====setUserPhotosVideoResponseSuccess==="+userProfilePhotoVideos.size());
+        System.out.println("====setUserPhotosVideoResponseSuccess222==="+this.userProfilePhotoVideos.size());
+
         if (requireActivity() != null) setMediaInViews();
     }
 
@@ -480,7 +589,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 break;
             case FAN_TYPE_LIKE:
                 likeObject = fan;
-                setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Wing Mate",  ParseUser.getCurrentUser().getString(PARAM_NICK) + NOTI_MSG_LIKED);
+                setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), "Wing Mate", ParseUser.getCurrentUser().getString(PARAM_NICK) + NOTI_MSG_LIKED);
                 break;
             case FAN_TYPE_MAY_BE:
                 maybeObject = fan;
@@ -552,6 +661,9 @@ public class ProfileFragment extends BaseFragment implements BaseView {
     }
 
     private void setMediaInViews() {
+
+        print("====in media===");
+
         pic2Card.setVisibility(View.GONE);
         pic3Card.setVisibility(View.GONE);
         videoCard.setVisibility(View.GONE);
@@ -569,7 +681,12 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 
             if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
                 for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
-                    String profilePicUrl = ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC);
+                    String profilePicUrl = "";
+                    if (isCurrentUser) {
+                        profilePicUrl = ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC);
+                    } else {
+                        profilePicUrl = parseUser.getString(PARAM_PROFILE_PIC);
+                    }
                     System.out.println(profilePicUrl + "==match==" + userProfilePhotoOnly.get(i).getFile().getUrl());
                     if (profilePicUrl != null && profilePicUrl.equals(userProfilePhotoOnly.get(i).getFile().getUrl())) {
 //                        UserProfilePhotoVideo user1stPhotoFile = userProfilePhotoOnly.get(i);
@@ -684,5 +801,22 @@ public class ProfileFragment extends BaseFragment implements BaseView {
             return bitmap;
 //            return bitmap != null ? ScalingUtilities.createScaledBitmap(bitmap, 40, 40, ScalingUtilities.ScalingLogic.FIT) : bitmap;
         }
+    }
+
+    private void fetchUpdatedCurrentUser() {
+        ParseUser.getCurrentUser().fetchInBackground((GetCallback<ParseUser>) (parseUser, e) -> {
+            presenter.checkServerDate(getContext(), false);
+        });
+    }
+
+    @Override
+    public void setHasTrial(int days, boolean showLoader) {
+
+    }
+
+    @Override
+    public void setTrialEnded(String msg, boolean showLoader) {
+        EventBus.getDefault().post(new RefreshDashboardView());
+        requireActivity().onBackPressed();
     }
 }

@@ -21,7 +21,8 @@ public interface BaseView {
     void setResponseSuccess();
     void setResponseError(ParseException e);
     void setResponseGeneralError(String error);
-    void setTrialEnded(String msg);
+    void setTrialEnded(String msg, boolean showLoader);
+    void setHasTrial(int days, boolean showLoader);
 
     //Common Methods
     void setEmailError();

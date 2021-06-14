@@ -10,11 +10,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,11 +35,13 @@ import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
 import com.app.wingmate.events.RefreshDashboard;
+import com.app.wingmate.events.RefreshDashboardView;
 import com.app.wingmate.events.RefreshFanList;
 import com.app.wingmate.events.RefreshFans;
 import com.app.wingmate.events.RefreshHome;
 import com.app.wingmate.events.RefreshHomeWithNewLocation;
 import com.app.wingmate.events.RefreshSearch;
+import com.app.wingmate.events.RefreshUserStatus;
 import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.MyCustomUser;
 import com.app.wingmate.models.Question;
@@ -69,6 +73,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
@@ -79,7 +84,9 @@ import static com.app.wingmate.utils.AppConstants.PARAM_IS_VIDEO_SUBMITTED;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
+import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
+import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
 import static com.app.wingmate.utils.AppConstants.UPDATE_INTERVAL_MINS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
@@ -128,6 +135,9 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     @BindView(R.id.tv_settings)
     TextView tvSettings;
 
+    @BindView(R.id.pending_view)
+    RelativeLayout pendingView;
+
     private HomeFragment homeFragment;
     private SearchFragment searchFragment;
     private MyFansFragment likesFragment;
@@ -152,6 +162,9 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     private ExecutorService executor;
     private Handler handler;
+
+    public boolean isExpired = false;
+    public int remainingDays = TRIAL_PERIOD;
 
     public DashboardFragment() {
 
@@ -234,6 +247,9 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
             };
 
     private void initViews() {
+
+        pendingView.setVisibility(View.GONE);
+
         homeFragment = HomeFragment.newInstance(this);
         searchFragment = SearchFragment.newInstance(this);
         likesFragment = MyFansFragment.newInstance(this);
@@ -404,74 +420,138 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     @Override
     public void onResume() {
         super.onResume();
-//        checkPaidUser();
-//        saveCurrentGeoPoint();
     }
 
-    public void performUserUpdateAction() {
+    @Subscribe
+    public void refreshUser(RefreshUserStatus refreshUserStatus) {
+        performUserUpdateAction(false);
+    }
+
+    public void performUserUpdateAction(boolean showLoader) {
         if (ParseUser.getCurrentUser() != null) {
-
-            if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                dialog.setTitle(getString(R.string.app_name))
-                        .setIcon(R.drawable.app_heart)
-                        .setCancelable(false)
-                        .setMessage("Your profile has been rejected by the admin!")
-                        .setNegativeButton("OK", (dialoginterface, i) -> {
-                            dialoginterface.cancel();
-                            SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
-                            ParseUser.logOut();
-                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
-                        }).show();
-            } else if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) &&
-                    !ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
-                ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, false);
-            } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED) || !ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED)) {
-                ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false);
-            }
-            if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-                presenter.checkServerDate(getContext());
-            }
-
-            long time1 = SharedPrefers.getLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
-            Date lastUpdateTime = new Date(time1);
-            Date currentTime = new Date();
-            if (DateUtils.greaterThanXMins(lastUpdateTime, currentTime, UPDATE_INTERVAL_MINS)) {
-                SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, new Date().getTime());
-                fetchUpdatedCurrentUser();
-            }
+            if (showLoader) showProgress();
+            fetchUpdatedCurrentUser(showLoader);
+//            long time1 = SharedPrefers.getLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
+//            Date lastUpdateTime = new Date(time1);
+//            Date currentTime = new Date();
+//            if (DateUtils.greaterThanXMins(lastUpdateTime, currentTime, UPDATE_INTERVAL_MINS)) {
+//                SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, new Date().getTime());
+//                fetchUpdatedCurrentUser();
+//            }
         }
     }
 
-    private void fetchUpdatedCurrentUser() {
+    private void fetchUpdatedCurrentUser(boolean showLoader) {
         ParseUser.getCurrentUser().fetchInBackground((GetCallback<ParseUser>) (parseUser, e) -> {
-            if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                dialog.setTitle(getString(R.string.app_name))
-                        .setIcon(R.drawable.app_heart)
-                        .setCancelable(false)
-                        .setMessage("Your profile has been rejected by the admin!")
-                        .setNegativeButton("OK", (dialoginterface, i) -> {
-                            dialoginterface.cancel();
-                            SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
-                            ParseUser.logOut();
-                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
-                        }).show();
-            } else if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER) &&
-                    !ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
-                            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, false);
-            } else if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED) || !ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED)) {
-                ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false);
-            }
-            if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-                presenter.checkServerDate(getContext());
-            }
+            presenter.checkServerDate(getContext(), showLoader);
         });
+    }
+
+    @Override
+    public void setHasTrial(int days, boolean showLoader) {
+        isExpired = false;
+        remainingDays = days;
+
+        int accountStatus = ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS);
+        boolean isPaid = ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER);
+        boolean isPhotoSubmitted = ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED);
+        boolean isVideoSubmitted = ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED);
+        boolean isMandatoryQuestionnaireFilled = ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED);
+
+        if (showLoader) dismissProgress();
+
+        if (accountStatus == REJECTED) {
+            showRejectionPopupAndLogout();
+        } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
+            homeFragment.setBannerTV("Kindly submit your photos/video");
+            if (showLoader) ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false);
+        } else if (accountStatus == PENDING) {
+            homeFragment.setBannerTV("Your profile is under screening process");
+        } else if (!isPaid && accountStatus == ACTIVE) {
+            String str = days + " days left for trial. <b>Buy Pro</b>";
+            homeFragment.setBannerTV(Html.fromHtml(str).toString());
+            if (showLoader) ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);
+        } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
+            homeFragment.setBannerTV("Kindly fill-up your mandatory questionnaire");
+            if (showLoader) ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, false);
+        } else if (isPaid && accountStatus == ACTIVE) {
+            homeFragment.hideBannerTV();
+        }
+    }
+
+    @Override
+    public void setTrialEnded(String msg, boolean showLoader) {
+
+        isExpired = true;
+        remainingDays = 0;
+
+        homeFragment.hideBannerTV();
+
+        if (showLoader) dismissProgress();
+
+        int accountStatus = ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS);
+        boolean isPaid = ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER);
+        boolean isPhotoSubmitted = ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED);
+        boolean isVideoSubmitted = ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED);
+        boolean isMandatoryQuestionnaireFilled = ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED);
+
+        if (accountStatus == REJECTED) {
+            showRejectionPopupAndLogout();
+        } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
+            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true);
+        } else if (accountStatus == PENDING) {
+            pendingView.setVisibility(View.VISIBLE);
+        } else if (!isPaid && accountStatus == ACTIVE) {
+            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+        } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
+            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, true);
+        }
+    }
+
+    private void showRejectionPopupAndLogout() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+        dialog.setTitle(getString(R.string.app_name))
+                .setIcon(R.drawable.app_heart)
+                .setCancelable(false)
+                .setMessage("Your profile has been rejected by the admin!")
+                .setNegativeButton("OK", (dialoginterface, i) -> {
+                    dialoginterface.cancel();
+                    SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
+                    ParseUser.logOut();
+                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
+                })
+                .show();
+    }
+
+    @Subscribe
+    public void refreshDashboardViews(RefreshDashboardView refreshDashboardView) {
+        isExpired = true;
+        remainingDays = 0;
+
+        int accountStatus = ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS);
+        boolean isPaid = ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER);
+        boolean isPhotoSubmitted = ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED);
+        boolean isVideoSubmitted = ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED);
+        boolean isMandatoryQuestionnaireFilled = ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED);
+
+        homeFragment.hideBannerTV();
+
+        if (accountStatus == REJECTED) {
+            showRejectionPopupAndLogout();
+        } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
+            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true);
+        } else if (accountStatus == PENDING) {
+            pendingView.setVisibility(View.VISIBLE);
+        } else if (!isPaid && accountStatus == ACTIVE) {
+            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+        } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
+            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, true);
+        }
     }
 
     private void checkPaidUser() {
         if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-            presenter.checkServerDate(getContext());
+            presenter.checkServerDate(getContext(), false);
         }
     }
 
@@ -598,9 +678,13 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         EventBus.getDefault().unregister(this);
     }
 
-    @OnClick({R.id.btn_home, R.id.btn_search, R.id.btn_fan, R.id.btn_msg, R.id.btn_settings})
+    @OnClick({R.id.btn_logout, R.id.btn_home, R.id.btn_search, R.id.btn_fan, R.id.btn_msg, R.id.btn_settings})
     public void onViewClicked(View v) {
         switch (v.getId()) {
+            case R.id.btn_logout:
+                ParseUser.logOut();
+                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
+                break;
             case R.id.btn_home:
                 isHomeView = true;
 //                setHomeView();
@@ -711,28 +795,6 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         this.questions = questions;
         if (this.questions == null) this.questions = new ArrayList<>();
         EventBus.getDefault().post(new RefreshSearch());
-    }
-
-    @Override
-    public void setTrialEnded(String msg) {
-        ActivityUtility.startPaymentActivity(requireActivity(), KEY_FRAGMENT_PAYMENT, true);
-//        showToast(getActivity(), getContext(), "Trial period ended!", ERROR);
-//        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-//        dialog.setTitle(getString(R.string.app_name))
-//                .setIcon(R.drawable.app_heart)
-//                .setMessage("Your trial period has been ended!")
-//                .setNegativeButton("Pay Now", (dialoginterface, i) -> {
-//                    dialoginterface.cancel();
-//                    ParseUser.getCurrentUser().put(PARAM_IS_PAID_USER, true);
-//                    showToast(getActivity(), getContext(), "Processing...", INFO);
-//                    ParseUser.getCurrentUser().saveInBackground(en -> {
-//                        showToast(getActivity(), getContext(), "Congrats on becoming a paid user!", SUCCESS);
-//                    });
-//                })
-//                .setPositiveButton("Cancel", (dialoginterface, i) -> {
-//                    dialoginterface.cancel();
-//                    getActivity().onBackPressed();
-//                }).show();
     }
 
     public void searchSpecificQuestion(List<QuestionOption> optionsObjArray) {
