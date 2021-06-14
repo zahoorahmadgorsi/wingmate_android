@@ -190,7 +190,7 @@ public class SettingsFragment extends BaseFragment {
                     })
                     .setPositiveButton("Upload Now", (dialoginterface, i) -> {
                         dialoginterface.cancel();
-                        ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false);
+                        ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false, isExpired);
                     }).show();
         } else if (accountStatus == PENDING) {
             dialog.setTitle(getString(R.string.app_name))
@@ -233,7 +233,7 @@ public class SettingsFragment extends BaseFragment {
                     })
                     .setPositiveButton("Upload Now", (dialoginterface, i) -> {
                         dialoginterface.cancel();
-                        ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false);
+                        ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false, isExpired);
                     }).show();
         } else if (accountStatus == PENDING) {
             dialog.setTitle(getString(R.string.app_name))

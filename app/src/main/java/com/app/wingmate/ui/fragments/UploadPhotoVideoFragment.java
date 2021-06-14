@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -86,8 +87,10 @@ import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_BACK_TAG;
+import static com.app.wingmate.utils.CommonKeys.KEY_EXPIRE_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_VIDEO_VIEW;
@@ -119,6 +122,8 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
     RecyclerView dosPhotosRV;
     @BindView(R.id.del_main_img_btn)
     ImageView delMainImgBtn;
+    @BindView(R.id.congrats_view)
+    RelativeLayout congratsView;
 
     public boolean hasChange = false;
     public int CURRENT_MODE = MODE_PHOTOS;
@@ -153,6 +158,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
     private BasePresenter presenter;
 
     public boolean isClear = false;
+    public boolean isExpired = false;
 
     public UploadPhotoVideoFragment() {
 
@@ -178,6 +184,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
         presenter = new BasePresenter(this, new BaseInteractor());
 
         isClear = requireActivity().getIntent().getBooleanExtra(KEY_BACK_TAG, false);
+        isExpired = requireActivity().getIntent().getBooleanExtra(KEY_EXPIRE_TAG, false);
 
         CURRENT_MODE = MODE_PHOTOS;
 
@@ -204,6 +211,8 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
         userPhotosListAdapter = new PhotosHorizontalListAdapter(getActivity(), this, userProfilePhotoOnly);
         photosRV.setAdapter(userPhotosListAdapter);
 
+        congratsView.setVisibility(View.GONE);
+
         showProgress();
         presenter.queryTermsConditions(getContext());
     }
@@ -219,7 +228,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.del_main_img_btn, R.id.take_photo_video_btn, R.id.btn_continue, R.id.btn_back})
+    @OnClick({R.id.btn_congrats, R.id.del_main_img_btn, R.id.take_photo_video_btn, R.id.btn_continue, R.id.btn_back})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.del_main_img_btn:
@@ -228,10 +237,10 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                     dialog.setTitle(getString(R.string.app_name))
                             .setIcon(R.drawable.app_heart)
                             .setCancelable(false)
-                            .setMessage("Are you sure you want to delete it? Please note that your profile will go into pending state.")
-                            .setNegativeButton("Yes, Delete", (dialoginterface, i) -> {
+                            .setMessage("Removing video will make account pending. Are you sure you want to continue?")
+                            .setNegativeButton("Yes", (dialoginterface, i) -> {
                                 dialoginterface.cancel();
-                                deleteMainImageVideo(CURRENT_MODE);
+                                deleteMainImageVideo(CURRENT_MODE, false);
                             })
                             .setPositiveButton("No", (dialoginterface, i) -> {
                                 dialoginterface.cancel();
@@ -241,16 +250,16 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                     dialog.setTitle(getString(R.string.app_name))
                             .setIcon(R.drawable.app_heart)
                             .setCancelable(false)
-                            .setMessage("Are you sure you want to delete it? Please note that your profile will go into pending state.")
-                            .setNegativeButton("Yes, Delete", (dialoginterface, i) -> {
+                            .setMessage("Removing all photos will make account pending. Are you sure you want to continue?")
+                            .setNegativeButton("Yes", (dialoginterface, i) -> {
                                 dialoginterface.cancel();
-                                deleteMainImageVideo(CURRENT_MODE);
+                                deleteMainImageVideo(CURRENT_MODE, true);
                             })
                             .setPositiveButton("No", (dialoginterface, i) -> {
                                 dialoginterface.cancel();
                             }).show();
                 } else {
-                    deleteMainImageVideo(CURRENT_MODE);
+                    deleteMainImageVideo(CURRENT_MODE, false);
                 }
                 break;
             case R.id.take_photo_video_btn:
@@ -276,33 +285,110 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                 break;
             case R.id.btn_continue:
                 if (CURRENT_MODE == MODE_PHOTOS) {
-                    if (hasPhotos) {
-                        CURRENT_MODE = MODE_VIDEO;
-                        setVideoView();
-                    } else {
-                        showToast(getActivity(), getContext(), "Minimum 1 photo is required!", ERROR);
-                    }
-                } else if (CURRENT_MODE == MODE_VIDEO) {
-                    if (hasVideo) {
-                        CURRENT_MODE = MODE_PHOTOS;
-//                        if (!ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED)) {
-//                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
-//                        } else {
-//                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
-//                        }
+//                    if (hasPhotos) {
+//                        CURRENT_MODE = MODE_VIDEO;
+//                        setVideoView();
+//                    } else {
+//                        showToast(getActivity(), getContext(), "Minimum 1 photo is required!", ERROR);
+//                    }
 
-                        if (isClear) {
-                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                    if (isExpired) {
+                        if (hasPhotos) {
+                            CURRENT_MODE = MODE_VIDEO;
+                            setVideoView();
                         } else {
-                            getActivity().onBackPressed();
+                            showToast(requireActivity(), getContext(), "Upload at least 1 photo", ERROR);
                         }
                     } else {
-                        showToast(getActivity(), getContext(), "Video is required!", ERROR);
+                        if (hasPhotos) {
+                            CURRENT_MODE = MODE_VIDEO;
+                            setVideoView();
+                        } else {
+                            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                            dialog.setTitle(getString(R.string.app_name))
+                                    .setIcon(R.drawable.app_heart)
+                                    .setMessage("Minimum 1 photo is required, are you sure you want to continue without uploading it?")
+                                    .setNegativeButton("No", (dialoginterface, i) -> {
+                                        dialoginterface.cancel();
+                                    })
+                                    .setPositiveButton("Yes", (dialoginterface, i) -> {
+                                        dialoginterface.cancel();
+                                        CURRENT_MODE = MODE_VIDEO;
+                                        setVideoView();
+                                    }).show();
+                        }
                     }
+
+                } else if (CURRENT_MODE == MODE_VIDEO) {
+//                    if (hasVideo) {
+//                        CURRENT_MODE = MODE_PHOTOS;
+//                        if (isClear) {
+//                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+//                        } else {
+//                            getActivity().onBackPressed();
+//                        }
+//                    } else {
+//                        showToast(getActivity(), getContext(), "Video is required!", ERROR);
+//                    }
+
+
+                    if (isExpired) {
+                        if (hasVideo) {
+                            if (hasPhotos) {
+                                ((MainActivity) requireActivity()).hideTopView();
+                                congratsView.setVisibility(View.VISIBLE);
+                            } else {
+                                if (isClear) {
+                                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                                } else {
+                                    getActivity().onBackPressed();
+                                }
+                            }
+                        } else {
+                            showToast(requireActivity(), getContext(), "Upload video to continue", ERROR);
+                        }
+                    } else {
+                        if (hasVideo) {
+                            if (hasPhotos) {
+                                ((MainActivity) requireActivity()).hideTopView();
+                                congratsView.setVisibility(View.VISIBLE);
+                            } else {
+                                if (isClear) {
+                                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                                } else {
+                                    getActivity().onBackPressed();
+                                }
+                            }
+                        } else {
+                            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                            dialog.setTitle(getString(R.string.app_name))
+                                    .setIcon(R.drawable.app_heart)
+                                    .setMessage("Video is required, are you sure you want to continue without uploading it?")
+                                    .setNegativeButton("No", (dialoginterface, i) -> {
+                                        dialoginterface.cancel();
+                                    })
+                                    .setPositiveButton("Yes", (dialoginterface, i) -> {
+                                        dialoginterface.cancel();
+                                        if (isClear) {
+                                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                                        } else {
+                                            getActivity().onBackPressed();
+                                        }
+                                    }).show();
+                        }
+                    }
+
                 }
                 break;
             case R.id.btn_back:
                 getActivity().onBackPressed();
+                break;
+            case R.id.btn_congrats:
+                if (isClear) {
+                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                } else {
+                    getActivity().onBackPressed();
+                }
                 break;
             default:
                 break;
@@ -660,7 +746,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 //                }).show();
     }
 
-    public void deleteMainImageVideo(int mode) {
+    public void deleteMainImageVideo(int mode, boolean isLastPhoto) {
 //        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
 //        dialog.setTitle("Alert")
 //                .setIcon(R.drawable.small_red_cross)
@@ -713,12 +799,14 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                         } else {
                             userProfilePhotoOnly = new ArrayList<>();
                             photosRV.setVisibility(View.GONE);
-                            ParseUser.getCurrentUser().put(PARAM_ACCOUNT_STATUS, PENDING);
-                            ParseUser.getCurrentUser().put(PARAM_IS_MEDIA_APPROVED, false);
-                            ParseUser.getCurrentUser().put(PARAM_IS_PHOTO_SUBMITTED, false);
-                            ParseUser.getCurrentUser().saveInBackground(e12 -> {
+                            if (isLastPhoto) {
+                                ParseUser.getCurrentUser().put(PARAM_ACCOUNT_STATUS, PENDING);
+                                ParseUser.getCurrentUser().put(PARAM_IS_MEDIA_APPROVED, false);
+                                ParseUser.getCurrentUser().put(PARAM_IS_PHOTO_SUBMITTED, false);
+                                ParseUser.getCurrentUser().saveInBackground(e12 -> {
 
-                            });
+                                });
+                            }
                         }
                         userPhotosListAdapter.setData(userProfilePhotoOnly);
                         userPhotosListAdapter.notifyDataSetChanged();

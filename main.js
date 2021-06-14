@@ -180,4 +180,40 @@ Parse.Cloud.define('updateUserPic', async (request) => {
 	}
 });
 
+// UPDATE USER PHOTO STATUS FROM ADMIN APP
+Parse.Cloud.define('resetUserPhotosStatus', async (request) => {
+	var userId = request.params.userId;
+
+	const User = Parse.Object.extend("User");
+
+	const query = new Parse.Query(User);
+	query.equalTo("objectId", userId);
+	var userObject = await query.first({useMasterKey: true});
+
+	if(userObject !=null)
+	{
+		userObject.set("isPhotosSubmitted", false);
+		await userObject.save(null, {useMasterKey: true}).catch(error => {throw 'Something went wrong';});
+    	return 'success';
+	}
+});
+
+// UPDATE USER VIDEO STATUS FROM ADMIN APP
+Parse.Cloud.define('resetUserVideoStatus', async (request) => {
+	var userId = request.params.userId;
+
+	const User = Parse.Object.extend("User");
+
+	const query = new Parse.Query(User);
+	query.equalTo("objectId", userId);
+	var userObject = await query.first({useMasterKey: true});
+
+	if(userObject !=null)
+	{
+		userObject.set("isVideoSubmitted", false);
+		await userObject.save(null, {useMasterKey: true}).catch(error => {throw 'Something went wrong';});
+    	return 'success';
+	}
+});
+
 

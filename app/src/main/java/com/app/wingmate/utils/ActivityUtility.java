@@ -14,6 +14,7 @@ import java.util.List;
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_BACK_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_EMAIL_TAG;
+import static com.app.wingmate.utils.CommonKeys.KEY_EXPIRE_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DUMMY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
@@ -142,10 +143,11 @@ public class ActivityUtility {
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }
 
-    public static void startProfileMediaActivity(Activity context, String tag, boolean isClear) {
+    public static void startProfileMediaActivity(Activity context, String tag, boolean isClear, boolean isExpired) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(KEY_ACTIVITY_TAG, tag);
         intent.putExtra(KEY_BACK_TAG, isClear);
+        intent.putExtra(KEY_EXPIRE_TAG, isExpired);
         if (isClear)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);

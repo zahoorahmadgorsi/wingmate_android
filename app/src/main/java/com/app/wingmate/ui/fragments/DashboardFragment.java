@@ -464,7 +464,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
             showRejectionPopupAndLogout();
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
             homeFragment.setBannerTV("Kindly submit your photos/video");
-            if (showLoader) ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false);
+            if (showLoader) ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false, isExpired);
         } else if (accountStatus == PENDING) {
             homeFragment.setBannerTV("Your profile is under screening process");
         } else if (!isPaid && accountStatus == ACTIVE) {
@@ -498,7 +498,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         if (accountStatus == REJECTED) {
             showRejectionPopupAndLogout();
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
-            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true);
+            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
         } else if (accountStatus == PENDING) {
             pendingView.setVisibility(View.VISIBLE);
         } else if (!isPaid && accountStatus == ACTIVE) {
@@ -539,7 +539,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         if (accountStatus == REJECTED) {
             showRejectionPopupAndLogout();
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
-            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true);
+            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
         } else if (accountStatus == PENDING) {
             pendingView.setVisibility(View.VISIBLE);
         } else if (!isPaid && accountStatus == ACTIVE) {

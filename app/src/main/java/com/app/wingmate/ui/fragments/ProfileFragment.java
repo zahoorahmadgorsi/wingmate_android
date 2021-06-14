@@ -87,6 +87,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
+import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
@@ -168,6 +169,9 @@ public class ProfileFragment extends BaseFragment implements BaseView {
     private Fans maybeObject;
     private Fans crushObject;
     private Fans likeObject;
+
+    public boolean isExpired = false;
+    public int remainingDays = TRIAL_PERIOD;
 
     public ProfileFragment() {
 
@@ -296,7 +300,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     })
                     .setPositiveButton("Upload Now", (dialoginterface, i) -> {
                         dialoginterface.cancel();
-                        ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false);
+                        ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false, isExpired);
                     }).show();
             return false;
         } else if (accountStatus == PENDING) {
@@ -356,7 +360,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 //             }
         } else if (v.getId() == R.id.pic_1) {
             ArrayList<String> arrayList = new ArrayList<>();
-            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size()>0) {
+            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
                 for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
                     arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
                 }
@@ -365,7 +369,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 //            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(0).getFile().getUrl());
         } else if (v.getId() == R.id.pic2_card) {
             ArrayList<String> arrayList = new ArrayList<>();
-            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size()>0) {
+            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
                 for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
                     arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
                 }
@@ -374,7 +378,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 //            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(1).getFile().getUrl());
         } else if (v.getId() == R.id.pic3_card) {
             ArrayList<String> arrayList = new ArrayList<>();
-            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size()>0) {
+            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
                 for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
                     arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
                 }
@@ -382,7 +386,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
             }
 //            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(2).getFile().getUrl());
         } else if (v.getId() == R.id.video_card) {
-            if (userProfileVideoOnly != null && userProfileVideoOnly.size()>0) {
+            if (userProfileVideoOnly != null && userProfileVideoOnly.size() > 0) {
                 ActivityUtility.startVideoViewActivity(requireActivity(), KEY_FRAGMENT_VIDEO_VIEW, userProfileVideoOnly.get(0).getFile().getUrl());
             }
         } else if (v.getId() == R.id.btn_may_be) {
@@ -558,8 +562,8 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         if (userProfilePhotoVideos != null && userProfilePhotoVideos.size() > 0)
             this.userProfilePhotoVideos = userProfilePhotoVideos;
 
-        System.out.println("====setUserPhotosVideoResponseSuccess==="+userProfilePhotoVideos.size());
-        System.out.println("====setUserPhotosVideoResponseSuccess222==="+this.userProfilePhotoVideos.size());
+        System.out.println("====setUserPhotosVideoResponseSuccess===" + userProfilePhotoVideos.size());
+        System.out.println("====setUserPhotosVideoResponseSuccess222===" + this.userProfilePhotoVideos.size());
 
         if (requireActivity() != null) setMediaInViews();
     }
@@ -816,7 +820,45 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 
     @Override
     public void setTrialEnded(String msg, boolean showLoader) {
-        EventBus.getDefault().post(new RefreshDashboardView());
-        requireActivity().onBackPressed();
+//        EventBus.getDefault().post(new RefreshDashboardView());
+//        requireActivity().onBackPressed();
+
+        isExpired = true;
+        remainingDays = 0;
+
+        int accountStatus = ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS);
+        boolean isPaid = ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER);
+        boolean isPhotoSubmitted = ParseUser.getCurrentUser().getBoolean(PARAM_IS_PHOTO_SUBMITTED);
+        boolean isVideoSubmitted = ParseUser.getCurrentUser().getBoolean(PARAM_IS_VIDEO_SUBMITTED);
+        boolean isMandatoryQuestionnaireFilled = ParseUser.getCurrentUser().getBoolean(PARAM_MANDATORY_QUESTIONNAIRE_FILLED);
+
+        if (accountStatus == REJECTED) {
+            showRejectionPopupAndLogout();
+        } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
+            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
+        } else if (accountStatus == PENDING) {
+            EventBus.getDefault().post(new RefreshDashboardView());
+            requireActivity().onBackPressed();
+//            pendingView.setVisibility(View.VISIBLE);
+        } else if (!isPaid && accountStatus == ACTIVE) {
+            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+        } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
+            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, true);
+        }
+    }
+
+    private void showRejectionPopupAndLogout() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+        dialog.setTitle(getString(R.string.app_name))
+                .setIcon(R.drawable.app_heart)
+                .setCancelable(false)
+                .setMessage("Your profile has been rejected by the admin!")
+                .setNegativeButton("OK", (dialoginterface, i) -> {
+                    dialoginterface.cancel();
+                    SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
+                    ParseUser.logOut();
+                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
+                })
+                .show();
     }
 }
