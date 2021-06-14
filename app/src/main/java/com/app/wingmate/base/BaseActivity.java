@@ -235,12 +235,20 @@ public class BaseActivity extends AppCompatActivity {
 
     public void setProfileImage(String url) {
         profileImg.setVisibility(View.VISIBLE);
-        Picasso.get()
+        if (ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC) != null && ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC).length() > 0)
+            Picasso.get()
                 .load(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))
                 .centerCrop()
                 .resize(500, 500)
                 .placeholder(R.drawable.image_placeholder)
                 .into(profileImg);
+        else
+            Picasso.get()
+                    .load(R.drawable.image_placeholder)
+                    .centerCrop()
+                    .resize(500, 500)
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(profileImg);
     }
 
     public void hideProfileImage() {
