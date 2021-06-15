@@ -88,6 +88,7 @@ import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
 import static com.app.wingmate.utils.AppConstants.UPDATE_INTERVAL_MINS;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ACCOUNT_PENDING;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
@@ -508,7 +509,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
             ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
         } else if (accountStatus == PENDING) {
-            pendingView.setVisibility(View.VISIBLE);
+            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
+//            pendingView.setVisibility(View.VISIBLE);
         } else if (!isPaid && accountStatus == ACTIVE) {
             ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
         } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
@@ -549,7 +551,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
             ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
         } else if (accountStatus == PENDING) {
-            pendingView.setVisibility(View.VISIBLE);
+//            pendingView.setVisibility(View.VISIBLE);
+            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
         } else if (!isPaid && accountStatus == ACTIVE) {
             ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
         } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {

@@ -88,6 +88,7 @@ import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ACCOUNT_PENDING;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
@@ -837,9 +838,9 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
             ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
         } else if (accountStatus == PENDING) {
-            EventBus.getDefault().post(new RefreshDashboardView());
-            requireActivity().onBackPressed();
-//            pendingView.setVisibility(View.VISIBLE);
+//            EventBus.getDefault().post(new RefreshDashboardView());
+//            requireActivity().onBackPressed();
+            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
         } else if (!isPaid && accountStatus == ACTIVE) {
             ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
         } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {

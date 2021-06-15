@@ -15,6 +15,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_BACK_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_EMAIL_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_EXPIRE_TAG;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ACCOUNT_PENDING;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DUMMY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
@@ -55,6 +56,7 @@ public class ActivityUtility {
             case KEY_FRAGMENT_PRE_LOGIN:
             case KEY_FRAGMENT_QUESTIONNAIRE:
             case KEY_FRAGMENT_PAYMENT:
+            case KEY_FRAGMENT_ACCOUNT_PENDING:
                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             case KEY_FRAGMENT_CROP:
             case KEY_FRAGMENT_SIGN_UP:

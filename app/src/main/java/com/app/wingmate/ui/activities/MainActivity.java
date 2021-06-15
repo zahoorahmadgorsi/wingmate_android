@@ -25,6 +25,7 @@ import com.app.wingmate.R;
 import com.app.wingmate.base.BaseActivity;
 import com.app.wingmate.events.RefreshDashboard;
 import com.app.wingmate.events.RefreshUserStatus;
+import com.app.wingmate.ui.fragments.AccountPendingFragment;
 import com.app.wingmate.ui.fragments.DashboardFragment;
 import com.app.wingmate.events.RefreshProfile;
 import com.app.wingmate.ui.fragments.HomeFragment;
@@ -54,6 +55,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_ABOUT_ME;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ACCOUNT_PENDING;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DUMMY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
@@ -111,6 +113,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Fragment videoViewFragment;
     private Fragment photoViewFragment;
     private Fragment paymentFragment;
+    private Fragment accountPendingFragment;
 
     private String fragmentTag;
 
@@ -181,6 +184,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case KEY_FRAGMENT_PAYMENT:
                 beginPaymentFragment();
+                break;
+            case KEY_FRAGMENT_ACCOUNT_PENDING:
+                beginAccountPendingFragment();
                 break;
             case KEY_FRAGMENT_EDIT_PROFILE_TEXT_FIELDS:
                 beginEditProfileFieldsFragment();
@@ -335,6 +341,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, paymentFragment, PaymentFragment.TAG).commit();
     }
 
+    private void beginAccountPendingFragment() {
+        accountPendingFragment = getSupportFragmentManager().findFragmentByTag(AccountPendingFragment.TAG);
+        if (accountPendingFragment == null)
+            accountPendingFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), AccountPendingFragment.TAG);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, accountPendingFragment, AccountPendingFragment.TAG).commit();
+    }
+
     private void beginEditProfileFieldsFragment() {
         showTopView();
         String title = getIntent().getStringExtra(KEY_TITLE);
@@ -462,7 +475,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         }).show();
             }
 //            }
-        }  else if (paymentFragment != null) {
+        } else if (paymentFragment != null) {
             if (((PaymentFragment) paymentFragment).canBack()) {
                 super.onBackPressed();
                 overridePendingTransition(R.anim.blank_anim, R.anim.left_to_right);

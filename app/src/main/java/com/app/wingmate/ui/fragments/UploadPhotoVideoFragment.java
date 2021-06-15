@@ -88,6 +88,7 @@ import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_BACK_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_EXPIRE_TAG;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ACCOUNT_PENDING;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
@@ -385,7 +386,10 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                 break;
             case R.id.btn_congrats:
                 if (isClear) {
-                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                    if (isExpired)
+                        ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
+                    else
+                        ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
                 } else {
                     getActivity().onBackPressed();
                 }
