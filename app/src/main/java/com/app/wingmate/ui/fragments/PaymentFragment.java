@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -48,6 +49,8 @@ public class PaymentFragment extends BaseFragment implements BaseView {
 
     @BindView(R.id.payment_success_view)
     RelativeLayout paymentSuccessView;
+    @BindView(R.id.btn_back)
+    ImageView btnBack;
 
     public boolean isClear = false;
 
@@ -75,6 +78,9 @@ public class PaymentFragment extends BaseFragment implements BaseView {
         presenter = new BasePresenter(this, new BaseInteractor());
 
         isClear = requireActivity().getIntent().getBooleanExtra(KEY_BACK_TAG, false);
+
+        if (isClear) btnBack.setVisibility(View.INVISIBLE);
+        else btnBack.setVisibility(View.VISIBLE);
 
         paymentSuccessView.setVisibility(View.GONE);
     }
