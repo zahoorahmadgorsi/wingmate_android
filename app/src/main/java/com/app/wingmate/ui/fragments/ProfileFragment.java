@@ -809,17 +809,17 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 
     private void fetchUpdatedCurrentUser() {
         ParseUser.getCurrentUser().fetchInBackground((GetCallback<ParseUser>) (parseUser, e) -> {
-            presenter.checkServerDate(getContext(), false);
+            presenter.checkServerDate(getContext(), false, true);
         });
     }
 
     @Override
-    public void setHasTrial(int days, boolean showLoader) {
+    public void setHasTrial(int days, boolean showLoader, boolean isJustRefresh) {
 
     }
 
     @Override
-    public void setTrialEnded(String msg, boolean showLoader) {
+    public void setTrialEnded(String msg, boolean showLoader, boolean isJustRefresh) {
 //        EventBus.getDefault().post(new RefreshDashboardView());
 //        requireActivity().onBackPressed();
 

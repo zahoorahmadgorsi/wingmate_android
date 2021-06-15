@@ -111,11 +111,11 @@ public class HomeFragment extends BaseFragment {
 
         if (ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC) != null && ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC).length() > 0)
             Picasso.get()
-                .load(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))
-                .centerCrop()
-                .resize(500, 500)
-                .placeholder(R.drawable.image_placeholder)
-                .into(profileImg);
+                    .load(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))
+                    .centerCrop()
+                    .resize(500, 500)
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(profileImg);
         else
             Picasso.get()
                     .load(R.drawable.image_placeholder)
@@ -168,7 +168,7 @@ public class HomeFragment extends BaseFragment {
                 if (!Utilities.isInternetAvailable(requireContext())) {
                     setInternetError();
                 } else {
-                    dashboardInstance.performUserUpdateAction(true);
+                    dashboardInstance.performUserUpdateAction(true, false);
                 }
                 break;
             case R.id.profile_img:
@@ -203,6 +203,7 @@ public class HomeFragment extends BaseFragment {
 
     private void initView() {
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        if (dashboardInstance.allUsers == null) dashboardInstance.allUsers = new ArrayList<>();
         userViewAdapter = new UserViewAdapter(getActivity(), dashboardInstance.allUsers);
         userViewAdapter.setEmpty(emptyView);
         recyclerView.setHasFixedSize(false);
@@ -232,15 +233,19 @@ public class HomeFragment extends BaseFragment {
             dashboardInstance.presenter.queryAllUsers(getContext());
         });
 
-        dashboardInstance.performUserUpdateAction(false);
+        dashboardInstance.performUserUpdateAction(false, false);
     }
 
     public void setBannerTV(String text) {
-        bannerTV.setVisibility(View.VISIBLE);
-        bannerTV.setText(text);
+        if (bannerTV != null) {
+            bannerTV.setVisibility(View.VISIBLE);
+            bannerTV.setText(text);
+        }
     }
 
     public void hideBannerTV() {
-        bannerTV.setVisibility(View.GONE);
+        if (bannerTV != null) {
+            bannerTV.setVisibility(View.GONE);
+        }
     }
 }

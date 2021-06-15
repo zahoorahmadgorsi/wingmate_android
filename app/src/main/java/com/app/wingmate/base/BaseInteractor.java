@@ -137,8 +137,8 @@ public class BaseInteractor {
 
         void onUserProfileSuccess(List<UserProfilePhotoVideo> userProfilePhotoVideos);
 
-        void onTrialEnded(String msg, boolean showLoader);
-        void onHasTrial(int days, boolean showLoader);
+        void onTrialEnded(String msg, boolean showLoader, boolean isJustRefresh);
+        void onHasTrial(int days, boolean showLoader, boolean isJustRefresh);
 
         void onSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers);
 
@@ -466,7 +466,7 @@ public class BaseInteractor {
         }
     }
 
-    public void fetchServerDateFormParse(final Context context, boolean showLoader, final OnFinishedListener listener) {
+    public void fetchServerDateFormParse(final Context context, boolean showLoader, boolean isJustRefresh, final OnFinishedListener listener) {
         HashMap<String, Object> params = new HashMap<>();
         ParseCloud.callFunctionInBackground(PARSE_CLOUD_FUNCTION_GET_SERVER_TIME, params, (FunctionCallback<String>) (result, e) -> {
             if (e == null) {
@@ -477,13 +477,13 @@ public class BaseInteractor {
                     Date SERVER_DATE = isoDateFormat.parse(serverDate);
                     int trialDays = (int) DateUtils.daysBetween(ParseUser.getCurrentUser().getCreatedAt(), SERVER_DATE);
                     if (DateUtils.daysBetween(ParseUser.getCurrentUser().getCreatedAt(), SERVER_DATE) >= TRIAL_PERIOD) {
-                        listener.onTrialEnded("", showLoader);
+                        listener.onTrialEnded("", showLoader, isJustRefresh);
                     } else {
-                        listener.onHasTrial((TRIAL_PERIOD - trialDays), showLoader);
+                        listener.onHasTrial((TRIAL_PERIOD - trialDays), showLoader, isJustRefresh);
                     }
                 } catch (java.text.ParseException parseException) {
                     parseException.printStackTrace();
-                    listener.onTrialEnded("", showLoader);
+                    listener.onTrialEnded("", showLoader, isJustRefresh);
                 }
             }
         });

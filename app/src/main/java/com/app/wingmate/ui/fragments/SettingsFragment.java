@@ -160,12 +160,12 @@ public class SettingsFragment extends BaseFragment {
 
     private void fetchUpdatedCurrentUser(boolean showLoader) {
         ParseUser.getCurrentUser().fetchInBackground((GetCallback<ParseUser>) (parseUser, e) -> {
-            presenter.checkServerDate(getContext(), showLoader);
+            presenter.checkServerDate(getContext(), showLoader, false);
         });
     }
 
     @Override
-    public void setHasTrial(int days, boolean showLoader) {
+    public void setHasTrial(int days, boolean showLoader, boolean isJustRefresh) {
         isExpired = false;
         remainingDays = days;
 
@@ -207,7 +207,7 @@ public class SettingsFragment extends BaseFragment {
     }
 
     @Override
-    public void setTrialEnded(String msg, boolean showLoader) {
+    public void setTrialEnded(String msg, boolean showLoader, boolean isJustRefresh) {
 
         isExpired = true;
         remainingDays = 0;

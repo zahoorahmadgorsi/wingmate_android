@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/purple_theme">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -11,36 +13,37 @@
             android:id="@+id/btn_pay_now"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
-            android:layout_centerInParent="true"
             android:layout_marginStart="@dimen/_60ssp"
             android:layout_marginLeft="@dimen/_60ssp"
             android:layout_marginEnd="@dimen/_60ssp"
             android:layout_marginRight="@dimen/_60ssp"
-            android:background="@drawable/button_pressed"
+            android:layout_above="@+id/logout"
+            android:background="@drawable/button_pressed_grey"
             android:fontFamily="@font/baloo_regular"
             android:onClick="onClick"
             android:text="Pay Now"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
             android:textSize="@dimen/txt_size" />
 
         <Button
             android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
-            android:layout_below="@+id/btn_pay_now"
-            android:layout_centerInParent="true"
             android:layout_marginStart="@dimen/_60ssp"
             android:layout_marginLeft="@dimen/_60ssp"
             android:layout_marginTop="@dimen/_16ssp"
             android:layout_marginEnd="@dimen/_60ssp"
             android:layout_marginRight="@dimen/_60ssp"
-            android:background="@drawable/button_pressed"
+            android:layout_marginBottom="@dimen/_24ssp"
+            android:background="@drawable/button_pressed_grey"
             android:fontFamily="@font/baloo_regular"
+            android:layout_above="@+id/btn_back"
+
             android:onClick="onClick"
             android:text="Logout"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
             android:textSize="@dimen/txt_size" />
 
         <ImageView
@@ -48,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40ssp"
             android:layout_alignParentBottom="true"
+            app:tint="@color/white"
             android:background="?attr/selectableItemBackground"
             android:paddingTop="@dimen/_10ssp"
             android:paddingBottom="@dimen/_10ssp"

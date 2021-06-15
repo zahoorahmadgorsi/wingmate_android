@@ -424,13 +424,13 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     @Subscribe
     public void refreshUser(RefreshUserStatus refreshUserStatus) {
-        performUserUpdateAction(false);
+        performUserUpdateAction(false, true);
     }
 
-    public void performUserUpdateAction(boolean showLoader) {
+    public void performUserUpdateAction(boolean showLoader, boolean isJustRefresh) {
         if (ParseUser.getCurrentUser() != null) {
             if (showLoader) showProgress();
-            fetchUpdatedCurrentUser(showLoader);
+            fetchUpdatedCurrentUser(showLoader, isJustRefresh);
 //            long time1 = SharedPrefers.getLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
 //            Date lastUpdateTime = new Date(time1);
 //            Date currentTime = new Date();
@@ -441,14 +441,14 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         }
     }
 
-    private void fetchUpdatedCurrentUser(boolean showLoader) {
+    private void fetchUpdatedCurrentUser(boolean showLoader, boolean isJustRefresh) {
         ParseUser.getCurrentUser().fetchInBackground((GetCallback<ParseUser>) (parseUser, e) -> {
-            presenter.checkServerDate(getContext(), showLoader);
+            presenter.checkServerDate(getContext(), showLoader, isJustRefresh);
         });
     }
 
     @Override
-    public void setHasTrial(int days, boolean showLoader) {
+    public void setHasTrial(int days, boolean showLoader, boolean isJustRefresh) {
         isExpired = false;
         remainingDays = days;
 
@@ -464,23 +464,26 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
             showRejectionPopupAndLogout();
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
             homeFragment.setBannerTV("Kindly submit your photos/video");
-            if (showLoader) ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false, isExpired);
+            if (!isJustRefresh)
+                ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false, isExpired);
         } else if (accountStatus == PENDING) {
             homeFragment.setBannerTV("Your profile is under screening process");
         } else if (!isPaid && accountStatus == ACTIVE) {
             String str = days + " days left for trial. <b>Buy Pro</b>";
             homeFragment.setBannerTV(Html.fromHtml(str).toString());
-            if (showLoader) ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);
+            if (!isJustRefresh)
+                ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);
         } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
             homeFragment.setBannerTV("Kindly fill-up your mandatory questionnaire");
-            if (showLoader) ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, false);
+            if (!isJustRefresh)
+                ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, false);
         } else if (isPaid && accountStatus == ACTIVE) {
             homeFragment.hideBannerTV();
         }
     }
 
     @Override
-    public void setTrialEnded(String msg, boolean showLoader) {
+    public void setTrialEnded(String msg, boolean showLoader, boolean isJustRefresh) {
 
         isExpired = true;
         remainingDays = 0;
@@ -551,7 +554,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     private void checkPaidUser() {
         if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-            presenter.checkServerDate(getContext(), false);
+            presenter.checkServerDate(getContext(), false, true);
         }
     }
 

@@ -99,12 +99,12 @@ public class BaseFragment extends Fragment implements BaseView {
     }
 
     @Override
-    public void setTrialEnded(String msg, boolean showLoader) {
+    public void setTrialEnded(String msg, boolean showLoader, boolean isJustRefresh) {
 
     }
 
     @Override
-    public void setHasTrial(int days, boolean showLoader) {
+    public void setHasTrial(int days, boolean showLoader, boolean isJustRefresh) {
 
     }
 
