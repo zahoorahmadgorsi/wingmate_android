@@ -2,6 +2,8 @@ package com.app.wingmate;
 
 import android.app.Application;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
@@ -22,6 +24,8 @@ public class WingMateApplication extends Application {
         super.onCreate();
 
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         ParseObject.registerSubclass(Question.class);
         ParseObject.registerSubclass(QuestionOption.class);

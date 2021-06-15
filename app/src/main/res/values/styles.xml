@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -8,6 +8,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:textColor">@color/text_color</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
 
 
 <!--        <item name="android:windowActionBarOverlay">true</item>-->
@@ -25,16 +26,19 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:textColor">@color/text_color</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
 <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
         <item name="colorPrimary">@color/transparent</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -101,12 +105,15 @@
         <item name="android:textSize">@dimen/small_label_txt_size</item>
         <item name="android:textColor">@color/grey</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+
     </style>
 
     <style name="BottomNavigationView.Active" parent="@style/TextAppearance.AppCompat.Caption">
         <item name="android:textSize">@dimen/small_label_txt_size</item>
         <item name="android:textColor">@color/purple_theme</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
 
     </style>
 

@@ -166,6 +166,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     public boolean isExpired = false;
     public int remainingDays = TRIAL_PERIOD;
 
+    public boolean isStart = true;
+
     public DashboardFragment() {
 
     }
@@ -177,6 +179,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         executor = Executors.newSingleThreadExecutor();
         handler = new Handler(Looper.getMainLooper());
         EventBus.getDefault().register(this);
+
+        isStart = true;
 
         updateParseInstallation();
     }
@@ -428,6 +432,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     }
 
     public void performUserUpdateAction(boolean showLoader, boolean isJustRefresh) {
+        isStart = false;
         if (ParseUser.getCurrentUser() != null) {
             if (showLoader) showProgress();
             fetchUpdatedCurrentUser(showLoader, isJustRefresh);

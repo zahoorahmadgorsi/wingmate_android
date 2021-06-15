@@ -233,7 +233,8 @@ public class HomeFragment extends BaseFragment {
             dashboardInstance.presenter.queryAllUsers(getContext());
         });
 
-        dashboardInstance.performUserUpdateAction(false, false);
+        dashboardInstance.performUserUpdateAction(false, !dashboardInstance.isStart);
+        dashboardInstance.isStart = false;
     }
 
     public void setBannerTV(String text) {
