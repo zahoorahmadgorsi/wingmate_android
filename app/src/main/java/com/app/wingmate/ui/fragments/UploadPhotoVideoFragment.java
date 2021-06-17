@@ -1,5 +1,6 @@
 package com.app.wingmate.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -65,6 +66,7 @@ import pl.aprilapps.easyphotopicker.MediaFile;
 import pl.aprilapps.easyphotopicker.MediaSource;
 
 import static com.app.wingmate.ui.fragments.CropFragment.REQUEST_CODE_CROP_IMAGE;
+import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.KEY_PHOTO;
 import static com.app.wingmate.utils.AppConstants.KEY_PHOTO_TEXT;
@@ -84,6 +86,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.PENDING;
+import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_BACK_TAG;
@@ -125,6 +128,8 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
     ImageView delMainImgBtn;
     @BindView(R.id.congrats_view)
     RelativeLayout congratsView;
+    @BindView(R.id.status)
+    TextView statusTV;
 
     public boolean hasChange = false;
     public int CURRENT_MODE = MODE_PHOTOS;
@@ -235,32 +240,46 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
             case R.id.del_main_img_btn:
                 if (CURRENT_MODE == MODE_VIDEO) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                    dialog.setTitle(getString(R.string.app_name))
-                            .setIcon(R.drawable.app_heart)
-                            .setCancelable(false)
-                            .setMessage("Removing video will make account pending. Are you sure you want to continue?")
-                            .setNegativeButton("Yes", (dialoginterface, i) -> {
+                    dialog
+//                            .setTitle(getString(R.string.app_name))
+//                            .setIcon(R.drawable.app_heart)
+//                            .setCancelable(false)
+//                            .setMessage("Removing video will make account pending. Are you sure you want to continue?")
+                            .setMessage("Are you sure you want to delete this video?")
+                            .setNegativeButton("No", (dialoginterface, i) -> {
+                                dialoginterface.cancel();
+                            })
+                            .setPositiveButton("Yes", (dialoginterface, i) -> {
                                 dialoginterface.cancel();
                                 deleteMainImageVideo(CURRENT_MODE, false);
-                            })
-                            .setPositiveButton("No", (dialoginterface, i) -> {
-                                dialoginterface.cancel();
                             }).show();
                 } else if (CURRENT_MODE == MODE_PHOTOS && (userProfilePhotoOnly == null || userProfilePhotoOnly.size() == 0 || userProfilePhotoOnly.size() == 1)) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                    dialog.setTitle(getString(R.string.app_name))
-                            .setIcon(R.drawable.app_heart)
-                            .setCancelable(false)
-                            .setMessage("Removing all photos will make account pending. Are you sure you want to continue?")
-                            .setNegativeButton("Yes", (dialoginterface, i) -> {
+                    dialog
+//                            .setTitle(getString(R.string.app_name))
+//                            .setIcon(R.drawable.app_heart)
+//                            .setCancelable(false)
+//                            .setMessage("Removing all photos will make account pending. Are you sure you want to continue?")
+                            .setMessage("Are you sure you want to delete this photo?")
+                            .setNegativeButton("No", (dialoginterface, i) -> {
+                                dialoginterface.cancel();
+                            })
+                            .setPositiveButton("Yes", (dialoginterface, i) -> {
                                 dialoginterface.cancel();
                                 deleteMainImageVideo(CURRENT_MODE, true);
-                            })
-                            .setPositiveButton("No", (dialoginterface, i) -> {
-                                dialoginterface.cancel();
                             }).show();
                 } else {
-                    deleteMainImageVideo(CURRENT_MODE, false);
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                    dialog
+//                            .setCancelable(false)
+                            .setMessage("Are you sure you want to delete this photo?")
+                            .setNegativeButton("No", (dialoginterface, i) -> {
+                                dialoginterface.cancel();
+                            })
+                            .setPositiveButton("Yes", (dialoginterface, i) -> {
+                                dialoginterface.cancel();
+                                deleteMainImageVideo(CURRENT_MODE, false);
+                            }).show();
                 }
                 break;
             case R.id.take_photo_video_btn:
@@ -306,8 +325,9 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                             setVideoView();
                         } else {
                             AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                            dialog.setTitle(getString(R.string.app_name))
-                                    .setIcon(R.drawable.app_heart)
+                            dialog
+//                                    .setTitle(getString(R.string.app_name))
+//                                    .setIcon(R.drawable.app_heart)
                                     .setMessage("Minimum 1 photo is required, are you sure you want to continue without uploading it?")
                                     .setNegativeButton("No", (dialoginterface, i) -> {
                                         dialoginterface.cancel();
@@ -362,8 +382,9 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                             }
                         } else {
                             AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                            dialog.setTitle(getString(R.string.app_name))
-                                    .setIcon(R.drawable.app_heart)
+                            dialog
+//                                    .setTitle(getString(R.string.app_name))
+//                                    .setIcon(R.drawable.app_heart)
                                     .setMessage("Video is required, are you sure you want to continue without uploading it?")
                                     .setNegativeButton("No", (dialoginterface, i) -> {
                                         dialoginterface.cancel();
@@ -587,6 +608,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void setPhotosView() {
         ((MainActivity) requireActivity()).setScreenTitle("Upload Photos");
 
@@ -603,10 +625,24 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
             addView.setVisibility(View.GONE);
             delMainImgBtn.setVisibility(View.VISIBLE);
             hasPhotos = true;
+
+            System.out.println("====" + user1stPhotoFile.getInt(PARAM_FILE_STATUS));
+            if (user1stPhotoFile.getInt(PARAM_FILE_STATUS) == ACTIVE) {
+                statusTV.setVisibility(View.GONE);
+            } else if (user1stPhotoFile.getInt(PARAM_FILE_STATUS) == PENDING) {
+                statusTV.setVisibility(View.VISIBLE);
+                statusTV.setText("Pending");
+                statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_pending));
+            } else if (user1stPhotoFile.getInt(PARAM_FILE_STATUS) == REJECTED) {
+                statusTV.setVisibility(View.VISIBLE);
+                statusTV.setText("Rejected");
+                statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_rejected));
+            }
         } else {
             addView.setVisibility(View.VISIBLE);
             delMainImgBtn.setVisibility(View.GONE);
             photoVideoPic1.setImageResource(android.R.color.transparent);
+            statusTV.setVisibility(View.GONE);
         }
         if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
             photosRV.setVisibility(View.VISIBLE);
@@ -643,11 +679,23 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
             playIcon.setVisibility(View.VISIBLE);
             delMainImgBtn.setVisibility(View.VISIBLE);
             hasVideo = true;
+            if (user1stVideoFile.getInt(PARAM_FILE_STATUS) == ACTIVE) {
+                statusTV.setVisibility(View.GONE);
+            } else if (user1stVideoFile.getInt(PARAM_FILE_STATUS) == PENDING) {
+                statusTV.setVisibility(View.VISIBLE);
+                statusTV.setText("Pending");
+                statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_pending));
+            } else if (user1stVideoFile.getInt(PARAM_FILE_STATUS) == REJECTED) {
+                statusTV.setVisibility(View.VISIBLE);
+                statusTV.setText("Rejected");
+                statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_rejected));
+            }
         } else {
             addView.setVisibility(View.VISIBLE);
             delMainImgBtn.setVisibility(View.GONE);
             photoVideoPic1.setImageResource(android.R.color.transparent);
             hasVideo = false;
+            statusTV.setVisibility(View.GONE);
         }
         photosRV.setVisibility(View.GONE);
 //        if (userProfileVideoOnly != null && userProfileVideoOnly.size() > 0) {
@@ -711,43 +759,42 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
     }
 
     public void deleteImage(int index) {
-//        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-//        dialog.setTitle("Alert")
-//                .setIcon(R.drawable.small_red_cross)
-//                .setMessage("Are you sure to delete this image?")
-//                .setNegativeButton("Cancel", (dialoginterface, i) -> dialoginterface.cancel())
-//                .setPositiveButton("Yes, Delete", (dialoginterface, i) -> {
-        if (CURRENT_MODE == MODE_PHOTOS) {
-            CLICK_TAG = TAG_LIST;
+        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+        dialog
+                .setMessage("Are you sure you want to delete this photo?")
+                .setNegativeButton("No", (dialoginterface, i) -> dialoginterface.cancel())
+                .setPositiveButton("Yes", (dialoginterface, i) -> {
+                    if (CURRENT_MODE == MODE_PHOTOS) {
+                        CLICK_TAG = TAG_LIST;
 //            userProfilePhotoOnly.get(index).deleteEventually();
-            showProgress();
-            userProfilePhotoOnly.get(index).deleteInBackground(e -> {
-                if (e == null) {
-                    userProfilePhotoOnly.remove(index);
-                    userPhotosListAdapter.setData(userProfilePhotoOnly);
-                    userPhotosListAdapter.notifyDataSetChanged();
+                        showProgress();
+                        userProfilePhotoOnly.get(index).deleteInBackground(e -> {
+                            if (e == null) {
+                                userProfilePhotoOnly.remove(index);
+                                userPhotosListAdapter.setData(userProfilePhotoOnly);
+                                userPhotosListAdapter.notifyDataSetChanged();
 
-                    boolean hasDummy = false;
-                    if (userProfilePhotoOnly == null || userProfilePhotoOnly.size() == 0)
-                        userProfilePhotoOnly = new ArrayList<>();
-                    for (int x = 0; x < userProfilePhotoOnly.size(); x++) {
-                        if (userProfilePhotoOnly.get(x).isDummyFile())
-                            hasDummy = true;
-                    }
-                    if (!hasDummy) {
-                        UserProfilePhotoVideo dummyObj = new UserProfilePhotoVideo();
-                        dummyObj.setDummyFile(true);
-                        userProfilePhotoOnly.add(dummyObj);
-                    }
-                    hasChange = true;
-                } else {
-                    showToast(requireActivity(), getContext(), e.getMessage(), ERROR);
-                }
+                                boolean hasDummy = false;
+                                if (userProfilePhotoOnly == null || userProfilePhotoOnly.size() == 0)
+                                    userProfilePhotoOnly = new ArrayList<>();
+                                for (int x = 0; x < userProfilePhotoOnly.size(); x++) {
+                                    if (userProfilePhotoOnly.get(x).isDummyFile())
+                                        hasDummy = true;
+                                }
+                                if (!hasDummy) {
+                                    UserProfilePhotoVideo dummyObj = new UserProfilePhotoVideo();
+                                    dummyObj.setDummyFile(true);
+                                    userProfilePhotoOnly.add(dummyObj);
+                                }
+                                hasChange = true;
+                            } else {
+                                showToast(requireActivity(), getContext(), e.getMessage(), ERROR);
+                            }
 
-                dismissProgress();
-            });
-        }
-//                }).show();
+                            dismissProgress();
+                        });
+                    }
+                }).show();
     }
 
     public void deleteMainImageVideo(int mode, boolean isLastPhoto) {
@@ -764,15 +811,15 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                 user1stPhotoFile.deleteInBackground(e -> {
                     if (e == null) {
                         user1stPhotoFile = null;
-                        ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, "");
-                        ParseUser.getCurrentUser().saveInBackground(e1 -> {
-                        });
+//                        ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, "");
+//                        ParseUser.getCurrentUser().saveInBackground(e1 -> {
+//                        });
                         if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 1) {
                             user1stPhotoFile = userProfilePhotoOnly.get(0);
                             userProfilePhotoOnly.remove(0);
-                            ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
-                            ParseUser.getCurrentUser().saveInBackground(e1 -> {
-                            });
+//                            ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
+//                            ParseUser.getCurrentUser().saveInBackground(e1 -> {
+//                            });
                             boolean hasDummy = false;
                             for (int x = 0; x < userProfilePhotoOnly.size(); x++) {
                                 if (userProfilePhotoOnly.get(x).isDummyFile())
@@ -789,12 +836,24 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                             addView.setVisibility(View.GONE);
                             delMainImgBtn.setVisibility(View.VISIBLE);
                             hasPhotos = true;
+                            if (user1stPhotoFile.getInt(PARAM_FILE_STATUS) == ACTIVE) {
+                                statusTV.setVisibility(View.GONE);
+                            } else if (user1stPhotoFile.getInt(PARAM_FILE_STATUS) == PENDING) {
+                                statusTV.setVisibility(View.VISIBLE);
+                                statusTV.setText("Pending");
+                                statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_pending));
+                            } else if (user1stPhotoFile.getInt(PARAM_FILE_STATUS) == REJECTED) {
+                                statusTV.setVisibility(View.VISIBLE);
+                                statusTV.setText("Rejected");
+                                statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_rejected));
+                            }
                         } else {
                             userProfilePhotoOnly = new ArrayList<>();
                             addView.setVisibility(View.VISIBLE);
                             delMainImgBtn.setVisibility(View.GONE);
                             photoVideoPic1.setImageResource(android.R.color.transparent);
                             hasPhotos = false;
+                            statusTV.setVisibility(View.GONE);
                         }
                         if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
                             photosRV.setVisibility(View.VISIBLE);
@@ -916,9 +975,13 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                             playIcon.setVisibility(View.VISIBLE);
                                             hasChange = true;
                                             showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
+                                            statusTV.setVisibility(View.VISIBLE);
+                                            statusTV.setText("Pending");
+                                            statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_pending));
                                         } else {
                                             showToast(requireActivity(), getContext(), e12.getMessage(), ERROR);
                                             System.out.println("====e12===" + e12.getMessage());
+                                            statusTV.setVisibility(View.GONE);
                                         }
                                         dismissProgress();
                                     });
@@ -936,6 +999,9 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                     hasChange = true;
                                     showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
                                     dismissProgress();
+                                    statusTV.setVisibility(View.VISIBLE);
+                                    statusTV.setText("Pending");
+                                    statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_pending));
                                 }
                                 ParseUser.getCurrentUser().put(PARAM_IS_VIDEO_SUBMITTED, true);
                                 ParseUser.getCurrentUser().saveInBackground(e12 -> {
@@ -992,8 +1058,13 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                         playIcon.setVisibility(View.VISIBLE);
                                         hasChange = true;
                                         showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
+
+                                        statusTV.setVisibility(View.VISIBLE);
+                                        statusTV.setText("Pending");
+                                        statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_pending));
                                     } else {
                                         showToast(requireActivity(), getContext(), e12.getMessage(), ERROR);
+                                        statusTV.setVisibility(View.GONE);
                                     }
                                     dismissProgress();
                                 });
@@ -1011,6 +1082,9 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                 hasChange = true;
                                 showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
                                 dismissProgress();
+                                statusTV.setVisibility(View.VISIBLE);
+                                statusTV.setText("Pending");
+                                statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_pending));
                             }
                             ParseUser.getCurrentUser().put(PARAM_IS_VIDEO_SUBMITTED, true);
                             ParseUser.getCurrentUser().saveInBackground(e12 -> {
@@ -1057,9 +1131,9 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                         if (e13 == null) {
                                             user1stPhotoFile = userProfilePhotoVideo;
                                             System.out.println("===url====" + user1stPhotoFile.getFile().getUrl());
-                                            ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
-                                            ParseUser.getCurrentUser().saveInBackground(e1 -> {
-                                            });
+//                                            ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
+//                                            ParseUser.getCurrentUser().saveInBackground(e1 -> {
+//                                            });
                                             if (userProfilePhotoOnly == null || userProfilePhotoOnly.size() == 0) {
                                                 UserProfilePhotoVideo dummyObj = new UserProfilePhotoVideo();
                                                 dummyObj.setDummyFile(true);
@@ -1069,17 +1143,21 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                             Picasso.get().load(user1stPhotoFile.getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(photoVideoPic1);
                                             addView.setVisibility(View.GONE);
                                             delMainImgBtn.setVisibility(View.VISIBLE);
+                                            statusTV.setVisibility(View.VISIBLE);
+                                            statusTV.setText("Pending");
+                                            statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_pending));
                                         } else {
                                             showToast(requireActivity(), getContext(), e13.getMessage(), ERROR);
+                                            statusTV.setVisibility(View.GONE);
                                         }
                                         dismissProgress();
                                     });
                                 } else {
                                     user1stPhotoFile = userProfilePhotoVideo;
                                     System.out.println("===url====" + user1stPhotoFile.getFile().getUrl());
-                                    ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
-                                    ParseUser.getCurrentUser().saveInBackground(e1 -> {
-                                    });
+//                                    ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
+//                                    ParseUser.getCurrentUser().saveInBackground(e1 -> {
+//                                    });
                                     if (userProfilePhotoOnly == null || userProfilePhotoOnly.size() == 0) {
                                         UserProfilePhotoVideo dummyObj = new UserProfilePhotoVideo();
                                         dummyObj.setDummyFile(true);
@@ -1089,6 +1167,9 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                     Picasso.get().load(user1stPhotoFile.getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(photoVideoPic1);
                                     addView.setVisibility(View.GONE);
                                     delMainImgBtn.setVisibility(View.VISIBLE);
+                                    statusTV.setVisibility(View.VISIBLE);
+                                    statusTV.setText("Pending");
+                                    statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_pending));
                                 }
                                 break;
                             case TAG_LIST:
@@ -1121,6 +1202,24 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
             } else {
                 showToast(getActivity(), getContext(), "Error occurred, try another image!", ERROR);
             }
+        }
+    }
+
+    private void setPhotoStatus() {
+        if (user1stPhotoFile != null) {
+            if (user1stPhotoFile.getInt(PARAM_FILE_STATUS) == ACTIVE) {
+                statusTV.setVisibility(View.GONE);
+            } else if (user1stPhotoFile.getInt(PARAM_FILE_STATUS) == PENDING) {
+                statusTV.setVisibility(View.VISIBLE);
+                statusTV.setText("Pending");
+                statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_pending));
+            } else if (user1stPhotoFile.getInt(PARAM_FILE_STATUS) == REJECTED) {
+                statusTV.setVisibility(View.VISIBLE);
+                statusTV.setText("Rejected");
+                statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_rejected));
+            }
+        } else {
+            statusTV.setVisibility(View.GONE);
         }
     }
 }

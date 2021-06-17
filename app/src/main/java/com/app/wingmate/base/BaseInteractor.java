@@ -408,7 +408,7 @@ public class BaseInteractor {
             query.setLimit(1000);
             query.whereEqualTo(PARAM_USER_ID, parseUser.getObjectId());
             if (parseUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
-                query.whereNotEqualTo(PARAM_FILE_STATUS, REJECTED);
+//                query.whereNotEqualTo(PARAM_FILE_STATUS, REJECTED);
             } else {
                 query.whereEqualTo(PARAM_FILE_STATUS, ACTIVE);
             }

@@ -16,6 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.models.UserProfilePhotoVideo;
 import com.app.wingmate.widgets.FadePageTransformer;
 import com.jsibbold.zoomage.ZoomageView;
 import com.rd.PageIndicatorView;
@@ -53,6 +54,7 @@ public class PhotoViewFragment extends BaseFragment implements ViewPager.OnPageC
     int index = 0;
 
     private List<String> imagesPath = new ArrayList<>();
+//    private List<UserProfilePhotoVideo> imagesPath = new ArrayList<>();
 
     public PhotoViewFragment() {
 
@@ -76,6 +78,7 @@ public class PhotoViewFragment extends BaseFragment implements ViewPager.OnPageC
         super.onViewCreated(view, savedInstanceState);
 
         imagesPath = requireActivity().getIntent().getStringArrayListExtra(KEY_IMAGES_ARRAY);
+//        imagesPath = requireActivity().getIntent().getParcelableArrayListExtra(KEY_IMAGES_ARRAY);
         index = requireActivity().getIntent().getExtras().getInt(KEY_IMAGE_INDEX);
 
         viewPager.setAdapter(new CustomAdapter());
@@ -146,6 +149,7 @@ public class PhotoViewFragment extends BaseFragment implements ViewPager.OnPageC
             zoomageView1.setScaleType(ImageView.ScaleType.CENTER_CROP);
             container.addView(zoomageView1);
             imagePath = imagesPath.get(position);
+//            imagePath = imagesPath.get(position).getFile().getUrl();
             if (imagePath != null && imagePath.length() > 0) {
                 Picasso.get().load(imagePath).placeholder(R.drawable.image_placeholder).into(zoomageView1);
             } else {

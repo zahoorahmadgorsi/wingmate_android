@@ -466,8 +466,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 overridePendingTransition(R.anim.blank_anim, R.anim.left_to_right);
             } else {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-                dialog.setTitle(getString(R.string.app_name))
-                        .setIcon(R.drawable.app_heart)
+                dialog
+//                        .setTitle(getString(R.string.app_name))
+//                        .setIcon(R.drawable.app_heart)
                         .setCancelable(false)
                         .setMessage("Please submit your photos/video to proceed")
                         .setPositiveButton("OK", (dialoginterface, i) -> {

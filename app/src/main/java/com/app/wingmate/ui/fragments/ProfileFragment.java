@@ -270,8 +270,9 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 
     private void showPaymentAlert(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-        dialog.setTitle(getString(R.string.app_name))
-                .setIcon(R.drawable.app_heart)
+        dialog
+//                .setTitle(getString(R.string.app_name))
+//                .setIcon(R.drawable.app_heart)
                 .setMessage(msg)
                 .setNegativeButton("No", (dialoginterface, i) -> {
                     dialoginterface.cancel();
@@ -293,8 +294,9 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
 
         if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
-            dialog.setTitle(getString(R.string.app_name))
-                    .setIcon(R.drawable.app_heart)
+            dialog
+//                    .setTitle(getString(R.string.app_name))
+//                    .setIcon(R.drawable.app_heart)
                     .setMessage("Please upload your photos and video and become a paid user to avail this feature. Do you want to upload photos and video?")
                     .setNegativeButton("Upload Later", (dialoginterface, i) -> {
                         dialoginterface.cancel();
@@ -305,16 +307,18 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     }).show();
             return false;
         } else if (accountStatus == PENDING) {
-            dialog.setTitle(getString(R.string.app_name))
-                    .setIcon(R.drawable.app_heart)
+            dialog
+//                    .setTitle(getString(R.string.app_name))
+//                    .setIcon(R.drawable.app_heart)
                     .setMessage("Your account is under review. Only approved and paid accounts can avail this feature.")
                     .setPositiveButton("OK", (dialoginterface, i) -> {
                         dialoginterface.cancel();
                     }).show();
             return false;
         } else if (!isPaid && accountStatus == ACTIVE) {
-            dialog.setTitle(getString(R.string.app_name))
-                    .setIcon(R.drawable.app_heart)
+            dialog
+//                    .setTitle(getString(R.string.app_name))
+//                    .setIcon(R.drawable.app_heart)
                     .setMessage("Please become a paid user to avail this feature. Do you want to pay?")
                     .setNegativeButton("Pay Later", (dialoginterface, i) -> {
                         dialoginterface.cancel();
@@ -325,8 +329,9 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     }).show();
             return false;
         } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
-            dialog.setTitle(getString(R.string.app_name))
-                    .setIcon(R.drawable.app_heart)
+            dialog
+//                    .setTitle(getString(R.string.app_name))
+//                    .setIcon(R.drawable.app_heart)
                     .setMessage("Please fill-up your mandatory questionnaire to avail this feature.")
                     .setNegativeButton("Fill Later", (dialoginterface, i) -> {
                         dialoginterface.cancel();
@@ -365,9 +370,16 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
                     arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
                 }
-                ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 0);
+                ActivityUtility.startPhotoViewActivity(requireActivity(),
+                        KEY_FRAGMENT_PHOTO_VIEW,
+                        arrayList,
+                        0);
+//                ActivityUtility.startPhotoViewActivity(requireActivity(),
+//                        KEY_FRAGMENT_PHOTO_VIEW,
+//                        (ArrayList<UserProfilePhotoVideo>) userProfilePhotoOnly,
+//                        0);
+
             }
-//            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(0).getFile().getUrl());
         } else if (v.getId() == R.id.pic2_card) {
             ArrayList<String> arrayList = new ArrayList<>();
             if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
@@ -375,8 +387,8 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
                 }
                 ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 1);
+//                ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, (ArrayList<UserProfilePhotoVideo>) userProfilePhotoOnly, 1);
             }
-//            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(1).getFile().getUrl());
         } else if (v.getId() == R.id.pic3_card) {
             ArrayList<String> arrayList = new ArrayList<>();
             if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
@@ -384,8 +396,8 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     arrayList.add(userProfilePhotoOnly.get(i).getFile().getUrl());
                 }
                 ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, arrayList, 2);
+//                ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, (ArrayList<UserProfilePhotoVideo>) userProfilePhotoOnly, 2);
             }
-//            ActivityUtility.startPhotoViewActivity(requireActivity(), KEY_FRAGMENT_PHOTO_VIEW, userProfilePhotoOnly.get(2).getFile().getUrl());
         } else if (v.getId() == R.id.video_card) {
             if (userProfileVideoOnly != null && userProfileVideoOnly.size() > 0) {
                 ActivityUtility.startVideoViewActivity(requireActivity(), KEY_FRAGMENT_VIDEO_VIEW, userProfileVideoOnly.get(0).getFile().getUrl());
@@ -850,8 +862,9 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 
     private void showRejectionPopupAndLogout() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-        dialog.setTitle(getString(R.string.app_name))
-                .setIcon(R.drawable.app_heart)
+        dialog
+//                .setTitle(getString(R.string.app_name))
+//                .setIcon(R.drawable.app_heart)
                 .setCancelable(false)
                 .setMessage("Your profile has been rejected by the admin!")
                 .setNegativeButton("OK", (dialoginterface, i) -> {

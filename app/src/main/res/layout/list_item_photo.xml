@@ -41,6 +41,27 @@
                             android:layout_height="@dimen/_24ssp"
                             android:layout_centerInParent="true"
                             android:src="@drawable/ic_add_photo_video" />
+
+                        <TextView
+                            android:id="@+id/status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/open_sans_semibold"
+                            android:text="Pending"
+                            android:layout_gravity="center_vertical|end"
+                            android:paddingLeft="@dimen/_4ssp"
+                            android:paddingEnd="@dimen/_4ssp"
+                            android:paddingTop="@dimen/_2ssp"
+                            android:paddingBottom="@dimen/_2ssp"
+                            android:paddingRight="@dimen/_4ssp"
+                            android:paddingStart="@dimen/_4ssp"
+                            android:textColor="@color/white"
+                            android:layout_centerHorizontal="true"
+                            android:layout_alignParentBottom="true"
+                            android:layout_margin="@dimen/_2ssp"
+                            android:visibility="invisible"
+                            android:background="@drawable/bg_status_pending"
+                            android:textSize="@dimen/_6ssp" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 

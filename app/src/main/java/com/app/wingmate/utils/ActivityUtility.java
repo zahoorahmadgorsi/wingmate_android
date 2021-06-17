@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.app.wingmate.R;
 import com.app.wingmate.models.UserAnswer;
+import com.app.wingmate.models.UserProfilePhotoVideo;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.parse.ParseUser;
 
@@ -90,7 +91,23 @@ public class ActivityUtility {
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }
 
-    public static void startPhotoViewActivity(Activity context, String tag, ArrayList<String> paths, int index) {
+    public static void startPhotoViewActivity2(Activity context,
+                                              String tag,
+                                              ArrayList<UserProfilePhotoVideo> paths,
+                                              int index) {
+        Intent mainIntent = new Intent(context, MainActivity.class);
+        mainIntent.putExtra(KEY_ACTIVITY_TAG, tag);
+        mainIntent.putExtra(KEY_IMAGE_LINK, paths.get(0));
+        mainIntent.putParcelableArrayListExtra(KEY_IMAGES_ARRAY, paths);
+        mainIntent.putExtra(KEY_IMAGE_INDEX, index);
+        context.startActivity(mainIntent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+
+    public static void startPhotoViewActivity(Activity context,
+                                              String tag,
+                                              ArrayList<String> paths,
+                                              int index) {
         Intent mainIntent = new Intent(context, MainActivity.class);
         mainIntent.putExtra(KEY_ACTIVITY_TAG, tag);
         mainIntent.putExtra(KEY_IMAGE_LINK, paths.get(0));

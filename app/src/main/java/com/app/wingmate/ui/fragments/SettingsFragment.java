@@ -143,11 +143,21 @@ public class SettingsFragment extends BaseFragment {
                 showToast(getActivity(), getContext(), "You are not a paid user!", ERROR);
             }
         } else if (v.getId() == R.id.logout) {
-            showToast(getActivity(), getContext(), "Logging out...", ERROR);
-            SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
-            ParseUser.logOutInBackground(e -> {
-                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setMessage("Are you sure to logout?");
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                dialog.cancel();
+                showToast(getActivity(), getContext(), "Logging out...", ERROR);
+                SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
+                ParseUser.logOutInBackground(e -> {
+                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
+                });
             });
+            builder.setNegativeButton("No", (dialog, which) -> {
+                dialog.cancel();
+            });
+            builder.show();
         }
     }
 
@@ -182,8 +192,9 @@ public class SettingsFragment extends BaseFragment {
         if (accountStatus == REJECTED) {
             showRejectionPopupAndLogout();
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
-            dialog.setTitle(getString(R.string.app_name))
-                    .setIcon(R.drawable.app_heart)
+            dialog
+//                    .setTitle(getString(R.string.app_name))
+//                    .setIcon(R.drawable.app_heart)
                     .setMessage("You need to upload photos & video first in order to proceed. Do you wish to continue?")
                     .setNegativeButton("Upload Later", (dialoginterface, i) -> {
                         dialoginterface.cancel();
@@ -193,8 +204,9 @@ public class SettingsFragment extends BaseFragment {
                         ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false, isExpired);
                     }).show();
         } else if (accountStatus == PENDING) {
-            dialog.setTitle(getString(R.string.app_name))
-                    .setIcon(R.drawable.app_heart)
+            dialog
+//                    .setTitle(getString(R.string.app_name))
+//                    .setIcon(R.drawable.app_heart)
                     .setMessage("Your account is under review.")
                     .setPositiveButton("OK", (dialoginterface, i) -> {
                         dialoginterface.cancel();
@@ -225,8 +237,9 @@ public class SettingsFragment extends BaseFragment {
         if (accountStatus == REJECTED) {
             showRejectionPopupAndLogout();
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
-            dialog.setTitle(getString(R.string.app_name))
-                    .setIcon(R.drawable.app_heart)
+            dialog
+//                    .setTitle(getString(R.string.app_name))
+//                    .setIcon(R.drawable.app_heart)
                     .setMessage("You need to upload photos & video first in order to proceed. Do you wish to continue?")
                     .setNegativeButton("Upload Later", (dialoginterface, i) -> {
                         dialoginterface.cancel();
@@ -236,8 +249,9 @@ public class SettingsFragment extends BaseFragment {
                         ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false, isExpired);
                     }).show();
         } else if (accountStatus == PENDING) {
-            dialog.setTitle(getString(R.string.app_name))
-                    .setIcon(R.drawable.app_heart)
+            dialog
+//                    .setTitle(getString(R.string.app_name))
+//                    .setIcon(R.drawable.app_heart)
                     .setMessage("Your account is under review.")
                     .setPositiveButton("OK", (dialoginterface, i) -> {
                         dialoginterface.cancel();
@@ -251,8 +265,9 @@ public class SettingsFragment extends BaseFragment {
 
     private void showRejectionPopupAndLogout() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-        dialog.setTitle(getString(R.string.app_name))
-                .setIcon(R.drawable.app_heart)
+        dialog
+//                .setTitle(getString(R.string.app_name))
+//                .setIcon(R.drawable.app_heart)
                 .setCancelable(false)
                 .setMessage("Your profile has been rejected by the admin!")
                 .setNegativeButton("OK", (dialoginterface, i) -> {

@@ -330,8 +330,9 @@ public class LoginFragment extends BaseFragment implements BaseView {
 
         if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-            dialog.setTitle(getString(R.string.app_name))
-                    .setIcon(R.drawable.app_heart)
+            dialog
+//                    .setTitle(getString(R.string.app_name))
+//                    .setIcon(R.drawable.app_heart)
                     .setCancelable(false)
                     .setMessage("Your profile has been rejected by the admin!")
                     .setNegativeButton("OK", (dialoginterface, i) -> {

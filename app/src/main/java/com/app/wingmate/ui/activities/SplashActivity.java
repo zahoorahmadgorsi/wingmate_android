@@ -54,8 +54,9 @@ public class SplashActivity extends AppCompatActivity {
                             ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_PRE_LOGIN);
                         } else if (ParseUser.getCurrentUser().getInt(PARAM_ACCOUNT_STATUS) == REJECTED) {
                             AlertDialog.Builder dialog = new AlertDialog.Builder(SplashActivity.this);
-                            dialog.setTitle(getString(R.string.app_name))
-                                    .setIcon(R.drawable.app_heart)
+                            dialog
+//                                    .setTitle(getString(R.string.app_name))
+//                                    .setIcon(R.drawable.app_heart)
                                     .setCancelable(false)
                                     .setMessage("Your profile has been rejected by the admin!")
                                     .setNegativeButton("OK", (dialoginterface, i) -> {

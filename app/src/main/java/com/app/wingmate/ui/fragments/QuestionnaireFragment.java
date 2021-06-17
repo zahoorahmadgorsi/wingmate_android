@@ -567,8 +567,9 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
 //
             if (questionType.equals(MANDATORY)) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                dialog.setTitle(getString(R.string.app_name))
-                        .setIcon(R.drawable.app_heart)
+                dialog
+//                        .setTitle(getString(R.string.app_name))
+//                        .setIcon(R.drawable.app_heart)
                         .setMessage("Do you want to fill optional questionnaires?")
                         .setNegativeButton("No", (dialoginterface, i) -> {
                             dialoginterface.cancel();
@@ -636,8 +637,9 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
     public void backBtnPress() {
         if (questionType.equals(MANDATORY)) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-            dialog.setTitle(getString(R.string.app_name))
-                    .setIcon(R.drawable.app_heart)
+            dialog
+//                    .setTitle(getString(R.string.app_name))
+//                    .setIcon(R.drawable.app_heart)
                     .setMessage("Please fill mandatory questionnaires to proceed")
                     .setNegativeButton("OK", (dialoginterface, i) -> {
                         dialoginterface.cancel();
