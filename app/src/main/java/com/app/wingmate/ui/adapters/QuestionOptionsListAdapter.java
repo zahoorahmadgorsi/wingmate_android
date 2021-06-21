@@ -15,6 +15,8 @@ import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
+import com.app.wingmate.admin.ui.fragments.AdminSearchFragment;
+import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.ui.fragments.SearchFragment;
 import com.app.wingmate.models.Question;
 
@@ -38,14 +40,15 @@ public class QuestionOptionsListAdapter extends RecyclerView.Adapter<QuestionOpt
 
     private LayoutInflater inflater;
     private Activity context;
-    private SearchFragment fragment;
+    //    private SearchFragment fragment;
+    private BaseFragment fragment;
     private List<Question> itemsList;
     private boolean isReset = false;
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
 
-    public QuestionOptionsListAdapter(Activity context, SearchFragment fragment, List<Question> itemsList) {
+    public QuestionOptionsListAdapter(Activity context, BaseFragment fragment, List<Question> itemsList) {
         this.inflater = LayoutInflater.from(context);
         this.itemsList = itemsList;
         this.context = context;
@@ -93,7 +96,10 @@ public class QuestionOptionsListAdapter extends RecyclerView.Adapter<QuestionOpt
 
         holder.itemView.setOnClickListener(view -> {
             object.setOptions(object.getOptionsObjArray());
-            fragment.showOptionSelectionDialog(object, position, PARAM_QUESTION_ID);
+            if (fragment instanceof SearchFragment)
+                ((SearchFragment) fragment).showOptionSelectionDialog(object, position, PARAM_QUESTION_ID);
+            else if (fragment instanceof AdminSearchFragment)
+                ((AdminSearchFragment) fragment).showOptionSelectionDialog(object, position, PARAM_QUESTION_ID);
         });
 
 //        case range0 = "No distance selected"
@@ -114,51 +120,111 @@ public class QuestionOptionsListAdapter extends RecyclerView.Adapter<QuestionOpt
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (progress == 0) {
                     holder.disValueTV.setText(R.string.no_distance_selected);
-                    fragment.setDistanceValue(0.0);
+//                    fragment.setDistanceValue(0.0);
+                    if (fragment instanceof SearchFragment)
+                        ((SearchFragment) fragment).setDistanceValue(0.0);
+                    else if (fragment instanceof AdminSearchFragment)
+                        ((AdminSearchFragment) fragment).setDistanceValue(0.0);
+
                 }
                 if (progress == 1) {
                     holder.disValueTV.setText(_5M);
-                    fragment.setDistanceValue(5.0);
+//                    fragment.setDistanceValue(5.0);
+                    if (fragment instanceof SearchFragment)
+                        ((SearchFragment) fragment).setDistanceValue(5.0);
+                    else if (fragment instanceof AdminSearchFragment)
+                        ((AdminSearchFragment) fragment).setDistanceValue(5.0);
+
                 }
                 if (progress == 2) {
                     holder.disValueTV.setText(_10M);
-                    fragment.setDistanceValue(10.0);
+//                    fragment.setDistanceValue(10.0);
+                    if (fragment instanceof SearchFragment)
+                        ((SearchFragment) fragment).setDistanceValue(10.0);
+                    else if (fragment instanceof AdminSearchFragment)
+                        ((AdminSearchFragment) fragment).setDistanceValue(10.0);
+
                 }
                 if (progress == 3) {
                     holder.disValueTV.setText(_50M);
-                    fragment.setDistanceValue(50.0);
+//                    fragment.setDistanceValue(50.0);
+                    if (fragment instanceof SearchFragment)
+                        ((SearchFragment) fragment).setDistanceValue(50.0);
+                    else if (fragment instanceof AdminSearchFragment)
+                        ((AdminSearchFragment) fragment).setDistanceValue(50.0);
+
                 }
                 if (progress == 4) {
                     holder.disValueTV.setText(_100M);
-                    fragment.setDistanceValue(100.0);
+//                    fragment.setDistanceValue(100.0);
+                    if (fragment instanceof SearchFragment)
+                        ((SearchFragment) fragment).setDistanceValue(100.0);
+                    else if (fragment instanceof AdminSearchFragment)
+                        ((AdminSearchFragment) fragment).setDistanceValue(100.0);
+
                 }
                 if (progress == 5) {
                     holder.disValueTV.setText(_250M);
-                    fragment.setDistanceValue(250.0);
+//                    fragment.setDistanceValue(250.0);
+                    if (fragment instanceof SearchFragment)
+                        ((SearchFragment) fragment).setDistanceValue(250.0);
+                    else if (fragment instanceof AdminSearchFragment)
+                        ((AdminSearchFragment) fragment).setDistanceValue(250.0);
+
                 }
                 if (progress == 6) {
                     holder.disValueTV.setText(_1KM);
-                    fragment.setDistanceValue(1000.0);
+//                    fragment.setDistanceValue(1000.0);
+                    if (fragment instanceof SearchFragment)
+                        ((SearchFragment) fragment).setDistanceValue(1000.0);
+                    else if (fragment instanceof AdminSearchFragment)
+                        ((AdminSearchFragment) fragment).setDistanceValue(1000.0);
+
                 }
                 if (progress == 7) {
                     holder.disValueTV.setText(_5KM);
-                    fragment.setDistanceValue(5000.0);
+//                    fragment.setDistanceValue(5000.0);
+                    if (fragment instanceof SearchFragment)
+                        ((SearchFragment) fragment).setDistanceValue(5000.0);
+                    else if (fragment instanceof AdminSearchFragment)
+                        ((AdminSearchFragment) fragment).setDistanceValue(5000.0);
+
                 }
                 if (progress == 8) {
                     holder.disValueTV.setText(_10KM);
-                    fragment.setDistanceValue(10000.0);
+//                    fragment.setDistanceValue(10000.0);
+                    if (fragment instanceof SearchFragment)
+                        ((SearchFragment) fragment).setDistanceValue(10000.0);
+                    else if (fragment instanceof AdminSearchFragment)
+                        ((AdminSearchFragment) fragment).setDistanceValue(10000.0);
+
                 }
                 if (progress == 9) {
                     holder.disValueTV.setText(_100KM);
-                    fragment.setDistanceValue(100000.0);
+//                    fragment.setDistanceValue(100000.0);
+                    if (fragment instanceof SearchFragment)
+                        ((SearchFragment) fragment).setDistanceValue(100000.0);
+                    else if (fragment instanceof AdminSearchFragment)
+                        ((AdminSearchFragment) fragment).setDistanceValue(100000.0);
+
                 }
                 if (progress == 10) {
                     holder.disValueTV.setText(_1000KM);
-                    fragment.setDistanceValue(1000000.0);
+//                    fragment.setDistanceValue(1000000.0);
+                    if (fragment instanceof SearchFragment)
+                        ((SearchFragment) fragment).setDistanceValue(1000000.0);
+                    else if (fragment instanceof AdminSearchFragment)
+                        ((AdminSearchFragment) fragment).setDistanceValue(1000000.0);
+
                 }
                 if (progress == 11) {
                     holder.disValueTV.setText(_5000KM);
-                    fragment.setDistanceValue(5000000.0);
+//                    fragment.setDistanceValue(5000000.0);
+                    if (fragment instanceof SearchFragment)
+                        ((SearchFragment) fragment).setDistanceValue(5000000.0);
+                    else if (fragment instanceof AdminSearchFragment)
+                        ((AdminSearchFragment) fragment).setDistanceValue(5000000.0);
+
                 }
             }
 

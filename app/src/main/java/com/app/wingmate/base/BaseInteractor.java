@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import androidx.appcompat.app.AlertDialog;
 
 import com.app.wingmate.R;
+import com.app.wingmate.admin.models.RejectionReason;
 import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
@@ -36,12 +37,14 @@ import java.util.Objects;
 
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_GET_SERVER_TIME;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_RESEND_EMAIL;
+import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_UPDATE_USER;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_UPDATE_WRONG_EMAIL;
 import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.BOTH;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_FANS;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUESTION;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUESTION_OPTION;
+import static com.app.wingmate.utils.AppConstants.CLASS_NAME_REJECTION_REASON;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_TERMS;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_ANSWER;
@@ -151,6 +154,10 @@ public class BaseInteractor {
         void onUserFanStatusSuccess(List<Fans> fans);
 
         void onFanAddingSuccess(Fans fan);
+
+        void onRejectReasonsResponseSuccess(List<RejectionReason> rejectReasons);
+
+        void onSpecificUsersSuccess(ParseUser parseUser);
     }
 
     public void signUpFormValidate(Context context, final String nick, final String gender, final String email, final String password, final OnFinishedListener listener) {
@@ -425,6 +432,25 @@ public class BaseInteractor {
         }
     }
 
+    public void adminFetchUserProfilePhotosVideoFormParse(final Context context, ParseUser parseUser, final OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            skip = 0;
+            photosResults = new ArrayList<>();
+            ParseQuery query = ParseQuery.getQuery(CLASS_NAME_USER_PROFILE_PHOTOS_VIDEO);
+            query.setLimit(1000);
+            query.whereEqualTo(PARAM_USER_ID, parseUser.getObjectId());
+//            query.whereNotEqualTo(PARAM_FILE_STATUS, 2);
+            query.findInBackground((FindCallback<UserProfilePhotoVideo>) (objects, e) -> {
+                if (e != null) {
+                    listener.onResponseError(e);
+                    objects = new ArrayList<>();
+                }
+                listener.onUserProfileSuccess(objects);
+            });
+        }
+    }
+
     private FindCallback getAllRemainingProfilePhotosRecords(final Context context, ParseUser parseUser, final OnFinishedListener listener) {
         return (FindCallback<UserProfilePhotoVideo>) (objects, e) -> {
             if (e == null) {
@@ -554,6 +580,33 @@ public class BaseInteractor {
         }
     }
 
+    public void adminFetchUsersWithInKMFormParse(final Context context, ParseGeoPoint myGeoPoint, double distance, final OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            ParseQuery<ParseUser> query = ParseUser.getQuery();
+            query.include(PARAM_USER_MANDATORY_ARRAY);
+            query.include(PARAM_USER_OPTIONAL_ARRAY);
+            query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+//            query.whereNotEqualTo(PARAM_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
+//            query.whereNotEqualTo(PARAM_GENDER, ParseUser.getCurrentUser().getString(PARAM_GENDER));
+            query.whereWithinKilometers(PARAM_CURRENT_LOCATION, myGeoPoint, distance);
+            query.setLimit(1000);
+            query.findInBackground((objects, e) -> {
+                if (e == null) {
+                    if (objects == null || objects.size() == 0) {
+                        objects = new ArrayList<>();
+                    }
+                    listener.onWithInKMUsersSuccess(objects);
+                } else {
+                    listener.onResponseError(e);
+                }
+            });
+        }
+    }
+
     public void fetchUsersWithInKMFormParse(final Context context, ParseGeoPoint myGeoPoint, double distance, final OnFinishedListener listener) {
         if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
         else {
@@ -595,6 +648,31 @@ public class BaseInteractor {
             query.whereEqualTo(PARAM_ACCOUNT_STATUS, ACTIVE);
             query.whereNotEqualTo(PARAM_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
             query.setLimit(1000);
+            query.findInBackground((objects, e) -> {
+                if (e == null) {
+                    if (objects == null || objects.size() == 0) {
+                        objects = new ArrayList<>();
+                    }
+                    listener.onAllUsersSuccess(objects);
+                } else {
+                    listener.onResponseError(e);
+                }
+            });
+        }
+    }
+
+    public void adminFetchAllUsersFormParse(final Context context, final BaseInteractor.OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            ParseQuery<ParseUser> query = ParseUser.getQuery();
+            query.include(PARAM_USER_MANDATORY_ARRAY);
+            query.include(PARAM_USER_OPTIONAL_ARRAY);
+            query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.setLimit(1000);
+            query.addDescendingOrder("createdAt");
             query.findInBackground((objects, e) -> {
                 if (e == null) {
                     if (objects == null || objects.size() == 0) {
@@ -770,6 +848,74 @@ public class BaseInteractor {
                     listener.onFanAddingSuccess(fan);
                 } else {
                     listener.onResponseError(e);
+                }
+            });
+        }
+    }
+
+    public void fetchRejectReasonsFormParse(Context context, final OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            ParseQuery query = ParseQuery.getQuery(CLASS_NAME_REJECTION_REASON);
+            query.orderByAscending(PARAM_DISPLAY_ORDER);
+            query.findInBackground((FindCallback<RejectionReason>) (objects, e) -> {
+                if (e == null) {
+                    if (objects == null || objects.size() == 0) objects = new ArrayList<>();
+                    listener.onRejectReasonsResponseSuccess(objects);
+                } else {
+                    listener.onResponseError(e);
+                }
+            });
+        }
+    }
+
+    public void fetchSpecificUserFormParse(final Context context, ParseUser parseUser, final OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            ParseQuery<ParseUser> query = ParseUser.getQuery();
+            query.whereEqualTo(PARAM_OBJECT_ID, parseUser.getObjectId());
+            query.include(PARAM_USER_MANDATORY_ARRAY);
+            query.include(PARAM_USER_OPTIONAL_ARRAY);
+            query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
+            query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.setLimit(1000);
+            query.findInBackground((objects, e) -> {
+                if (e == null && objects.size() > 0) {
+                    listener.onSpecificUsersSuccess(objects.get(0));
+                } else {
+                    listener.onResponseError(e);
+                }
+            });
+        }
+    }
+
+    public void updateUserViaCloudCode(Context context,
+                                       final String userId,
+                                       final String category,
+                                       final int status,
+                                       final String reason,
+                                       final String comment,
+                                       final boolean isMediaApproved,
+                                       final OnFinishedListener listener) {
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else {
+            HashMap<String, Object> params = new HashMap<String, Object>();
+            params.put("userId", userId);
+            params.put("category", category);
+            params.put("status", status);
+            params.put("reason", reason);
+            params.put("comment", comment);
+            params.put("isMediaApproved", isMediaApproved);
+            ParseCloud.callFunctionInBackground(PARSE_CLOUD_FUNCTION_UPDATE_USER, params, new FunctionCallback<String>() {
+                @Override
+                public void done(String object, ParseException e) {
+                    if (e == null) {
+                        listener.onResponseSuccess();
+                    } else {
+                        listener.onResponseError(e);
+                    }
                 }
             });
         }

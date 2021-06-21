@@ -1,113 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/version_tv"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/buy_btn"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginStart="@dimen/_40ssp"
-        android:layout_marginLeft="@dimen/_40ssp"
-        android:layout_marginEnd="@dimen/_40ssp"
-        android:layout_marginRight="@dimen/_40ssp"
-        android:layout_marginBottom="@dimen/_8ssp"
-        android:layout_marginTop="@dimen/_8ssp"
-        android:visibility="visible"
-        android:background="@drawable/button_pressed"
-        android:fontFamily="@font/baloo_regular"
-        android:text="Pay Now"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/txt_size" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginStart="@dimen/_40ssp"
-        android:layout_marginLeft="@dimen/_40ssp"
-        android:layout_marginEnd="@dimen/_40ssp"
-        android:layout_marginTop="@dimen/_8ssp"
-        android:layout_marginRight="@dimen/_40ssp"
-        android:layout_marginBottom="@dimen/_8ssp"
-        android:background="@drawable/button_pressed"
-        android:fontFamily="@font/baloo_regular"
-        android:text="Logout"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/txt_size" />
+        <Button
+            android:id="@+id/buy_btn"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/_40ssp"
+            android:layout_marginLeft="@dimen/_40ssp"
+            android:layout_marginTop="@dimen/_8ssp"
+            android:layout_marginEnd="@dimen/_40ssp"
+            android:layout_marginRight="@dimen/_40ssp"
+            android:layout_marginBottom="@dimen/_8ssp"
+            android:layout_weight="1"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/baloo_regular"
+            android:text="Pay Now"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size"
+            android:visibility="visible" />
 
-    <Button
-        android:id="@+id/questionnaire_mandatory"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginStart="@dimen/_40ssp"
-        android:layout_marginLeft="@dimen/_40ssp"
-        android:layout_marginEnd="@dimen/_40ssp"
-        android:layout_marginTop="@dimen/_8ssp"
-        android:layout_marginRight="@dimen/_40ssp"
-        android:layout_marginBottom="@dimen/_8ssp"
-        android:background="@drawable/button_pressed"
-        android:fontFamily="@font/baloo_regular"
-        android:text="Mandatory Questionnaire"
-        android:visibility="invisible"
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/_40ssp"
+            android:layout_marginLeft="@dimen/_40ssp"
+            android:layout_marginTop="@dimen/_8ssp"
+            android:layout_marginEnd="@dimen/_40ssp"
+            android:layout_marginRight="@dimen/_40ssp"
+            android:layout_marginBottom="@dimen/_8ssp"
+            android:layout_weight="1"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/baloo_regular"
+            android:text="Logout"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size" />
 
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/txt_size" />
+        <Button
+            android:id="@+id/questionnaire_mandatory"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/_40ssp"
+            android:layout_marginLeft="@dimen/_40ssp"
+            android:layout_marginTop="@dimen/_8ssp"
+            android:layout_marginEnd="@dimen/_40ssp"
+            android:layout_marginRight="@dimen/_40ssp"
+            android:layout_marginBottom="@dimen/_8ssp"
+            android:layout_weight="1"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/baloo_regular"
+            android:text="Mandatory Questionnaire"
+            android:textAllCaps="false"
 
-    <Button
-        android:id="@+id/questionnaire_optional"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginStart="@dimen/_40ssp"
-        android:layout_marginLeft="@dimen/_40ssp"
-        android:layout_marginEnd="@dimen/_40ssp"
-        android:layout_marginTop="@dimen/_8ssp"
-        android:layout_marginRight="@dimen/_40ssp"
-        android:layout_marginBottom="@dimen/_8ssp"
-        android:background="@drawable/button_pressed"
-        android:fontFamily="@font/baloo_regular"
-        android:text="Optional Questionnaire"
-        android:visibility="invisible"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size"
+            android:visibility="invisible" />
 
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/txt_size" />
+        <Button
+            android:id="@+id/questionnaire_optional"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/_40ssp"
+            android:layout_marginLeft="@dimen/_40ssp"
+            android:layout_marginTop="@dimen/_8ssp"
+            android:layout_marginEnd="@dimen/_40ssp"
+            android:layout_marginRight="@dimen/_40ssp"
+            android:layout_marginBottom="@dimen/_8ssp"
+            android:layout_weight="1"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/baloo_regular"
+            android:text="Optional Questionnaire"
+            android:textAllCaps="false"
 
-    <Button
-        android:id="@+id/profile_photo_video"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginStart="@dimen/_40ssp"
-        android:layout_marginLeft="@dimen/_40ssp"
-        android:layout_marginEnd="@dimen/_40ssp"
-        android:layout_marginRight="@dimen/_40ssp"
-        android:layout_marginBottom="@dimen/_8ssp"
-        android:background="@drawable/button_pressed"
-        android:fontFamily="@font/baloo_regular"
-        android:text="Profile"
-        android:visibility="invisible"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/txt_size" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size"
+            android:visibility="invisible" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        <Button
+            android:id="@+id/profile_photo_video"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/_40ssp"
+            android:layout_marginLeft="@dimen/_40ssp"
+            android:layout_marginEnd="@dimen/_40ssp"
+            android:layout_marginRight="@dimen/_40ssp"
+            android:layout_marginBottom="@dimen/_8ssp"
+            android:layout_weight="1"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/baloo_regular"
+            android:text="Profile"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size"
+            android:visibility="invisible" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/admin_btn"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/_40ssp"
+            android:layout_marginLeft="@dimen/_40ssp"
+            android:layout_marginEnd="@dimen/_40ssp"
+            android:layout_marginRight="@dimen/_40ssp"
+            android:layout_marginBottom="@dimen/_8ssp"
+            android:layout_weight="1"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/baloo_regular"
+            android:text="Go To Admin Section"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size"
+            android:visibility="visible" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/version_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Version: 1.0.0"
+        android:textSize="@dimen/label_txt_size"
+        android:fontFamily="@font/open_sans_regular"
+        android:textColor="@color/text_color_grey"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/_8ssp"/>
+</RelativeLayout>

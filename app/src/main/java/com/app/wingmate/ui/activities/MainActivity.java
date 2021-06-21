@@ -22,6 +22,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.app.wingmate.R;
+import com.app.wingmate.admin.ui.fragments.AdminDashboardFragment;
+import com.app.wingmate.admin.ui.fragments.AdminPhotoViewFragment;
+import com.app.wingmate.admin.ui.fragments.AdminProfileFragment;
+import com.app.wingmate.admin.ui.fragments.AdminVideoViewFragment;
 import com.app.wingmate.base.BaseActivity;
 import com.app.wingmate.events.RefreshDashboard;
 import com.app.wingmate.events.RefreshUserStatus;
@@ -56,6 +60,10 @@ import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ACCOUNT_PENDING;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_DASHBOARD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_PHOTO_VIEW;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_PROFILE;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_VIDEO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DUMMY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
@@ -115,6 +123,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Fragment paymentFragment;
     private Fragment accountPendingFragment;
 
+    private Fragment adminDashboardFragment;
+    private Fragment adminProfileFragment;
+    private Fragment adminPhotoViewFragment;
+    private Fragment adminVideoViewFragment;
+
     private String fragmentTag;
 
     @Override
@@ -170,6 +183,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 checkPermissions();
                 beginDashboardFragment();
                 break;
+            case KEY_FRAGMENT_ADMIN_DASHBOARD:
+                checkPermissions();
+                beginAdminDashboardFragment();
+                break;
             case KEY_FRAGMENT_HOME:
                 beginHomeFragment();
                 break;
@@ -178,6 +195,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case KEY_FRAGMENT_PROFILE:
                 beginProfileFragment();
+                break;
+            case KEY_FRAGMENT_ADMIN_PROFILE:
+                beginAdminProfileFragment();
                 break;
             case KEY_FRAGMENT_EDIT_PROFILE:
                 beginEditProfileFragment();
@@ -198,8 +218,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case KEY_FRAGMENT_VIDEO_VIEW:
                 beginVideoViewFragment();
                 break;
+            case KEY_FRAGMENT_ADMIN_VIDEO_VIEW:
+                beginAdminVideoViewFragment();
+                break;
             case KEY_FRAGMENT_PHOTO_VIEW:
                 beginPhotoViewFragment();
+                break;
+            case KEY_FRAGMENT_ADMIN_PHOTO_VIEW:
+                beginAdminPhotoViewFragment();
                 break;
             default:
                 onBackPressed();
@@ -314,6 +340,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, dashboardFragment, DashboardFragment.TAG).commit();
     }
 
+    private void beginAdminDashboardFragment() {
+        hideTopView();
+        hideScreenTitle();
+        adminDashboardFragment = getSupportFragmentManager().findFragmentByTag(AdminDashboardFragment.TAG);
+        if (adminDashboardFragment == null)
+            adminDashboardFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), AdminDashboardFragment.TAG);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, adminDashboardFragment, AdminDashboardFragment.TAG).commit();
+
+    }
+
     private void beginProfileFragment() {
         hideTopView();
         hideScreenTitle();
@@ -321,6 +357,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (profileFragment == null)
             profileFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), ProfileFragment.TAG);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment, ProfileFragment.TAG).commit();
+    }
+
+    private void beginAdminProfileFragment() {
+        hideTopView();
+        hideScreenTitle();
+        adminProfileFragment = getSupportFragmentManager().findFragmentByTag(AdminProfileFragment.TAG);
+        if (adminProfileFragment == null)
+            adminProfileFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), AdminProfileFragment.TAG);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, adminProfileFragment, AdminProfileFragment.TAG).commit();
     }
 
     private void beginEditProfileFragment() {
@@ -384,6 +429,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, videoViewFragment, VideoViewFragment.TAG).commit();
     }
 
+    private void beginAdminVideoViewFragment() {
+        adminVideoViewFragment = getSupportFragmentManager().findFragmentByTag(AdminVideoViewFragment.TAG);
+        if (adminVideoViewFragment == null)
+            adminVideoViewFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), AdminVideoViewFragment.TAG);
+        adminVideoViewFragment.setArguments(getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, adminVideoViewFragment, AdminVideoViewFragment.TAG).commit();
+    }
+
     private void beginPhotoViewFragment() {
 //        showCropToolbar();
 //        setActivityTitle("Photo");
@@ -394,6 +447,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             photoViewFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), PhotoViewFragment.TAG);
         photoViewFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.container, photoViewFragment, PhotoViewFragment.TAG).commit();
+    }
+
+    private void beginAdminPhotoViewFragment() {
+        adminPhotoViewFragment = getSupportFragmentManager().findFragmentByTag(AdminPhotoViewFragment.TAG);
+        if (adminPhotoViewFragment == null)
+            adminPhotoViewFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), AdminPhotoViewFragment.TAG);
+        adminPhotoViewFragment.setArguments(getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, adminPhotoViewFragment, AdminPhotoViewFragment.TAG).commit();
     }
 
     private void beginWebViewFragment() {

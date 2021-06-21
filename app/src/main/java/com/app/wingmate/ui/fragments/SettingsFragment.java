@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
+import com.app.wingmate.BuildConfig;
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.base.BaseInteractor;
@@ -32,6 +34,7 @@ import static com.app.wingmate.utils.AppConstants.INFO;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.OPTIONAL;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_ADMIN;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO_SUBMITTED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_VIDEO_SUBMITTED;
@@ -41,6 +44,7 @@ import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
@@ -59,6 +63,10 @@ public class SettingsFragment extends BaseFragment {
 
     @BindView(R.id.buy_btn)
     Button buyBtn;
+    @BindView(R.id.admin_btn)
+    Button adminBtn;
+    @BindView(R.id.version_tv)
+    TextView versionTV;
 
     public BasePresenter presenter;
 
@@ -92,6 +100,9 @@ public class SettingsFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter = new BasePresenter(this, new BaseInteractor());
+
+        String versionNo = "Version: " + BuildConfig.VERSION_NAME;
+        versionTV.setText(versionNo);
     }
 
     @Override
@@ -99,6 +110,12 @@ public class SettingsFragment extends BaseFragment {
         super.onResume();
         ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
 //        dashboardInstance.performUserUpdateAction();
+
+        if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_ADMIN)) {
+            adminBtn.setVisibility(View.VISIBLE);
+        } else {
+            adminBtn.setVisibility(View.INVISIBLE);
+        }
 
         if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
             buyBtn.setVisibility(View.INVISIBLE);
@@ -114,7 +131,7 @@ public class SettingsFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.buy_btn, R.id.profile_photo_video, R.id.questionnaire_mandatory, R.id.questionnaire_optional, R.id.logout})
+    @OnClick({R.id.admin_btn, R.id.buy_btn, R.id.profile_photo_video, R.id.questionnaire_mandatory, R.id.questionnaire_optional, R.id.logout})
     public void onViewClicked(View v) {
         if (v.getId() == R.id.buy_btn) {
             performUserUpdateAction(true);
@@ -122,6 +139,8 @@ public class SettingsFragment extends BaseFragment {
 //            ParseUser.getCurrentUser().put(PARAM_IS_PAID_USER, true);
 //            showToast(getActivity(), getContext(), "Processing...", INFO);
 //            ParseUser.getCurrentUser().saveInBackground(e -> showToast(getActivity(), getContext(), "Congrats on becoming a paid user!", SUCCESS));
+        } else if (v.getId() == R.id.admin_btn) {
+            ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_ADMIN_DASHBOARD);
         } else if (v.getId() == R.id.profile_photo_video) {
             if (!ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
                 showToast(getActivity(), getContext(), "You are not a paid user!", ERROR);

@@ -1,5 +1,6 @@
 package com.app.wingmate.base;
 
+import com.app.wingmate.admin.models.RejectionReason;
 import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
@@ -60,7 +61,13 @@ public interface BaseView {
     //Home
     void setAllUsersSuccess(List<ParseUser> parseUsers);
 
+    void setSpecificUserSuccess(ParseUser parseUser);
+
     //Fans
     void setMyFansSuccess(List<Fans> fansList);
     void setFanAddedSuccess(Fans fan);
+
+    //Reject
+    void setRejectReasonResponseSuccess(List<RejectionReason> rejectReasons);
+
 }

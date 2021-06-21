@@ -52,6 +52,7 @@ public class AppConstants {
     public static final String PARAM_IS_MEDIA_APPROVED = "isMediaApproved";
     public static final String PARAM_IS_PHOTO_SUBMITTED = "isPhotosSubmitted";
     public static final String PARAM_IS_VIDEO_SUBMITTED = "isVideoSubmitted";
+    public static final String PARAM_IS_ADMIN = "isAdmin";
 
     public static final String PARAM_ALERT_TITLE = "alertTitle";
     public static final String PARAM_ALERT_TEXT = "alertText";
@@ -140,4 +141,35 @@ public class AppConstants {
     public static final String NOTI_MSG_MAYBE = "You are marked as maybe by ";
     public static final String NOTI_MSG_UN_MAYBE = "You are unmarked as maybe by ";
     public static final String NOTI_MSG_SIGNUP = "A new user has just registered to Wing Mate.";
+
+    public static double DEFAULT_LATITUDE = 41.485678;
+    public static double DEFAULT_LONGITUDE = -81.708915;
+
+    public static final String PARAM_REJECT_REASON = "rejectReason";
+    public static final String PARAM_REJECT_COMMENT = "rejectComment";
+
+    public static final String CLASS_NAME_ADMIN_USERS = "AdminUsers";
+    public static final String PARAM_USERNAME = "username";
+    public static final String PARAM_PASSWORD = "password";
+    public static final String PARAM_IMAGE = "image";
+    public static final String PARAM_IS_ACTIVE = "isActive";
+
+    public static final String CLASS_NAME_REJECTION_REASON = "RejectionReason";
+    public static final String PARAM_REASON = "reason";
+    public static final String PARAM_TYPE = "type";
+
+
+    public static final String TYPE_PROFILE = "profile";
+    public static final String TYPE_MEDIA = "media";
+
+    public static final String NEW = "N";
+
+    public static final int REJECT = 2;
+
+    public static final String PHOTO_VIDEO_NOT_UPLOADED = "User has not uploaded photos and video yet. Please wait till user uploads then you need to accept the media first then assign a group.";
+    public static final String PHOTO_NOT_UPLOADED = "User has not uploaded photos yet. Please wait till user uploads then you need to accept the media first then assign a group.";
+    public static final String VIDEO_NOT_UPLOADED = "User has not uploaded video yet. Please wait till user uploads then you need to accept the media first then assign a group.";
+    public static final String PHOTO_VIDEO_NOT_APPROVED = "User has uploaded photos and video. You need to accept the media first then assign a group.";
+    public static final String PHOTO_NOT_APPROVED = "User has uploaded photos and video. You need to accept the photo first then assign a group.";
+    public static final String VIDEO_NOT_APPROVED = "User has uploaded photos and video. You need to accept the video first then assign a group.";
 }

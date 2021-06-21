@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.app.wingmate.admin.models.RejectionReason;
 import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
@@ -219,12 +220,22 @@ public class BaseFragment extends Fragment implements BaseView {
     }
 
     @Override
+    public void setSpecificUserSuccess(ParseUser parseUser) {
+
+    }
+
+    @Override
     public void setMyFansSuccess(List<Fans> fansList) {
 
     }
 
     @Override
     public void setFanAddedSuccess(Fans fan) {
+
+    }
+
+    @Override
+    public void setRejectReasonResponseSuccess(List<RejectionReason> rejectReasons) {
 
     }
 

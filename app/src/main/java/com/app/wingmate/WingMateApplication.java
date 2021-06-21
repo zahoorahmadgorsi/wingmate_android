@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.app.wingmate.admin.models.RejectionReason;
 import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
@@ -33,6 +34,7 @@ public class WingMateApplication extends Application {
         ParseObject.registerSubclass(TermsConditions.class);
         ParseObject.registerSubclass(UserProfilePhotoVideo.class);
         ParseObject.registerSubclass(Fans.class);
+        ParseObject.registerSubclass(RejectionReason.class);
 
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(getString(R.string.back4app_app_id))

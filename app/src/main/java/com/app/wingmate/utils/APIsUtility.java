@@ -8,8 +8,12 @@ public class APIsUtility {
     public static final String PARSE_CLOUD_FUNCTION_PUSH_TO_USER = "pushToUser";
     public static final String PARSE_CLOUD_FUNCTION_PUSH_TO_ADMIN = "pushToAdmin";
     public static final String PARSE_CLOUD_FUNCTION_EMAIL_TO_USER = "sendEmailToUser";
+    public static final String PARSE_CLOUD_FUNCTION_UPDATE_USER = "updateUserData";
+    public static final String PARSE_CLOUD_FUNCTION_UPDATE_USER_PIC = "updateUserPic";
+    public static final String PARSE_CLOUD_FUNCTION_UPDATE_USER_PHOTOS_STATUS = "resetUserPhotosStatus";
+    public static final String PARSE_CLOUD_FUNCTION_UPDATE_USER_VIDEO_STATUS = "resetUserVideoStatus";
+
     public static final String TERM_URL = "";
     public static final String PRIVACY_URL = "";
     public static final String FAQ_URL = "";
-
 }

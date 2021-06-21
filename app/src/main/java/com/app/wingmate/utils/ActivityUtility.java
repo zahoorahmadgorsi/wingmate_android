@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.app.wingmate.R;
+import com.app.wingmate.admin.models.RejectionReason;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.models.UserProfilePhotoVideo;
 import com.app.wingmate.ui.activities.MainActivity;
@@ -17,6 +18,10 @@ import static com.app.wingmate.utils.CommonKeys.KEY_BACK_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_EMAIL_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_EXPIRE_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ACCOUNT_PENDING;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_DASHBOARD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_PHOTO_VIEW;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_PROFILE;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_VIDEO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DUMMY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
@@ -39,9 +44,12 @@ import static com.app.wingmate.utils.CommonKeys.KEY_IMAGE_LINK;
 import static com.app.wingmate.utils.CommonKeys.KEY_IS_CURRENT_USER;
 import static com.app.wingmate.utils.CommonKeys.KEY_NICK_TAG;
 import static com.app.wingmate.utils.CommonKeys.KEY_PARSE_USER;
+import static com.app.wingmate.utils.CommonKeys.KEY_PROFILE_PIC;
 import static com.app.wingmate.utils.CommonKeys.KEY_QUESTION_TYPE;
+import static com.app.wingmate.utils.CommonKeys.KEY_REASONS_ARRAY;
 import static com.app.wingmate.utils.CommonKeys.KEY_TITLE;
 import static com.app.wingmate.utils.CommonKeys.KEY_USER_ANSWERS;
+import static com.app.wingmate.utils.CommonKeys.KEY_USER_EMAIL;
 import static com.app.wingmate.utils.CommonKeys.KEY_VIDEO_LINK;
 
 public class ActivityUtility {
@@ -68,6 +76,10 @@ public class ActivityUtility {
             case KEY_FRAGMENT_EDIT_PROFILE_TEXT_FIELDS:
             case KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE:
             case KEY_FRAGMENT_VIDEO_VIEW:
+            case KEY_FRAGMENT_ADMIN_DASHBOARD:
+            case KEY_FRAGMENT_ADMIN_PROFILE:
+            case KEY_FRAGMENT_ADMIN_PHOTO_VIEW:
+            case KEY_FRAGMENT_ADMIN_VIDEO_VIEW:
                 activity.startActivity(mainIntent);
                 activity.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
                 break;
@@ -80,6 +92,19 @@ public class ActivityUtility {
         Intent mainIntent = new Intent(context, MainActivity.class);
         mainIntent.putExtra(KEY_ACTIVITY_TAG, tag);
         mainIntent.putExtra(KEY_VIDEO_LINK, path);
+        context.startActivity(mainIntent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+
+    public static void startVideoViewActivityAdmin(Activity context, String tag,
+                                              UserProfilePhotoVideo path,
+                                              ArrayList<RejectionReason> reasonList,
+                                              String emailId) {
+        Intent mainIntent = new Intent(context, MainActivity.class);
+        mainIntent.putExtra(KEY_ACTIVITY_TAG, tag);
+        mainIntent.putExtra(KEY_USER_EMAIL, emailId);
+        mainIntent.putExtra(KEY_VIDEO_LINK, path);
+        mainIntent.putParcelableArrayListExtra(KEY_REASONS_ARRAY, reasonList);
         context.startActivity(mainIntent);
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }
@@ -112,6 +137,24 @@ public class ActivityUtility {
         mainIntent.putExtra(KEY_ACTIVITY_TAG, tag);
         mainIntent.putExtra(KEY_IMAGE_LINK, paths.get(0));
         mainIntent.putStringArrayListExtra(KEY_IMAGES_ARRAY, paths);
+        mainIntent.putExtra(KEY_IMAGE_INDEX, index);
+        context.startActivity(mainIntent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+
+    public static void startPhotoViewActivityAdmin(Activity context, String tag,
+                                              ArrayList<UserProfilePhotoVideo> paths,
+                                              int index,
+                                              ArrayList<RejectionReason> reasonList,
+                                              String emailId,
+                                              String profilePic) {
+        Intent mainIntent = new Intent(context, MainActivity.class);
+        mainIntent.putExtra(KEY_ACTIVITY_TAG, tag);
+        mainIntent.putExtra(KEY_IMAGE_LINK, paths.get(0));
+        mainIntent.putExtra(KEY_USER_EMAIL, emailId);
+        mainIntent.putExtra(KEY_PROFILE_PIC, profilePic);
+        mainIntent.putParcelableArrayListExtra(KEY_IMAGES_ARRAY, paths);
+        mainIntent.putParcelableArrayListExtra(KEY_REASONS_ARRAY, reasonList);
         mainIntent.putExtra(KEY_IMAGE_INDEX, index);
         context.startActivity(mainIntent);
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);

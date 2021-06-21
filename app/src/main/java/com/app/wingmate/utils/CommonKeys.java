@@ -29,6 +29,11 @@ public class CommonKeys {
     public static final String KEY_FRAGMENT_WEB_VIEW = "WebViewFragment";
     public static final String KEY_FRAGMENT_PAYMENT = "PaymentFragment";
     public static final String KEY_FRAGMENT_ACCOUNT_PENDING = "AccountPendingFragment";
+    public static final String KEY_FRAGMENT_ADMIN_DASHBOARD = "AdminDashboardFragment";
+    public static final String KEY_FRAGMENT_ADMIN_PROFILE = "AdminProfileFragment";
+    public static final String KEY_FRAGMENT_ADMIN_PHOTO_VIEW = "AdminPhotoViewFragment";
+    public static final String KEY_FRAGMENT_ADMIN_VIDEO_VIEW = "AdminVideoViewFragment";
+
 
     public static final String KEY_TITLE = "key_title";
     public static final String KEY_QUESTION_TYPE = "QuestionType";
@@ -45,5 +50,10 @@ public class CommonKeys {
     public static final String PREF_EMAIL = "wingmate_pref_email";
     public static final String PREF_PASSWORD = "wingmate_pref_password";
     public static final String PREF_LAST_UPDATE_TIME = "wingmate_pref_last_update_time";
+
+    public static final String KEY_REASONS_ARRAY = "key_reasons_array";
+    public static final String KEY_USER_EMAIL = "key_user_email";
+    public static final String KEY_PROFILE_PIC = "key_profile_pic";
+    public static final String PREF_IMAGE_URL = "wingmate_pref_image_url";
 
 }

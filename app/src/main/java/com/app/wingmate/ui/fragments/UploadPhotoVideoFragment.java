@@ -355,7 +355,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 
                     if (isExpired) {
                         if (hasVideo) {
-                            if (hasPhotos) {
+                            if (hasPhotos && hasChange) {
                                 ((MainActivity) requireActivity()).hideTopView();
                                 congratsView.setVisibility(View.VISIBLE);
                             } else {
@@ -370,7 +370,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                         }
                     } else {
                         if (hasVideo) {
-                            if (hasPhotos) {
+                            if (hasPhotos && hasChange) {
                                 ((MainActivity) requireActivity()).hideTopView();
                                 congratsView.setVisibility(View.VISIBLE);
                             } else {

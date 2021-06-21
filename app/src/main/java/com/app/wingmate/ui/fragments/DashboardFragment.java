@@ -77,6 +77,7 @@ import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_ADMIN;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO_SUBMITTED;
@@ -84,6 +85,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_IS_VIDEO_SUBMITTED;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
+import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
@@ -189,7 +191,9 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     private void updateParseInstallation() {
         if (ParseUser.getCurrentUser() != null) {
             ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-            installation.put("userId", ParseUser.getCurrentUser().getObjectId());
+            installation.put(PARAM_USER_ID, ParseUser.getCurrentUser().getObjectId());
+            if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_ADMIN))
+                installation.put(PARAM_IS_ADMIN, true);
             installation.saveInBackground();
         }
     }

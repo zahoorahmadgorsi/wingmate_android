@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:attrs="http://schemas.android.com/tools"
+    android:background="@color/black">
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+<!--    android:layout_above="@+id/bottom_view"-->
+
+
+    <com.rd.PageIndicatorView
+        android:id="@+id/pageIndicatorView"
+        attrs:piv_padding="16dp"
+        attrs:piv_radius="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/bottom_view"
+        android:layout_margin="@dimen/_16ssp"
+        app:piv_animationType="swap"
+        app:piv_dynamicCount="false"
+        app:piv_interactiveAnimation="true"
+        app:piv_selectedColor="@color/colorPrimary"
+        app:piv_unselectedColor="@color/grey"
+        app:piv_viewPager="@id/viewPager" />
+
+    <com.jsibbold.zoomage.ZoomageView
+        android:id="@+id/zoom_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_above="@+id/bottom_view"
+        android:src="@drawable/image_placeholder"
+        app:zoomage_animateOnReset="true"
+        app:zoomage_autoCenter="true"
+        app:zoomage_autoResetMode="UNDER"
+        app:zoomage_maxScale="8"
+        app:zoomage_minScale="0.6"
+        app:zoomage_restrictBounds="false"
+        app:zoomage_translatable="true"
+        app:zoomage_zoomable="true" />
+
+<!--    <ImageView-->
+<!--        android:id="@+id/btn_cross"-->
+<!--        android:layout_width="@dimen/_48ssp"-->
+<!--        android:layout_height="@dimen/_48ssp"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentLeft="true"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:padding="@dimen/_10ssp"-->
+<!--        android:src="@drawable/icon_close" />-->
+
+    <RelativeLayout
+        android:id="@+id/btn_cross"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_48ssp"
+        android:layout_alignParentTop="true"
+        android:background="@color/transparent"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Done"
+            android:padding="@dimen/_8ssp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:shadowColor="@color/black"
+            android:shadowDx="5"
+            android:shadowDy="5"
+            android:shadowRadius="10"
+            android:fontFamily="@font/roboto_black"
+            android:textSize="@dimen/txt_size"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_reject"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="@dimen/_10ssp"
+                android:layout_marginLeft="@dimen/_10ssp"
+                android:layout_marginTop="@dimen/_8ssp"
+                android:layout_marginEnd="@dimen/_5ssp"
+                android:layout_marginRight="@dimen/_5ssp"
+                android:layout_marginBottom="@dimen/_8ssp"
+                android:layout_weight="1"
+                android:onClick="onClick"
+                android:background="@drawable/button_pressed_primary"
+                android:fontFamily="@font/baloo_regular"
+                android:text="Reject"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/txt_size" />
+
+            <Button
+                android:id="@+id/btn_approve"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="@dimen/_5ssp"
+                android:layout_marginLeft="@dimen/_5ssp"
+                android:layout_marginTop="@dimen/_8ssp"
+                android:layout_marginEnd="@dimen/_10ssp"
+                android:layout_marginRight="@dimen/_10ssp"
+                android:layout_marginBottom="@dimen/_8ssp"
+                android:layout_weight="1"
+                android:onClick="onClick"
+                android:background="@drawable/button_pressed"
+                android:fontFamily="@font/baloo_regular"
+                android:text="Approve"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/txt_size" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

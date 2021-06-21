@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_view">
+
+        <com.potyvideo.library.AndExoPlayerView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            app:andexo_aspect_ratio="aspect_match"
+            app:andexo_full_screen="true"
+            app:andexo_play_when_ready="true"
+            app:andexo_resize_mode="Fit"
+            app:andexo_show_controller="true" />
+
+                <ImageView
+                    android:id="@+id/img_placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/video_placeholder1" />
+
+                <ImageView
+                    android:id="@+id/play_btn"
+                    android:layout_width="@dimen/_40ssp"
+                    android:layout_height="@dimen/_40ssp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/play_video" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40ssp"
+        android:layout_alignParentBottom="true"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/_8ssp"
+        android:src="@drawable/ic_back_button"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/btn_cross"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_48ssp"
+        android:layout_alignParentTop="true"
+        android:background="@color/black"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Done"
+            android:padding="@dimen/_8ssp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:fontFamily="@font/roboto_black"
+            android:textSize="@dimen/txt_size"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+<!--    <ImageView-->
+<!--        android:layout_width="@dimen/_48ssp"-->
+<!--        android:layout_height="@dimen/_48ssp"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentLeft="true"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:padding="@dimen/_10ssp"-->
+<!--        android:src="@drawable/icon_close" />-->
+
+    <LinearLayout
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_reject"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="@dimen/_10ssp"
+                android:layout_marginLeft="@dimen/_10ssp"
+                android:layout_marginTop="@dimen/_8ssp"
+                android:layout_marginEnd="@dimen/_5ssp"
+                android:layout_marginRight="@dimen/_5ssp"
+                android:layout_marginBottom="@dimen/_8ssp"
+                android:layout_weight="1"
+                android:onClick="onClick"
+                android:background="@drawable/button_pressed_primary"
+                android:fontFamily="@font/baloo_regular"
+                android:text="Reject"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/txt_size" />
+
+            <Button
+                android:id="@+id/btn_approve"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="@dimen/_5ssp"
+                android:layout_marginLeft="@dimen/_5ssp"
+                android:layout_marginTop="@dimen/_8ssp"
+                android:layout_marginEnd="@dimen/_10ssp"
+                android:layout_marginRight="@dimen/_10ssp"
+                android:layout_marginBottom="@dimen/_8ssp"
+                android:layout_weight="1"
+                android:onClick="onClick"
+                android:background="@drawable/button_pressed"
+                android:fontFamily="@font/baloo_regular"
+                android:text="Approve"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/txt_size" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

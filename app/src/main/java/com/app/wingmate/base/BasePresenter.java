@@ -2,6 +2,7 @@ package com.app.wingmate.base;
 
 import android.content.Context;
 
+import com.app.wingmate.admin.models.RejectionReason;
 import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
@@ -103,6 +104,12 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
         }
     }
 
+    public void adminQueryUserPhotosVideo(Context context, ParseUser parseUser) {
+        if (baseView != null) {
+            interactor.adminFetchUserProfilePhotosVideoFormParse(context, parseUser, this);
+        }
+    }
+
     public void queryTermsConditions(Context context) {
         if (baseView != null) {
             interactor.fetchTermsConditionsFormParse(context, this);
@@ -118,6 +125,12 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
     public void queryAllUsers(Context context) {
         if (baseView != null) {
             interactor.fetchAllUsersFormParse(context, this);
+        }
+    }
+
+    public void queryAdminAllUsers(Context context) {
+        if (baseView != null) {
+            interactor.adminFetchAllUsersFormParse(context, this);
         }
     }
 
@@ -154,6 +167,12 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
     public void getUsersWithInKM(Context context, ParseGeoPoint myGeoPoint, double distance) {
         if (baseView != null) {
             interactor.fetchUsersWithInKMFormParse(context, myGeoPoint, distance, this);
+        }
+    }
+
+    public void adminGetUsersWithInKM(Context context, ParseGeoPoint myGeoPoint, double distance) {
+        if (baseView != null) {
+            interactor.adminFetchUsersWithInKMFormParse(context, myGeoPoint, distance, this);
         }
     }
 
@@ -237,6 +256,20 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
     public void onFanAddingSuccess(Fans fan) {
         if (baseView != null) {
             baseView.setFanAddedSuccess(fan);
+        }
+    }
+
+    @Override
+    public void onRejectReasonsResponseSuccess(List<RejectionReason> rejectReasons) {
+        if (baseView != null) {
+            baseView.setRejectReasonResponseSuccess(rejectReasons);
+        }
+    }
+
+    @Override
+    public void onSpecificUsersSuccess(ParseUser parseUser) {
+        if (baseView != null) {
+            baseView.setSpecificUserSuccess(parseUser);
         }
     }
 
@@ -372,4 +405,29 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
             baseView.setLoginSuccess(parseUser);
         }
     }
+
+    public void queryRejectReasons(Context context) {
+        if (baseView != null) {
+            interactor.fetchRejectReasonsFormParse(context, this);
+        }
+    }
+
+    public void querySpecificUser(Context context, ParseUser parseUser) {
+        if (baseView != null) {
+            interactor.fetchSpecificUserFormParse(context, parseUser, this);
+        }
+    }
+
+    public void updateUserViaCloudCode(Context context,
+                                       String userId,
+                                       String category,
+                                       int status,
+                                       String reason,
+                                       String comment,
+                                       boolean isMediaApproved) {
+        if (baseView != null) {
+            interactor.updateUserViaCloudCode(context, userId, category, status, reason, comment, isMediaApproved, this);
+        }
+    }
+
 }
