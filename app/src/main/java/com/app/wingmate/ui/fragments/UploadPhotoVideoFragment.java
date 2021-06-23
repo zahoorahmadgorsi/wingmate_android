@@ -406,14 +406,14 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                 getActivity().onBackPressed();
                 break;
             case R.id.btn_congrats:
-                if (isClear) {
+//                if (isClear) {
                     if (isExpired)
                         ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
                     else
                         ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
-                } else {
-                    getActivity().onBackPressed();
-                }
+//                } else {
+//                    getActivity().onBackPressed();
+//                }
                 break;
             default:
                 break;
@@ -440,7 +440,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
     private File videoFile = null;
     private String videoPath = null;
     private Uri videoURI = null;
-    public static int MAXIMUM_DURATION_VIDEO = 100;
+    public static int MAXIMUM_DURATION_VIDEO = 20;
 
     public void openVideoGallery() {
         Intent intent = new Intent();
@@ -935,7 +935,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                 Log.i("log-", "VIDEO PATH: " + videoPath);
                 Log.i("log-", "VIDEO URI: " + videoURI);
                 Log.i("log-", "VIDEO DURATION: " + videoDuration);
-                if (videoDuration < MAXIMUM_DURATION_VIDEO * 1100) {
+                if (videoDuration <= MAXIMUM_DURATION_VIDEO * 1100) {
 //                    Bitmap thumbnail = null;
                     videoFile = null;
                     if (videoPath != null) {
