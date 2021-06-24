@@ -405,7 +405,7 @@ public class Utilities {
     }
 
     public static void showToast(Context context, String txt, String type) {
-        Typeface typeface = Typeface.createFromAsset(context.getResources().getAssets(), "fonts/roboto_light.ttf");
+        Typeface typeface = Typeface.createFromAsset(context.getResources().getAssets(), "fonts/open_sans_regular.ttf");
 //         .setDuration(4000) // Time duration to show
 //                .autoHide(true) // Auto hide Sneaker view
 //                .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT) // Height of the Sneaker layout

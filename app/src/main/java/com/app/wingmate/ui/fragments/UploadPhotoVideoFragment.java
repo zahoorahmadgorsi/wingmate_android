@@ -674,6 +674,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                 setVideoImage(user1stVideoFile.getFile().getFile().getPath(), user1stVideoFile.getFile().getUrl());
             } catch (ParseException e) {
                 e.printStackTrace();
+                photoVideoPic1.setImageResource(android.R.color.transparent);
             }
             addView.setVisibility(View.GONE);
             playIcon.setVisibility(View.VISIBLE);
@@ -894,6 +895,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                             addView.setVisibility(View.VISIBLE);
                             playIcon.setVisibility(View.GONE);
                             delMainImgBtn.setVisibility(View.GONE);
+                            statusTV.setVisibility(View.GONE);
                             hasChange = true;
                             ParseUser.getCurrentUser().put(PARAM_ACCOUNT_STATUS, PENDING);
                             ParseUser.getCurrentUser().put(PARAM_IS_MEDIA_APPROVED, false);
@@ -1020,7 +1022,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 //                        });
                     }
                 } else {
-                    showToast(requireContext(), "Your video is longer than " + MAXIMUM_DURATION_VIDEO + " seconds. Please choose or take a shorter video", ERROR);
+                    showToast(requireActivity(), getContext(), "Your video is longer than " + MAXIMUM_DURATION_VIDEO + " seconds. Please choose or take a shorter video", ERROR);
                     videoPath = null;
                     videoURI = null;
                     videoFile = null;
