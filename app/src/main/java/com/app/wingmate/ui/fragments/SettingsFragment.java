@@ -164,7 +164,7 @@ public class SettingsFragment extends BaseFragment {
         } else if (v.getId() == R.id.logout) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setMessage("Are you sure to logout?");
+            builder.setMessage("Are you sure you want to logout?");
             builder.setPositiveButton("Yes", (dialog, which) -> {
                 dialog.cancel();
                 showToast(getActivity(), getContext(), "Logging out...", ERROR);

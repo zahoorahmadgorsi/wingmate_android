@@ -1022,7 +1022,12 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 //                        });
                     }
                 } else {
-                    showToast(requireActivity(), getContext(), "Your video is longer than " + MAXIMUM_DURATION_VIDEO + " seconds. Please choose or take a shorter video", ERROR);
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                    dialog.setMessage("Your video is longer than " + MAXIMUM_DURATION_VIDEO + " seconds. Please choose or take a shorter video")
+                            .setPositiveButton("OK", (dialoginterface, i) -> {
+                                dialoginterface.cancel();
+                            }).show();
+//                    showToast(requireActivity(), getContext(), "Your video is longer than " + MAXIMUM_DURATION_VIDEO + " seconds. Please choose or take a shorter video", ERROR);
                     videoPath = null;
                     videoURI = null;
                     videoFile = null;
