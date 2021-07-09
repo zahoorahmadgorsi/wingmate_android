@@ -21,6 +21,7 @@ import com.app.wingmate.admin.events.AdminRefreshHomeWithNewLocation;
 import com.app.wingmate.admin.ui.adapters.UserViewAdapter;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.SharedPrefers;
+import com.parse.GetCallback;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
@@ -142,20 +143,22 @@ public class AdminHomeFragment extends BaseFragment {
 //                .error(R.drawable.image_placeholder)
 //                .into(profileImg);
 
-        if (ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC) != null && ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC).length() > 0)
-            Picasso.get()
-                    .load(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))
-                    .centerCrop()
-                    .resize(500, 500)
-                    .placeholder(R.drawable.image_placeholder)
-                    .into(profileImg);
-        else
-            Picasso.get()
-                    .load(R.drawable.image_placeholder)
-                    .centerCrop()
-                    .resize(500, 500)
-                    .placeholder(R.drawable.image_placeholder)
-                    .into(profileImg);
+        ParseUser.getCurrentUser().fetchInBackground((GetCallback<ParseUser>) (parseUser, e) -> {
+            if (ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC) != null && ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC).length() > 0)
+                Picasso.get()
+                        .load(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))
+                        .centerCrop()
+                        .resize(500, 500)
+                        .placeholder(R.drawable.image_placeholder)
+                        .into(profileImg);
+            else
+                Picasso.get()
+                        .load(R.drawable.image_placeholder)
+                        .centerCrop()
+                        .resize(500, 500)
+                        .placeholder(R.drawable.image_placeholder)
+                        .into(profileImg);
+        });
 
         usernameTV.setText("Hi, " + ParseUser.getCurrentUser().getString(PARAM_NICK));
 //        usernameTV.setText("Hi, " + SharedPrefers.getString(requireContext(), PREF_EMAIL, "Admin"));

@@ -478,7 +478,6 @@ public class AdminPhotoViewFragment extends BaseFragment implements ViewPager.On
         imagesPath.get(index).put(PARAM_REJECT_REASON, reason);
         imagesPath.get(index).put(PARAM_REJECT_COMMENT, comment);
         imagesPath.get(index).saveInBackground(e -> {
-            dismissProgress();
             if (e == null) {
                 showToast(getActivity(), getContext(), "Updated successfully.", SUCCESS);
 //                String msg = "One of your photo has been rejected by the admin due to " + reason + ". Please check your email for details.";
@@ -491,6 +490,7 @@ public class AdminPhotoViewFragment extends BaseFragment implements ViewPager.On
                     ParseCloud.callFunctionInBackground(PARSE_CLOUD_FUNCTION_UPDATE_USER_PIC, params, new FunctionCallback<String>() {
                         @Override
                         public void done(String object, ParseException e) {
+                            dismissProgress();
                             if (e == null) {
 
                             } else {
@@ -498,6 +498,8 @@ public class AdminPhotoViewFragment extends BaseFragment implements ViewPager.On
                             }
                         }
                     });
+                } else {
+                    dismissProgress();
                 }
 
                 switch (index) {
@@ -525,6 +527,7 @@ public class AdminPhotoViewFragment extends BaseFragment implements ViewPager.On
                 }
                 viewPager.setCurrentItem(index);
             } else {
+                dismissProgress();
                 showToast(getActivity(), getContext(), e.getMessage(), ERROR);
             }
         });
