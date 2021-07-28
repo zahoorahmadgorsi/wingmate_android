@@ -64,6 +64,10 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import me.tankery.lib.circularseekbar.CircularSeekBar;
 
+import static com.app.wingmate.utils.AlertMessages.GO_TO_ACC_PENDING_SCREEN;
+import static com.app.wingmate.utils.AlertMessages.GO_TO_PAYMENT_SCREEN;
+import static com.app.wingmate.utils.AlertMessages.GO_TO_QUESTIONNAIRE_SCREEN;
+import static com.app.wingmate.utils.AlertMessages.GO_TO_UPLOAD_SCREEN;
 import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.FAN_TYPE_CRUSH;
@@ -624,19 +628,19 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         if (crushObject != null) {
             btnCrush.setAlpha(1.0f);
         } else {
-            btnCrush.setAlpha(0.4f);
+            btnCrush.setAlpha(1.0f);
         }
 
         if (likeObject != null) {
             btnLike.setAlpha(1.0f);
         } else {
-            btnLike.setAlpha(0.4f);
+            btnLike.setAlpha(1.0f);
         }
 
         if (maybeObject != null) {
             btnMaybe.setAlpha(1.0f);
         } else {
-            btnMaybe.setAlpha(0.4f);
+            btnMaybe.setAlpha(1.0f);
         }
     }
 
@@ -848,15 +852,44 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         if (accountStatus == REJECTED) {
             showRejectionPopupAndLogout();
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
-            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setCancelable(false)
+                    .setMessage(GO_TO_UPLOAD_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
+                    })
+                    .show();
         } else if (accountStatus == PENDING) {
 //            EventBus.getDefault().post(new RefreshDashboardView());
 //            requireActivity().onBackPressed();
-            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
+
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setCancelable(false)
+                    .setMessage(GO_TO_ACC_PENDING_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
+                    })
+                    .show();
         } else if (!isPaid && accountStatus == ACTIVE) {
-            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setCancelable(false)
+                    .setMessage(GO_TO_PAYMENT_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+                    })
+                    .show();
         } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
-            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, true);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setCancelable(false)
+                    .setMessage(GO_TO_QUESTIONNAIRE_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, true);
+                    })
+                    .show();
         }
     }
 

@@ -14,17 +14,22 @@
             android:layout_width="wrap_content"
             android:layout_height="140dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/email_verification" />
+            android:src="@drawable/email_ver" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/baloo_regular"
+            android:fontFamily="@font/open_sans_regular"
             android:gravity="center"
             android:layout_marginTop="@dimen/_16ssp"
             android:text="Email verification for"
-            android:textColor="@color/purple_theme"
-            android:textSize="@dimen/txt_size" />
+            android:textColor="@color/text_color_grey"
+            android:textSize="@dimen/label_txt_size"
+             />
+<!--        android:fontFamily="@font/baloo_regular"-->
+<!--        android:textSize="@dimen/txt_size"-->
+<!--        android:textColor="@color/purple_theme"-->
+
 
         <TextView
             android:id="@+id/email_id_tv"
@@ -38,6 +43,20 @@
             android:layout_marginStart="@dimen/_16ssp"
             android:layout_marginRight="@dimen/_16ssp"
             android:text="adam@mail.com"
+            android:textColor="@color/purple_theme"
+            android:textSize="@dimen/txt_size" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/baloo_regular"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_8ssp"
+            android:layout_marginEnd="@dimen/_16ssp"
+            android:layout_marginLeft="@dimen/_16ssp"
+            android:layout_marginStart="@dimen/_16ssp"
+            android:layout_marginRight="@dimen/_16ssp"
+            android:text="Please go to your inbox\nand click on the link"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/txt_size" />
 
@@ -52,6 +71,7 @@
             android:layout_marginLeft="@dimen/_16ssp"
             android:layout_marginStart="@dimen/_16ssp"
             android:layout_marginRight="@dimen/_16ssp"
+            android:visibility="gone"
             android:text="@string/email_verification_msg"
             android:textColor="@color/text_color_grey"
             android:textSize="@dimen/label_txt_size" />
@@ -64,7 +84,7 @@
             android:layout_marginLeft="@dimen/_40ssp"
             android:layout_marginEnd="@dimen/_40ssp"
             android:layout_marginRight="@dimen/_40ssp"
-            android:layout_marginTop="@dimen/_16ssp"
+            android:layout_marginTop="@dimen/_24ssp"
             android:layout_marginBottom="@dimen/_8ssp"
             android:background="@drawable/button_pressed"
             android:fontFamily="@font/baloo_regular"
@@ -74,12 +94,13 @@
             android:textSize="@dimen/txt_size" />
 
         <TextView
-            android:id="@+id/btn_wrong_email"
+            android:id="@+id/btn_send_again"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:fontFamily="@font/open_sans_regular"
             android:gravity="center"
+            android:visibility="gone"
             android:padding="@dimen/_4ssp"
             android:layout_marginTop="@dimen/_4ssp"
             android:text="Wrong email?"
@@ -93,7 +114,7 @@
         android:id="@+id/tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_send_again"
+        android:layout_above="@+id/btn_wrong_email"
         android:layout_centerHorizontal="true"
         android:background="?attr/selectableItemBackground"
         android:fontFamily="@font/open_sans_regular"
@@ -103,7 +124,7 @@
         android:textSize="@dimen/label_txt_size" />
 
     <TextView
-        android:id="@+id/btn_send_again"
+        android:id="@+id/btn_wrong_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -113,7 +134,7 @@
         android:gravity="center"
         android:paddingTop="@dimen/_8ssp"
         android:paddingBottom="@dimen/_12ssp"
-        android:text="Send Again"
+        android:text="Change Email"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/txt_size" />
 

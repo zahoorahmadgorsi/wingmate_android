@@ -430,7 +430,8 @@ public class SignupFragment extends BaseFragment implements BaseView, ViewPager.
                         step = 2;
                         ((MainActivity) getActivity()).showTopView();
                         ((MainActivity) getActivity()).showScreenTitle();
-                        ((MainActivity) getActivity()).setScreenTitle("Welcome, select your gender");
+                        ((MainActivity) getActivity()).setScreenTitle("Welcome!");
+                        ((MainActivity) getActivity()).setScreenSubTitle("Please select your gender");
 //                        if (nickET.getText().toString().isEmpty()) ((MainActivity) getActivity()).setScreenTitle("Hi, Wingmate");
 //                        else ((MainActivity) getActivity()).setScreenTitle("Hi, " + nickET.getText().toString());
                         ((MainActivity) getActivity()).showStep();
@@ -456,6 +457,7 @@ public class SignupFragment extends BaseFragment implements BaseView, ViewPager.
                         ((MainActivity) getActivity()).showTopView();
                         ((MainActivity) getActivity()).showScreenTitle();
                         ((MainActivity) getActivity()).setScreenTitle("Hi, " + nickET.getText().toString());
+                        ((MainActivity) getActivity()).setScreenSubTitle("");
                         ((MainActivity) getActivity()).showStep();
                         ((MainActivity) getActivity()).setStep(step);
                         layoutTutorial.setVisibility(View.GONE);
@@ -522,7 +524,9 @@ public class SignupFragment extends BaseFragment implements BaseView, ViewPager.
                     step = 2;
                     ((MainActivity) getActivity()).showTopView();
                     ((MainActivity) getActivity()).showScreenTitle();
-                    ((MainActivity) getActivity()).setScreenTitle("Welcome, select your gender");
+                    ((MainActivity) getActivity()).setScreenTitle("Welcome!");
+                    ((MainActivity) getActivity()).setScreenSubTitle("Please select your gender");
+
 //                    if (nickET.getText().toString().isEmpty()) ((MainActivity) getActivity()).setScreenTitle("Hi, Wingmate");
 //                    else ((MainActivity) getActivity()).setScreenTitle("Hi, " + nickET.getText().toString());
                     ((MainActivity) getActivity()).showStep();

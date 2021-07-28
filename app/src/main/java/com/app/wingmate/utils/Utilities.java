@@ -67,6 +67,7 @@ import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_AGE;
 import static com.app.wingmate.utils.AppConstants.SHORT_TITLE_NATIONALITY;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.WARNING;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 
 public class Utilities {
 
@@ -660,5 +661,10 @@ public class Utilities {
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     context.startActivityForResult(intent, 1234);
                 }).show();
+    }
+
+    public static void showOkAlertDialog(Context context, String msg) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setMessage(msg).setPositiveButton("OK", (dialoginterface, i) -> dialoginterface.cancel()).show();
     }
 }

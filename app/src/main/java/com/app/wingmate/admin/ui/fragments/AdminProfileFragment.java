@@ -58,6 +58,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.app.wingmate.utils.AlertMessages.PROFILE_ACCEPTED;
 import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.GROUP_A;
@@ -281,7 +282,7 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
                         showProgress();
                         isMediaTask = false;
                         title = "Profile Approved";
-                        msg = "Your profile has been approved by the admin.";
+                        msg = PROFILE_ACCEPTED;
                         presenter.updateUserViaCloudCode(getContext(),
                                 parseUser.getObjectId(),
                                 "A",
@@ -348,7 +349,7 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
                         showProgress();
                         isMediaTask = false;
                         title = "Profile Approved";
-                        msg = "Your profile has been approved by the admin";
+                        msg = PROFILE_ACCEPTED;
                         presenter.updateUserViaCloudCode(getContext(),
                                 parseUser.getObjectId(),
                                 "B",
@@ -682,8 +683,11 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
     }
 
     public Location getLastBestLocation2() {
+        Location defaultLoc = new Location("default");
+        defaultLoc.setLatitude(currentLocationLatitude);
+        defaultLoc.setLongitude(currentLocationLongitude);
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return null;
+            return defaultLoc;
         }
 
         Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -733,7 +737,7 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
                 showProgress();
                 isMediaTask = false;
                 title = "Profile Rejected";
-                msg = "Your profile has been rejected by the admin.";
+                msg = "Your profile has been rejected by the Wingmate.";
                 msg = msg + "<br><br>" + "Reason: " + reason;
                 if (!comment.isEmpty())
                     msg = msg + "<br><br>" + "Comment: " + comment;

@@ -108,6 +108,17 @@
                     android:textColor="@color/purple_theme"
                     android:textSize="@dimen/header_size" />
 
+                <TextView
+                    android:id="@+id/screen_sub_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_below="@+id/screen_title"
+                    android:fontFamily="@font/open_sans_regular"
+                    android:gravity="center"
+                    android:textColor="@color/text_color_grey"
+                    android:textSize="@dimen/label_txt_size"  />
+
                 <LinearLayout
                     android:id="@+id/fans_count_view"
                     android:layout_width="wrap_content"

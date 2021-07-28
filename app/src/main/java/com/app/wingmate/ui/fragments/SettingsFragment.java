@@ -19,6 +19,7 @@ import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.utils.ActivityUtility;
+import com.app.wingmate.utils.AlertMessages;
 import com.app.wingmate.utils.SharedPrefers;
 import com.parse.GetCallback;
 import com.parse.ParseUser;
@@ -28,6 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.app.wingmate.utils.AlertMessages.GO_TO_PAYMENT_SCREEN;
 import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.INFO;
@@ -231,7 +233,13 @@ public class SettingsFragment extends BaseFragment {
                         dialoginterface.cancel();
                     }).show();
         } else if (!isPaid && accountStatus == ACTIVE) {
-            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);
+            dialog
+                    .setCancelable(false)
+                    .setMessage(GO_TO_PAYMENT_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);
+                    }).show();
         } else if (isPaid) {
             buyBtn.setVisibility(View.INVISIBLE);
         }
@@ -276,7 +284,13 @@ public class SettingsFragment extends BaseFragment {
                         dialoginterface.cancel();
                     }).show();
         } else if (!isPaid && accountStatus == ACTIVE) {
-            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);
+            dialog
+                    .setCancelable(false)
+                    .setMessage(GO_TO_PAYMENT_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);
+                    }).show();
         } else if (isPaid) {
             buyBtn.setVisibility(View.INVISIBLE);
         }

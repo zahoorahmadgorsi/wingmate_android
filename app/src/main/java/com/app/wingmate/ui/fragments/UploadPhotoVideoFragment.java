@@ -66,6 +66,9 @@ import pl.aprilapps.easyphotopicker.MediaFile;
 import pl.aprilapps.easyphotopicker.MediaSource;
 
 import static com.app.wingmate.ui.fragments.CropFragment.REQUEST_CODE_CROP_IMAGE;
+import static com.app.wingmate.utils.AlertMessages.FIRST_PHOTO_UPLOADED;
+import static com.app.wingmate.utils.AlertMessages.PHOTO_UPLOADED;
+import static com.app.wingmate.utils.AlertMessages.VIDEO_UPLOADED;
 import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.KEY_PHOTO;
@@ -98,6 +101,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_VIDEO_VIEW;
+import static com.app.wingmate.utils.Utilities.showOkAlertDialog;
 import static com.app.wingmate.utils.Utilities.showToast;
 
 public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
@@ -664,7 +668,7 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
 
         photoVideoPic1.setImageResource(android.R.color.transparent);
         CURRENT_MODE = MODE_VIDEO;
-        placeholderTV.setText("Video is required");
+        placeholderTV.setText("Video is required. Max. video length is 20 seconds");
         modeTagTV.setText("Video");
         playIcon.setVisibility(View.GONE);
         dosDontsListAdapter.setData(dosDontsVideoTextsList);
@@ -1064,8 +1068,8 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                         delMainImgBtn.setVisibility(View.VISIBLE);
                                         playIcon.setVisibility(View.VISIBLE);
                                         hasChange = true;
-                                        showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
-
+//                                        showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
+                                        showOkAlertDialog(requireContext(), VIDEO_UPLOADED);
                                         statusTV.setVisibility(View.VISIBLE);
                                         statusTV.setText("Pending");
                                         statusTV.setBackground(requireActivity().getResources().getDrawable(R.drawable.bg_status_pending));
@@ -1087,7 +1091,8 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                 delMainImgBtn.setVisibility(View.VISIBLE);
                                 playIcon.setVisibility(View.VISIBLE);
                                 hasChange = true;
-                                showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
+//                                showToast(requireActivity(), getContext(), "Updated successfully", SUCCESS);
+                                showOkAlertDialog(requireContext(), VIDEO_UPLOADED);
                                 dismissProgress();
                                 statusTV.setVisibility(View.VISIBLE);
                                 statusTV.setText("Pending");
@@ -1137,7 +1142,6 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                     user1stPhotoFile.deleteInBackground(e13 -> {
                                         if (e13 == null) {
                                             user1stPhotoFile = userProfilePhotoVideo;
-                                            System.out.println("===url====" + user1stPhotoFile.getFile().getUrl());
 //                                            ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
 //                                            ParseUser.getCurrentUser().saveInBackground(e1 -> {
 //                                            });
@@ -1161,7 +1165,6 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                                     });
                                 } else {
                                     user1stPhotoFile = userProfilePhotoVideo;
-                                    System.out.println("===url====" + user1stPhotoFile.getFile().getUrl());
 //                                    ParseUser.getCurrentUser().put(PARAM_PROFILE_PIC, user1stPhotoFile.getFile().getUrl());
 //                                    ParseUser.getCurrentUser().saveInBackground(e1 -> {
 //                                    });
@@ -1196,8 +1199,11 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                         photosRV.setVisibility(View.VISIBLE);
                         hasPhotos = true;
                         hasChange = true;
-                        showToast(getActivity(), getContext(), "Updated successfully", SUCCESS);
-
+//                        showToast(getActivity(), getContext(), "Updated successfully", SUCCESS);
+                        if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() == 1)
+                            showOkAlertDialog(requireContext(), FIRST_PHOTO_UPLOADED);
+                        else
+                            showOkAlertDialog(requireContext(), PHOTO_UPLOADED);
                         ParseUser.getCurrentUser().put(PARAM_IS_PHOTO_SUBMITTED, true);
                         ParseUser.getCurrentUser().saveInBackground(e12 -> {
                         });

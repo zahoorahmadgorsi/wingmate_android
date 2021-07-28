@@ -34,6 +34,7 @@ public class BaseActivity extends AppCompatActivity {
 
     RelativeLayout topView;
     TextView screenTitle;
+    TextView screenSubTitle;
     ImageView icStep;
 
     RelativeLayout stepsView;
@@ -68,6 +69,7 @@ public class BaseActivity extends AppCompatActivity {
 
         topView = (RelativeLayout) findViewById(R.id.top_view);
         screenTitle = (TextView) findViewById(R.id.screen_title);
+        screenSubTitle = (TextView) findViewById(R.id.screen_sub_title);
         icStep = (ImageView) findViewById(R.id.ic_step);
 
         stepsView = (RelativeLayout) findViewById(R.id.steps_view);
@@ -128,6 +130,14 @@ public class BaseActivity extends AppCompatActivity {
         this.screenTitle.setText(title);
     }
 
+    public void setScreenSubTitle(String title) {
+        if (title.isEmpty())
+            this.screenSubTitle.setVisibility(View.GONE);
+        else
+            this.screenSubTitle.setVisibility(View.VISIBLE);
+        this.screenSubTitle.setText(title);
+    }
+
     public void hideCropToolbar() {
         cropToolbar.setVisibility(View.GONE);
     }
@@ -146,6 +156,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public void hideScreenTitle() {
         screenTitle.setVisibility(View.GONE);
+        screenSubTitle.setVisibility(View.GONE);
     }
 
     public void showStepView() {
@@ -237,11 +248,11 @@ public class BaseActivity extends AppCompatActivity {
         profileImg.setVisibility(View.VISIBLE);
         if (ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC) != null && ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC).length() > 0)
             Picasso.get()
-                .load(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))
-                .centerCrop()
-                .resize(500, 500)
-                .placeholder(R.drawable.image_placeholder)
-                .into(profileImg);
+                    .load(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC))
+                    .centerCrop()
+                    .resize(500, 500)
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(profileImg);
         else
             Picasso.get()
                     .load(R.drawable.image_placeholder)

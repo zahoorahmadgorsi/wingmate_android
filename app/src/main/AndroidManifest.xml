@@ -68,8 +68,10 @@
         <meta-data android:name="com.parse.push.gcm_sender_id"
             android:value="id:537652241854" />
 
+<!--        android:name="com.parse.fcm.ParseFirebaseMessagingService">-->
         <service
-            android:name="com.parse.fcm.ParseFirebaseMessagingService">
+            android:name=".WingMateParseFirebaseMessagingService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

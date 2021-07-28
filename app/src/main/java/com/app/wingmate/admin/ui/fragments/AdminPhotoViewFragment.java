@@ -42,6 +42,10 @@ import butterknife.Unbinder;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_EMAIL_TO_USER;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_UPDATE_USER_PHOTOS_STATUS;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_UPDATE_USER_PIC;
+import static com.app.wingmate.utils.AlertMessages.PHOTO_APPROVED;
+import static com.app.wingmate.utils.AlertMessages.PHOTO_REJECTED_EMAIL;
+import static com.app.wingmate.utils.AlertMessages.REJECTED_NOTE_EMAIL;
+import static com.app.wingmate.utils.AlertMessages.REJECTED_PHOTO_NOTI;
 import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.PARAM_FILE_STATUS;
@@ -196,7 +200,7 @@ public class AdminPhotoViewFragment extends BaseFragment implements ViewPager.On
         }
 
         if (IMAGE_1 == REJECT || IMAGE_2 == REJECT || IMAGE_3 == REJECT) {
-            body = body + "<br><br>" + "Unfortunately, below of images are rejected by the admin. Please update your profile accordingly.";
+            body = body + "<br><br>" + PHOTO_REJECTED_EMAIL;
             if (IMAGE_1 == REJECT) {
                 body = body + "<br><br>" + imagesPath.get(0).getFile().getUrl();
                 body = body + "<br><br>" + "Reason: " + REASON_1;
@@ -217,7 +221,7 @@ public class AdminPhotoViewFragment extends BaseFragment implements ViewPager.On
                     body = body + "<br><br>" + "Comment: " + COMMENT_3;
             }
 
-            body = body + "<br><br><br>" + "Note: If you will delete this photo/video from the application then this link will not be accessible again.";
+            body = body + "<br><br><br>" + REJECTED_NOTE_EMAIL;
 
             final HashMap<String, String> params = new HashMap<>();
             params.put("emailId", userEmailId);
@@ -297,7 +301,7 @@ public class AdminPhotoViewFragment extends BaseFragment implements ViewPager.On
                     dismissProgress();
                     if (e == null) {
                         showToast(getActivity(), getContext(), "Updated successfully.", SUCCESS);
-                        String msg = "Your photo has been approved by the admin.";
+                        String msg = PHOTO_APPROVED;
 
                         setPushToUser(requireActivity(), requireContext(), imagesPath.get(index).getUserId(), "Media Approved", msg);
 
@@ -480,8 +484,7 @@ public class AdminPhotoViewFragment extends BaseFragment implements ViewPager.On
         imagesPath.get(index).saveInBackground(e -> {
             if (e == null) {
                 showToast(getActivity(), getContext(), "Updated successfully.", SUCCESS);
-//                String msg = "One of your photo has been rejected by the admin due to " + reason + ". Please check your email for details.";
-                String msg = "One of your photo has been rejected by the admin. Please check your email for details.";
+                String msg = REJECTED_PHOTO_NOTI;
                 setPushToUser(requireActivity(), requireContext(), imagesPath.get(index).getUserId(), "Media Rejected", msg);
                 if (userProfilePic.equals(imagesPath.get(index).getFile().getUrl())) {
                     HashMap<String, Object> params = new HashMap<String, Object>();

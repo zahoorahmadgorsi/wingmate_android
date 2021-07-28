@@ -39,6 +39,10 @@ import butterknife.Unbinder;
 
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_EMAIL_TO_USER;
 import static com.app.wingmate.utils.APIsUtility.PARSE_CLOUD_FUNCTION_UPDATE_USER_VIDEO_STATUS;
+import static com.app.wingmate.utils.AlertMessages.REJECTED_NOTE_EMAIL;
+import static com.app.wingmate.utils.AlertMessages.REJECTED_VIDEO_NOTI;
+import static com.app.wingmate.utils.AlertMessages.VIDEO_APPROVED;
+import static com.app.wingmate.utils.AlertMessages.VIDEO_REJECTED_EMAIL;
 import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.PARAM_FILE_STATUS;
@@ -180,7 +184,7 @@ public class AdminVideoViewFragment extends BaseFragment implements RejectionRea
 //        }
 
         if (VIDEO_STATUS == REJECT) {
-            body = body + "<br><br>" + "Unfortunately, your video has been rejected by admin. Please update your profile accordingly.";
+            body = body + "<br><br>" + VIDEO_REJECTED_EMAIL;
             body = body + "<br><br>" + userProfilePhotoVideo.getFile().getUrl();
             body = body + "<br><br>" + "Reason: " + REASON;
             if (!COMMENT.isEmpty()) body = body + "<br><br>" + "Comment: " + COMMENT;
@@ -195,7 +199,7 @@ public class AdminVideoViewFragment extends BaseFragment implements RejectionRea
 //                }
 //            });
 
-            body = body + "<br><br><br>" + "Note: If you will delete this photo/video from the application then this link will not be accessible again.";
+            body = body + "<br><br><br>" + REJECTED_NOTE_EMAIL;
 
             final HashMap<String, String> params2 = new HashMap<>();
             params2.put("emailId", userEmailId);
@@ -287,7 +291,7 @@ public class AdminVideoViewFragment extends BaseFragment implements RejectionRea
                     dismissProgress();
                     if (e == null) {
                         showToast(getActivity(), getContext(), "Updated successfully.", SUCCESS);
-                        String msg = "Your video has been approved by the admin.";
+                        String msg = VIDEO_APPROVED;
                         setPushToUser(requireActivity(), requireContext(), userProfilePhotoVideo.getUserId(), "Media Approved", msg);
                         VIDEO_STATUS = ACTIVE;
 //                        EventBus.getDefault().post(new AdminRefreshDashboard());
@@ -330,7 +334,7 @@ public class AdminVideoViewFragment extends BaseFragment implements RejectionRea
             if (e == null) {
                 showToast(getActivity(), getContext(), "Updated successfully.", SUCCESS);
 //                String msg = "Your video has been rejected by the admin due to " + reason;
-                String msg = "Your video has been rejected by the admin. Please check your email for details.";
+                String msg = REJECTED_VIDEO_NOTI;
                 setPushToUser(requireActivity(), requireContext(), userProfilePhotoVideo.getUserId(), "Media Rejected", msg);
                 VIDEO_STATUS = REJECT;
                 REASON = reason;

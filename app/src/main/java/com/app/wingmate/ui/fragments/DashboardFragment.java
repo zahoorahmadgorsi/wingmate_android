@@ -49,6 +49,8 @@ import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.utils.ActivityUtility;
+import com.app.wingmate.utils.AlertMessages;
+import com.app.wingmate.utils.AppConstants;
 import com.app.wingmate.utils.DateUtils;
 import com.app.wingmate.utils.SharedPrefers;
 import com.app.wingmate.utils.Utilities;
@@ -73,6 +75,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.app.wingmate.utils.AlertMessages.GO_TO_ACC_PENDING_SCREEN;
+import static com.app.wingmate.utils.AlertMessages.GO_TO_PAYMENT_SCREEN;
+import static com.app.wingmate.utils.AlertMessages.GO_TO_QUESTIONNAIRE_SCREEN;
+import static com.app.wingmate.utils.AlertMessages.GO_TO_UPLOAD_SCREEN;
 import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
@@ -156,6 +162,9 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     public boolean homeProgress = false;
     public boolean searchProgress = false;
     public boolean myFansProgress = false;
+
+    public double currentLocationLatitude = AppConstants.DEFAULT_LATITUDE;
+    public double currentLocationLongitude = AppConstants.DEFAULT_LONGITUDE;
 
     private boolean isHomeView = true;
 
@@ -474,19 +483,43 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
             showRejectionPopupAndLogout();
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
             homeFragment.setBannerTV("Kindly submit your photos/video");
-            if (!isJustRefresh)
-                ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false, isExpired);
+            if (!isJustRefresh) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                dialog.setCancelable(false)
+                        .setMessage(GO_TO_UPLOAD_SCREEN)
+                        .setPositiveButton("OK", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, false, isExpired);
+                        })
+                        .show();
+            }
         } else if (accountStatus == PENDING) {
             homeFragment.setBannerTV("Your profile is under screening process");
         } else if (!isPaid && accountStatus == ACTIVE) {
             String str = days + " days left for trial. <b>Buy Pro</b>";
             homeFragment.setBannerTV(Html.fromHtml(str).toString());
-            if (!isJustRefresh)
-                ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);
+            if (!isJustRefresh) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                dialog.setCancelable(false)
+                        .setMessage(GO_TO_PAYMENT_SCREEN)
+                        .setPositiveButton("OK", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);
+                        })
+                        .show();
+            }
         } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
             homeFragment.setBannerTV("Kindly fill-up your mandatory questionnaire");
-            if (!isJustRefresh)
-                ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, false);
+            if (!isJustRefresh) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+                dialog.setCancelable(false)
+                        .setMessage(GO_TO_QUESTIONNAIRE_SCREEN)
+                        .setPositiveButton("OK", (dialoginterface, i) -> {
+                            dialoginterface.cancel();
+                            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, false);
+                        })
+                        .show();
+            }
         } else if (isPaid && accountStatus == ACTIVE) {
             homeFragment.hideBannerTV();
         }
@@ -511,14 +544,42 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         if (accountStatus == REJECTED) {
             showRejectionPopupAndLogout();
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
-            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setCancelable(false)
+                    .setMessage(GO_TO_UPLOAD_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
+                    })
+                    .show();
         } else if (accountStatus == PENDING) {
-            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setCancelable(false)
+                    .setMessage(GO_TO_ACC_PENDING_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
+                    })
+                    .show();
 //            pendingView.setVisibility(View.VISIBLE);
         } else if (!isPaid && accountStatus == ACTIVE) {
-            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setCancelable(false)
+                    .setMessage(GO_TO_PAYMENT_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+                    })
+                    .show();
         } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
-            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, true);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setCancelable(false)
+                    .setMessage(GO_TO_QUESTIONNAIRE_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, true);
+                    })
+                    .show();
         }
     }
 
@@ -554,14 +615,42 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         if (accountStatus == REJECTED) {
             showRejectionPopupAndLogout();
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
-            ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setCancelable(false)
+                    .setMessage(GO_TO_UPLOAD_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
+                    })
+                    .show();
         } else if (accountStatus == PENDING) {
 //            pendingView.setVisibility(View.VISIBLE);
-            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setCancelable(false)
+                    .setMessage(GO_TO_ACC_PENDING_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
+                    })
+                    .show();
         } else if (!isPaid && accountStatus == ACTIVE) {
-            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setCancelable(false)
+                    .setMessage(GO_TO_PAYMENT_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+                    })
+                    .show();
         } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
-            ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, true);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+            dialog.setCancelable(false)
+                    .setMessage(GO_TO_QUESTIONNAIRE_SCREEN)
+                    .setPositiveButton("OK", (dialoginterface, i) -> {
+                        dialoginterface.cancel();
+                        ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, true);
+                    })
+                    .show();
         }
     }
 
@@ -657,8 +746,11 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     }
 
     public Location getLastBestLocation() {
+        Location defaultLoc = new Location("default");
+        defaultLoc.setLatitude(currentLocationLatitude);
+        defaultLoc.setLongitude(currentLocationLongitude);
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return null;
+            return defaultLoc;
         }
 
         Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
