@@ -430,8 +430,9 @@ public class SignupFragment extends BaseFragment implements BaseView, ViewPager.
                         step = 2;
                         ((MainActivity) getActivity()).showTopView();
                         ((MainActivity) getActivity()).showScreenTitle();
-                        if (nickET.getText().toString().isEmpty()) ((MainActivity) getActivity()).setScreenTitle("Hi, Wingmate");
-                        else ((MainActivity) getActivity()).setScreenTitle("Hi, " + nickET.getText().toString());
+                        ((MainActivity) getActivity()).setScreenTitle("Welcome, select your gender");
+//                        if (nickET.getText().toString().isEmpty()) ((MainActivity) getActivity()).setScreenTitle("Hi, Wingmate");
+//                        else ((MainActivity) getActivity()).setScreenTitle("Hi, " + nickET.getText().toString());
                         ((MainActivity) getActivity()).showStep();
                         ((MainActivity) getActivity()).setStep(step);
                         layoutTutorial.setVisibility(View.GONE);
@@ -521,8 +522,9 @@ public class SignupFragment extends BaseFragment implements BaseView, ViewPager.
                     step = 2;
                     ((MainActivity) getActivity()).showTopView();
                     ((MainActivity) getActivity()).showScreenTitle();
-                    if (nickET.getText().toString().isEmpty()) ((MainActivity) getActivity()).setScreenTitle("Hi, Wingmate");
-                    else ((MainActivity) getActivity()).setScreenTitle("Hi, " + nickET.getText().toString());
+                    ((MainActivity) getActivity()).setScreenTitle("Welcome, select your gender");
+//                    if (nickET.getText().toString().isEmpty()) ((MainActivity) getActivity()).setScreenTitle("Hi, Wingmate");
+//                    else ((MainActivity) getActivity()).setScreenTitle("Hi, " + nickET.getText().toString());
                     ((MainActivity) getActivity()).showStep();
                     ((MainActivity) getActivity()).setStep(step);
                     layoutTutorial.setVisibility(View.GONE);
