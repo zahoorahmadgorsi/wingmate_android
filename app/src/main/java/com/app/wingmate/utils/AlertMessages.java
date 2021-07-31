@@ -13,8 +13,10 @@ public class AlertMessages {
     public static String PHOTO_APPROVED = "Your photo has been approved by the admin.";
     public static String VIDEO_APPROVED = "Your video has been approved by the admin.";
     public static String PROFILE_ACCEPTED = "Your profile is accepted by Wingmate. Please log in again to complete your profile.";
-    public static String GO_TO_UPLOAD_SCREEN = "Now go to upload photos and video screen.";
-    public static String GO_TO_ACC_PENDING_SCREEN = "Now go to account pending screen";
-    public static String GO_TO_PAYMENT_SCREEN = "Now go to payment screen";
-    public static String GO_TO_QUESTIONNAIRE_SCREEN = "Now go to questionnaire screen";
+    public static String GO_TO_UPLOAD_SCREEN = "You need to upload photos/video.";
+    public static String GO_TO_UPLOAD_SCREEN_AFTER_EXPIRED = "Your trial period has been expired. You need to upload photos/video";
+    public static String GO_TO_ACC_PENDING_SCREEN = "Your trial period has been expired. Your profile is being reviewed by the admin";
+    public static String GO_TO_PAYMENT_SCREEN = "You need to pay now.";
+    public static String GO_TO_PAYMENT_SCREEN_AFTER_EXPIRED = "Your trial period has been expired. You need to pay now";
+    public static String GO_TO_QUESTIONNAIRE_SCREEN = "You need to fill mandatory questionnaire.";
 }

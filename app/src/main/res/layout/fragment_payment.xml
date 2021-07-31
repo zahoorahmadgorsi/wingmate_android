@@ -96,7 +96,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="150dp"
-                android:src="@drawable/thanks_photos_video" />
+                android:src="@drawable/payment_success" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -108,23 +108,23 @@
                 android:layout_marginRight="@dimen/_16ssp"
                 android:fontFamily="@font/baloo_regular"
                 android:gravity="center"
-                android:text="@string/hurrah_"
+                android:text="@string/hurrah_1"
                 android:textColor="@color/white"
                 android:textSize="@dimen/txt_size" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_16ssp"
-                android:layout_marginLeft="@dimen/_16ssp"
-                android:layout_marginTop="@dimen/_8ssp"
-                android:layout_marginEnd="@dimen/_16ssp"
-                android:layout_marginRight="@dimen/_16ssp"
-                android:fontFamily="@font/open_sans_regular"
-                android:gravity="center"
-                android:text="@string/payment_success_msg"
-                android:textColor="@color/white"
-                android:textSize="@dimen/label_txt_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="@dimen/_16ssp"-->
+<!--                android:layout_marginLeft="@dimen/_16ssp"-->
+<!--                android:layout_marginTop="@dimen/_8ssp"-->
+<!--                android:layout_marginEnd="@dimen/_16ssp"-->
+<!--                android:layout_marginRight="@dimen/_16ssp"-->
+<!--                android:fontFamily="@font/open_sans_regular"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/payment_success_msg"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="@dimen/label_txt_size" />-->
         </LinearLayout>
 
         <Button

@@ -30,6 +30,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.app.wingmate.utils.AlertMessages.GO_TO_PAYMENT_SCREEN;
+import static com.app.wingmate.utils.AlertMessages.GO_TO_PAYMENT_SCREEN_AFTER_EXPIRED;
 import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.INFO;
@@ -286,7 +287,7 @@ public class SettingsFragment extends BaseFragment {
         } else if (!isPaid && accountStatus == ACTIVE) {
             dialog
                     .setCancelable(false)
-                    .setMessage(GO_TO_PAYMENT_SCREEN)
+                    .setMessage(GO_TO_PAYMENT_SCREEN_AFTER_EXPIRED)
                     .setPositiveButton("OK", (dialoginterface, i) -> {
                         dialoginterface.cancel();
                         ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);

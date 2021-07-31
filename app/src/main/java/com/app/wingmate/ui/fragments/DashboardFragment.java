@@ -77,8 +77,10 @@ import butterknife.Unbinder;
 
 import static com.app.wingmate.utils.AlertMessages.GO_TO_ACC_PENDING_SCREEN;
 import static com.app.wingmate.utils.AlertMessages.GO_TO_PAYMENT_SCREEN;
+import static com.app.wingmate.utils.AlertMessages.GO_TO_PAYMENT_SCREEN_AFTER_EXPIRED;
 import static com.app.wingmate.utils.AlertMessages.GO_TO_QUESTIONNAIRE_SCREEN;
 import static com.app.wingmate.utils.AlertMessages.GO_TO_UPLOAD_SCREEN;
+import static com.app.wingmate.utils.AlertMessages.GO_TO_UPLOAD_SCREEN_AFTER_EXPIRED;
 import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
@@ -546,7 +548,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
             dialog.setCancelable(false)
-                    .setMessage(GO_TO_UPLOAD_SCREEN)
+                    .setMessage(GO_TO_UPLOAD_SCREEN_AFTER_EXPIRED)
                     .setPositiveButton("OK", (dialoginterface, i) -> {
                         dialoginterface.cancel();
                         ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
@@ -565,7 +567,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         } else if (!isPaid && accountStatus == ACTIVE) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
             dialog.setCancelable(false)
-                    .setMessage(GO_TO_PAYMENT_SCREEN)
+                    .setMessage(GO_TO_PAYMENT_SCREEN_AFTER_EXPIRED)
                     .setPositiveButton("OK", (dialoginterface, i) -> {
                         dialoginterface.cancel();
                         ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
@@ -617,7 +619,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         } else if (accountStatus == PENDING && (!isPhotoSubmitted || !isVideoSubmitted)) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
             dialog.setCancelable(false)
-                    .setMessage(GO_TO_UPLOAD_SCREEN)
+                    .setMessage(GO_TO_UPLOAD_SCREEN_AFTER_EXPIRED)
                     .setPositiveButton("OK", (dialoginterface, i) -> {
                         dialoginterface.cancel();
                         ActivityUtility.startProfileMediaActivity(requireActivity(), KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE, true, isExpired);
@@ -636,7 +638,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         } else if (!isPaid && accountStatus == ACTIVE) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
             dialog.setCancelable(false)
-                    .setMessage(GO_TO_PAYMENT_SCREEN)
+                    .setMessage(GO_TO_PAYMENT_SCREEN_AFTER_EXPIRED)
                     .setPositiveButton("OK", (dialoginterface, i) -> {
                         dialoginterface.cancel();
                         ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);

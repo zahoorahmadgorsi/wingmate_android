@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -78,6 +79,17 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
     @BindView(R.id.et_search)
     EditText searchET;
 
+    @BindView(R.id.que_end_view)
+    RelativeLayout queEndView;
+    @BindView(R.id.img1)
+    ImageView endImage;
+    @BindView(R.id.txt1)
+    TextView endTxt1;
+    @BindView(R.id.txt2)
+    TextView endTxt2;
+    @BindView(R.id.btn_skip)
+    TextView btnSkip;
+
     private OptionsListAdapter adapter;
     private GridLayoutManager gridLayoutManager;
 
@@ -122,6 +134,8 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
         super.onViewCreated(view, savedInstanceState);
 
         presenter = new BasePresenter(this, new BaseInteractor());
+
+        queEndView.setVisibility(View.GONE);
 
         initOptionsListView();
         setSkipBtnListener();
@@ -177,7 +191,7 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.btn_continue, R.id.btn_back})
+    @OnClick({R.id.btn_continue, R.id.btn_back, R.id.btn_1, R.id.btn_skip})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.btn_continue:
@@ -185,6 +199,17 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
                 break;
             case R.id.btn_back:
                 moveBack();
+                break;
+            case R.id.btn_1:
+                if (questionType.equals(MANDATORY)) {
+                    ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL, true);
+                } else {
+                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+//                    new Handler().postDelayed(() -> ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD), 1000);
+                }
+                break;
+            case R.id.btn_skip:
+                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
                 break;
             default:
                 break;
@@ -557,7 +582,7 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
         showProgress();
         ParseUser.getCurrentUser().saveInBackground(e -> {
             dismissProgress();
-            showToast(requireActivity(), requireContext(), "You have successfully saved " + questionType + " questions.", SUCCESS);
+//            showToast(requireActivity(), requireContext(), "You have successfully saved " + questionType + " questions.", SUCCESS);
 
 ////            if (!ParseUser.getCurrentUser().getBoolean(PARAM_OPTIONAL_QUESTIONNAIRE_FILLED)) {
 ////                ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL);
@@ -566,25 +591,38 @@ public class QuestionnaireFragment extends BaseFragment implements BaseView {
 ////            }
 //
             if (questionType.equals(MANDATORY)) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
-                dialog
-//                        .setTitle(getString(R.string.app_name))
-//                        .setIcon(R.drawable.app_heart)
-                        .setMessage("Do you want to fill optional questionnaires?")
-                        .setNegativeButton("No", (dialoginterface, i) -> {
-                            dialoginterface.cancel();
-//                            requireActivity().onBackPressed();
-                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
-                        })
-                        .setPositiveButton("Yes", (dialoginterface, i) -> {
-                            dialoginterface.cancel();
-//                            requireActivity().finish();
-                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL, true);
-                        }).show();
+//                AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+//                dialog
+//                        .setMessage("Do you want to fill optional questionnaires?")
+//                        .setNegativeButton("No", (dialoginterface, i) -> {
+//                            dialoginterface.cancel();
+////                            requireActivity().onBackPressed();
+//                            ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+//                        })
+//                        .setPositiveButton("Yes", (dialoginterface, i) -> {
+//                            dialoginterface.cancel();
+////                            requireActivity().finish();
+//                            ActivityUtility.startQuestionnaireActivity(requireActivity(), KEY_FRAGMENT_QUESTIONNAIRE, OPTIONAL, true);
+//                        }).show();
+
+                ((MainActivity) getActivity()).hideTopView();
+                queEndView.setVisibility(View.VISIBLE);
+                btnSkip.setVisibility(View.VISIBLE);
+                endImage.setImageResource(R.drawable.mandatory_success);
+                endTxt1.setText("You're almost done.\n\nOnly 5 more Questions left.");
+                endTxt2.setText("If you are curious to know your compatibility score, please take a minute to answer the next 5 questions.");
+
             } else {
-                new Handler().postDelayed(() -> ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD), 1000);
-//                new Handler().postDelayed(() -> requireActivity().onBackPressed(), 1000);
-//                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
+                ((MainActivity) getActivity()).hideTopView();
+                queEndView.setVisibility(View.VISIBLE);
+                btnSkip.setVisibility(View.INVISIBLE);
+                endImage.setImageResource(R.drawable.optional_success);
+                endTxt1.setText("You're all setup\nReady for action!");
+                endTxt2.setText("Thanks for completing your profile.");
+
+//                new Handler().postDelayed(() -> ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD), 1000);
+////                new Handler().postDelayed(() -> requireActivity().onBackPressed(), 1000);
+////                ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_DASHBOARD);
             }
 
 //            new Handler().postDelayed(() -> requireActivity().onBackPressed(), 1000);
