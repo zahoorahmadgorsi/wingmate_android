@@ -123,6 +123,8 @@ public class EditProfileFragment extends BaseFragment implements BaseView, Optio
         if (qa != null && qa.size() > 0) {
             questions = qa;
         }
+        for (int i=0 ; i<questions.size() ; i++)
+            System.out.println("========>>>::"+questions.get(i).getOptionsObjArray().size());
         presenter.queryUserAnswers(getContext(), ParseUser.getCurrentUser());
     }
 

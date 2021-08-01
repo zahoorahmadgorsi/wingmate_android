@@ -304,6 +304,7 @@ public class BaseInteractor {
             ParseQuery query = ParseQuery.getQuery(CLASS_NAME_QUESTION);
             query.orderByAscending(PARAM_DISPLAY_ORDER);
             query.include(PARAM_OPTIONS_OBJ_ARRAY);
+            query.setLimit(1000);
             if (!questionType.equals(BOTH)) query.whereEqualTo(PARAM_QUESTION_TYPE, questionType);
             query.findInBackground((FindCallback<Question>) (objects, e) -> {
                 if (e == null) {
@@ -324,6 +325,7 @@ public class BaseInteractor {
             ParseQuery query = ParseQuery.getQuery(CLASS_NAME_QUESTION_OPTION);
             query.whereEqualTo(PARAM_QUESTION_ID, questionObject);
             query.orderByAscending(PARAM_OPTION_ID);
+            query.setLimit(1000);
             query.findInBackground((FindCallback<QuestionOption>) (objects, e) -> {
                 if (e == null) {
                     if (objects != null && objects.size() > 0)
@@ -347,6 +349,7 @@ public class BaseInteractor {
             query.include(PARAM_USER_ID);
             query.include(PARAM_QUESTION_ID);
             query.include(PARAM_OPTIONS_OBJ_ARRAY);
+            query.setLimit(1000);
             query.getFirstInBackground((GetCallback<UserAnswer>) (object, e) -> {
                 if (e == null) {
                     listener.onUserAnswersResponseSuccess(object);
@@ -369,6 +372,7 @@ public class BaseInteractor {
             query.include(PARAM_USER_ID);
             query.include(PARAM_QUESTION_ID);
             query.include(PARAM_OPTIONS_OBJ_ARRAY);
+            query.setLimit(1000);
 //            query.findInBackground(getAllRemainingRecords(context, parseUser, listener));
             query.findInBackground((FindCallback<UserAnswer>) (objects, e) -> {
                 if (e == null) {
@@ -521,6 +525,7 @@ public class BaseInteractor {
         else {
             ParseQuery query = ParseQuery.getQuery(CLASS_NAME_TERMS);
             query.orderByAscending(PARAM_DISPLAY_ORDER);
+            query.setLimit(1000);
             query.findInBackground((FindCallback<TermsConditions>) (objects, e) -> {
                 if (e == null) {
                     if (objects == null || objects.size() == 0) objects = new ArrayList<>();
@@ -763,6 +768,7 @@ public class BaseInteractor {
             queries.add(queryMeToUser);
 
             ParseQuery<Fans> mainQuery = ParseQuery.or(queries);
+//            mainQuery.setLimit(1000);
             mainQuery.include(PARAM_FROM_USER);
             mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY);
             mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
@@ -858,6 +864,7 @@ public class BaseInteractor {
         else {
             ParseQuery query = ParseQuery.getQuery(CLASS_NAME_REJECTION_REASON);
             query.orderByAscending(PARAM_DISPLAY_ORDER);
+            query.setLimit(1000);
             query.findInBackground((FindCallback<RejectionReason>) (objects, e) -> {
                 if (e == null) {
                     if (objects == null || objects.size() == 0) objects = new ArrayList<>();
