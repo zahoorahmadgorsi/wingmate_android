@@ -20,7 +20,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="150dp"
-                android:src="@drawable/thanks_photos_video" />
+                android:src="@drawable/media_success" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -32,7 +32,7 @@
                 android:layout_marginRight="@dimen/_16ssp"
                 android:fontFamily="@font/baloo_regular"
                 android:gravity="center"
-                android:text="@string/please_wait"
+                android:text="@string/allow_photo_video"
                 android:textColor="@color/white"
                 android:textSize="@dimen/header_size" />
 
@@ -46,7 +46,7 @@
                 android:layout_marginRight="@dimen/_16ssp"
                 android:fontFamily="@font/open_sans_regular"
                 android:gravity="center"
-                android:text="@string/pending_msg"
+                android:text="@string/please_wait"
                 android:textColor="@color/white"
                 android:textSize="@dimen/label_txt_size" />
         </LinearLayout>

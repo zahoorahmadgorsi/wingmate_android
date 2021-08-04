@@ -440,7 +440,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                         dismissProgress();
 //                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Maybe";
                         String msg = "Updated successfully";
-                        showToast(getActivity(), getContext(), msg, SUCCESS);
+//                        showToast(getActivity(), getContext(), msg, SUCCESS);
                         EventBus.getDefault().post(new RefreshFanList());
                         maybeObject = null;
                         setBottomButtons();
@@ -481,7 +481,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     likeObject.deleteInBackground(e -> {
                         dismissProgress();
                         String msg = "Updated successfully";
-                        showToast(getActivity(), getContext(), msg, SUCCESS);
+//                        showToast(getActivity(), getContext(), msg, SUCCESS);
                         EventBus.getDefault().post(new RefreshFanList());
                         likeObject = null;
                         setBottomButtons();
@@ -524,7 +524,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                         dismissProgress();
 //                    String msg = parseUser.getString(PARAM_NICK) + " has been un-marked as your Crush";
                         String msg = "Updated successfully";
-                        showToast(getActivity(), getContext(), msg, SUCCESS);
+//                        showToast(getActivity(), getContext(), msg, SUCCESS);
                         EventBus.getDefault().post(new RefreshFanList());
                         crushObject = null;
                         setBottomButtons();
@@ -581,9 +581,6 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         if (userProfilePhotoVideos != null && userProfilePhotoVideos.size() > 0)
             this.userProfilePhotoVideos = userProfilePhotoVideos;
 
-        System.out.println("====setUserPhotosVideoResponseSuccess===" + userProfilePhotoVideos.size());
-        System.out.println("====setUserPhotosVideoResponseSuccess222===" + this.userProfilePhotoVideos.size());
-
         if (requireActivity() != null) setMediaInViews();
     }
 
@@ -620,7 +617,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 break;
         }
         String msg = "Updated successfully";
-        showToast(getActivity(), getContext(), msg, SUCCESS);
+//        showToast(getActivity(), getContext(), msg, SUCCESS);
         EventBus.getDefault().post(new RefreshFanList());
 
         setBottomButtons();
@@ -629,20 +626,26 @@ public class ProfileFragment extends BaseFragment implements BaseView {
     private void setBottomButtons() {
         if (crushObject != null) {
             btnCrush.setAlpha(1.0f);
+            btnCrush.setImageResource(R.drawable.profile_crush_filled);
         } else {
             btnCrush.setAlpha(1.0f);
+            btnCrush.setImageResource(R.drawable.profile_crush);
         }
 
         if (likeObject != null) {
             btnLike.setAlpha(1.0f);
+            btnLike.setImageResource(R.drawable.profile_like_filled);
         } else {
             btnLike.setAlpha(1.0f);
+            btnLike.setImageResource(R.drawable.profile_like);
         }
 
         if (maybeObject != null) {
             btnMaybe.setAlpha(1.0f);
+            btnMaybe.setImageResource(R.drawable.profile_maybe_filled);
         } else {
             btnMaybe.setAlpha(1.0f);
+            btnMaybe.setImageResource(R.drawable.profile_maybe);
         }
     }
 

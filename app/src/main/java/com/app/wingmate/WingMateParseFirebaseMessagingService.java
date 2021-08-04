@@ -36,6 +36,7 @@ public class WingMateParseFirebaseMessagingService extends FirebaseMessagingServ
     @Override
     public void onNewToken(String token) {
         super.onNewToken(token);
+        Log.d(TAG, "token::"+token);
         ParseFCM.register(token);
     }
 
@@ -78,6 +79,7 @@ public class WingMateParseFirebaseMessagingService extends FirebaseMessagingServ
                     .setContentText(dataString)
                     .setAutoCancel(true)
                     .setSound(null)
+                    .setChannelId("1")
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setPriority(NotificationManager.IMPORTANCE_HIGH)
                     .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher))
@@ -102,8 +104,8 @@ public class WingMateParseFirebaseMessagingService extends FirebaseMessagingServ
         int mNotificationId = 020;
         NotificationManager mNotifyMgr = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String CHANNEL_ID = channel;
-            String CHANNEL_NAME = dataString;
+            String CHANNEL_ID = "1";
+            String CHANNEL_NAME = "Wingmate";
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
             mNotifyMgr.createNotificationChannel(mChannel);
         }
