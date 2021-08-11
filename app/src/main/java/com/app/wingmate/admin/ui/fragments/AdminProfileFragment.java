@@ -70,6 +70,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_GROUP_CATEGORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO_SUBMITTED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_VIDEO_SUBMITTED;
+import static com.app.wingmate.utils.AppConstants.PARAM_MEDIA_PENDING;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_REJECT_COMMENT;
 import static com.app.wingmate.utils.AppConstants.PARAM_REJECT_REASON;
@@ -147,6 +148,8 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
     boolean hasApprovedVideo = false;
     boolean hasUploadedPhoto = false;
     boolean hasUploadedVideo = false;
+
+    boolean sendNotiAndEmail = false;
 
     public double currentLocationLatitude = AppConstants.DEFAULT_LATITUDE;
     public double currentLocationLongitude = AppConstants.DEFAULT_LONGITUDE;
@@ -279,6 +282,13 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
                     builder.setMessage("Are you sure to approve this user for group A?");
                     builder.setPositiveButton("Yes", (dialog, which) -> {
                         dialog.cancel();
+
+                        String currentCat = parseUser.getString(PARAM_GROUP_CATEGORY);
+                        if (currentCat.equalsIgnoreCase("A") || currentCat.equalsIgnoreCase("B"))
+                            sendNotiAndEmail = false;
+                        else
+                            sendNotiAndEmail = true;
+
                         showProgress();
                         isMediaTask = false;
                         title = "Profile Approved";
@@ -289,7 +299,8 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
                                 1,
                                 "",
                                 "",
-                                parseUser.getBoolean(PARAM_IS_MEDIA_APPROVED));
+                                parseUser.getBoolean(PARAM_IS_MEDIA_APPROVED),
+                                isMediaPending());
                     });
                     builder.setNegativeButton("Cancel", (dialog, which) -> {
                         dialog.cancel();
@@ -346,6 +357,11 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
                     builder.setMessage("Are you sure to approve this user for group B?");
                     builder.setPositiveButton("Yes", (dialog, which) -> {
                         dialog.cancel();
+                        String currentCat = parseUser.getString(PARAM_GROUP_CATEGORY);
+                        if (currentCat.equalsIgnoreCase("A") || currentCat.equalsIgnoreCase("B"))
+                            sendNotiAndEmail = false;
+                        else
+                            sendNotiAndEmail = true;
                         showProgress();
                         isMediaTask = false;
                         title = "Profile Approved";
@@ -356,7 +372,8 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
                                 1,
                                 "",
                                 "",
-                                parseUser.getBoolean(PARAM_IS_MEDIA_APPROVED));
+                                parseUser.getBoolean(PARAM_IS_MEDIA_APPROVED),
+                                isMediaPending());
 
                     });
                     builder.setNegativeButton("Cancel", (dialog, which) -> {
@@ -426,10 +443,11 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
         if (!isMediaTask) {
             showToast(getActivity(), getContext(), "Updated successfully.", SUCCESS);
             if (msg.length() > 0 && title.length() > 0) {
-                setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), title, msg);
-                sendEmailToUser(requireActivity(), requireContext(), parseUser.getUsername(), title, msg);
-
-                new senEmailTask().execute();
+                if (sendNotiAndEmail) {
+                    setPushToUser(requireActivity(), requireContext(), parseUser.getObjectId(), title, msg);
+                    sendEmailToUser(requireActivity(), requireContext(), parseUser.getUsername(), title, msg);
+//                    new senEmailTask().execute();
+                }
                 title = "";
                 msg = "";
             }
@@ -511,6 +529,7 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
 
         String groupCat = parseUser.getString(PARAM_GROUP_CATEGORY);
         int accStatus = parseUser.getInt(PARAM_ACCOUNT_STATUS);
+        boolean isMediaPending = parseUser.getBoolean(PARAM_MEDIA_PENDING);
 
         if (groupCat != null && groupCat.equalsIgnoreCase(GROUP_A)) {
             tagTV.setText("Group A");
@@ -532,6 +551,13 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
             statusTV.setText("Active");
             statusTV.setBackgroundResource(R.drawable.bg_status_active);
             statusTV.setVisibility(View.GONE);
+            if (isMediaPending) {
+                statusTV.setText("Media Pending");
+                statusTV.setBackgroundResource(R.drawable.bg_status_pending);
+                statusTV.setVisibility(View.VISIBLE);
+            } else {
+                statusTV.setVisibility(View.GONE);
+            }
         } else if (accStatus == REJECT) {
             statusTV.setText("Rejected");
             statusTV.setBackgroundResource(R.drawable.bg_status_rejected);
@@ -548,6 +574,27 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
             adapter.setData(userAnswers);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private boolean isMediaPending() {
+        boolean isPending = false;
+        if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
+            for (UserProfilePhotoVideo userProfilePhotoVideo : userProfilePhotoOnly) {
+                if (userProfilePhotoVideo.getInt(PARAM_FILE_STATUS) == PENDING) {
+                    isPending = true;
+                    break;
+                }
+            }
+        }
+        if (userProfileVideoOnly != null && userProfileVideoOnly.size() > 0) {
+            for (UserProfilePhotoVideo userProfilePhotoVideo : userProfileVideoOnly) {
+                if (userProfilePhotoVideo.getInt(PARAM_FILE_STATUS) == PENDING) {
+                    isPending = true;
+                    break;
+                }
+            }
+        }
+        return isPending;
     }
 
     private void setMediaInViews() {
@@ -635,7 +682,8 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
                         parseUser.getInt(PARAM_ACCOUNT_STATUS),
                         parseUser.getString(PARAM_REJECT_REASON),
                         parseUser.getString(PARAM_REJECT_COMMENT),
-                        true);
+                        true,
+                        isMediaPending());
             } else if ((!hasApprovedPhoto || !hasApprovedVideo) && parseUser.getBoolean(PARAM_IS_MEDIA_APPROVED)) {
                 isMediaTask = true;
 //                title = "Profile Pending";
@@ -646,7 +694,8 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
                         0,
                         parseUser.getString(PARAM_REJECT_REASON),
                         parseUser.getString(PARAM_REJECT_COMMENT),
-                        false);
+                        false,
+                        isMediaPending());
             }
         }
     }
@@ -748,7 +797,8 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
                         2,
                         reason,
                         comment,
-                        parseUser.getBoolean(PARAM_IS_MEDIA_APPROVED));
+                        parseUser.getBoolean(PARAM_IS_MEDIA_APPROVED),
+                        isMediaPending());
             });
             builder.setNegativeButton("Cancel", (dd, which) -> {
                 dd.cancel();

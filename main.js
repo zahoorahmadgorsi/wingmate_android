@@ -142,6 +142,7 @@ Parse.Cloud.define('updateUserData', async (request) => {
 	var reason = request.params.reason;
 	var comment = request.params.comment;
 	var isMediaApproved = request.params.isMediaApproved;
+	var isMediaPending = request.params.isMediaPending;
 
 	const User = Parse.Object.extend("User");
 
@@ -156,6 +157,7 @@ Parse.Cloud.define('updateUserData', async (request) => {
 		userObject.set("rejectReason", reason);
 		userObject.set("rejectComment", comment);
 		userObject.set("isMediaApproved", isMediaApproved);
+		userObject.set("isMediaPending", isMediaPending);
 		await userObject.save(null, {useMasterKey: true}).catch(error => {throw 'Something went wrong';});
     	return 'success';
 	}

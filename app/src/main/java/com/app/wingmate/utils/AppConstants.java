@@ -53,6 +53,7 @@ public class AppConstants {
     public static final String PARAM_IS_PHOTO_SUBMITTED = "isPhotosSubmitted";
     public static final String PARAM_IS_VIDEO_SUBMITTED = "isVideoSubmitted";
     public static final String PARAM_IS_ADMIN = "isAdmin";
+    public static final String PARAM_MEDIA_PENDING = "isMediaPending";
 
     public static final String PARAM_ALERT_TITLE = "alertTitle";
     public static final String PARAM_ALERT_TEXT = "alertText";

@@ -424,9 +424,11 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
                                        int status,
                                        String reason,
                                        String comment,
-                                       boolean isMediaApproved) {
+                                       boolean isMediaApproved,
+                                       boolean isMediaPending
+    ) {
         if (baseView != null) {
-            interactor.updateUserViaCloudCode(context, userId, category, status, reason, comment, isMediaApproved, this);
+            interactor.updateUserViaCloudCode(context, userId, category, status, reason, comment, isMediaApproved, isMediaPending, this);
         }
     }
 

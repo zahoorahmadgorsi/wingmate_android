@@ -43,6 +43,7 @@ import static com.app.wingmate.utils.AppConstants.NEW;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_GROUP_CATEGORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
+import static com.app.wingmate.utils.AppConstants.PARAM_MEDIA_PENDING;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PENDING;
@@ -302,15 +303,16 @@ public class AdminHomeFragment extends BaseFragment {
 
                 String groupCat = dashboardInstance.allUsers.get(i).getParseUser().getString(PARAM_GROUP_CATEGORY);
                 int accStatus = dashboardInstance.allUsers.get(i).getParseUser().getInt(PARAM_ACCOUNT_STATUS);
+                boolean isMediaPending = dashboardInstance.allUsers.get(i).getParseUser().getBoolean(PARAM_MEDIA_PENDING);
 
                 if (allView.isSelected()) {
                     dashboardInstance.filteredUsers.add(dashboardInstance.allUsers.get(i));
                 } else if (groupAView.isSelected()) {
-                    if (groupCat != null && groupCat.equalsIgnoreCase(GROUP_A) && accStatus == ACTIVE) {
+                    if (groupCat != null && groupCat.equalsIgnoreCase(GROUP_A) && accStatus == ACTIVE && !isMediaPending) {
                         dashboardInstance.filteredUsers.add(dashboardInstance.allUsers.get(i));
                     }
                 } else if (groupBView.isSelected()) {
-                    if (groupCat != null && groupCat.equalsIgnoreCase(GROUP_B) && accStatus == ACTIVE) {
+                    if (groupCat != null && groupCat.equalsIgnoreCase(GROUP_B) && accStatus == ACTIVE && !isMediaPending) {
                         dashboardInstance.filteredUsers.add(dashboardInstance.allUsers.get(i));
                     }
                 } else if (rejectedView.isSelected()) {
@@ -318,7 +320,7 @@ public class AdminHomeFragment extends BaseFragment {
                         dashboardInstance.filteredUsers.add(dashboardInstance.allUsers.get(i));
                     }
                 } else if (newRequestsView.isSelected()) {
-                    if ((groupCat == null || groupCat.isEmpty() || groupCat.equalsIgnoreCase(NEW) || accStatus == PENDING) && accStatus != REJECT) {
+                    if ((groupCat == null || groupCat.isEmpty() || groupCat.equalsIgnoreCase(NEW) || accStatus == PENDING || isMediaPending) && accStatus != REJECT) {
                         dashboardInstance.filteredUsers.add(dashboardInstance.allUsers.get(i));
                     }
                 }

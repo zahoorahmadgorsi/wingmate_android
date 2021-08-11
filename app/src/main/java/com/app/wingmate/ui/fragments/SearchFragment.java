@@ -22,6 +22,7 @@ import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.base.BaseView;
 import com.app.wingmate.events.RefreshSearch;
+import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.MyCustomUser;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.ui.adapters.QuestionOptionsListAdapter;
@@ -55,6 +56,7 @@ import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
 import static com.app.wingmate.utils.AppConstants.PARAM_GENDER;
+import static com.app.wingmate.utils.AppConstants.PARAM_GROUP_CATEGORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_QUESTION_ID;
@@ -386,9 +388,25 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
             }
         }
 
+
+
         if (myGeoPoint != null && selectedDistanceInKM > 0 && allSearchedResults.size() == 0) {
             dashboardInstance.searchUsersWithInKM(myGeoPoint, selectedDistanceInKM);
         } else {
+            List<MyCustomUser> searchedUsersTemp = new ArrayList<>();
+            if (dashboardInstance.searchedUsers != null && dashboardInstance.searchedUsers.size() > 0) {
+                for (int i = 0; i < dashboardInstance.searchedUsers.size(); i++) {
+                    String currentUserCategory = ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY);
+                    String otherUserCategory = dashboardInstance.searchedUsers.get(i).getParseUser().getString(PARAM_GROUP_CATEGORY);
+                    if (currentUserCategory != null) {
+                        if (currentUserCategory.equalsIgnoreCase(otherUserCategory)) {
+                            searchedUsersTemp.add(dashboardInstance.searchedUsers.get(i));
+                        }
+                    }
+                }
+            }
+            dashboardInstance.searchedUsers = searchedUsersTemp;
+
             searchView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
             userViewAdapter.setEmpty(emptyView);

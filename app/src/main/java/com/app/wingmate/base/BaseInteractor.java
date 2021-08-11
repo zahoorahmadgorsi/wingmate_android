@@ -51,6 +51,8 @@ import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_ANSWER;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER_PROFILE_PHOTOS_VIDEO;
 import static com.app.wingmate.utils.AppConstants.CLASS_NAME_VIDEO_LINK;
 import static com.app.wingmate.utils.AppConstants.ERROR;
+import static com.app.wingmate.utils.AppConstants.GROUP_A;
+import static com.app.wingmate.utils.AppConstants.GROUP_B;
 import static com.app.wingmate.utils.AppConstants.GROUP_NEW;
 import static com.app.wingmate.utils.AppConstants.INFO;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
@@ -141,6 +143,7 @@ public class BaseInteractor {
         void onUserProfileSuccess(List<UserProfilePhotoVideo> userProfilePhotoVideos);
 
         void onTrialEnded(String msg, boolean showLoader, boolean isJustRefresh);
+
         void onHasTrial(int days, boolean showLoader, boolean isJustRefresh);
 
         void onSpecificQuestionUserAnswersSuccess(List<UserAnswer> userAnswers);
@@ -430,7 +433,7 @@ public class BaseInteractor {
                     objects = new ArrayList<>();
                 }
 
-                System.out.println("====objst sizeee==="+objects.size());
+                System.out.println("====objst sizeee===" + objects.size());
                 listener.onUserProfileSuccess(objects);
             });
         }
@@ -617,6 +620,9 @@ public class BaseInteractor {
         else {
             ParseQuery<ParseUser> query = ParseUser.getQuery();
             query.whereEqualTo(PARAM_ACCOUNT_STATUS, ACTIVE);
+            if (ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY).equalsIgnoreCase(GROUP_A)
+                    || ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY).equalsIgnoreCase(GROUP_B))
+                query.whereEqualTo(PARAM_GROUP_CATEGORY, ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY));
             query.include(PARAM_USER_MANDATORY_ARRAY);
             query.include(PARAM_USER_OPTIONAL_ARRAY);
             query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
@@ -651,6 +657,9 @@ public class BaseInteractor {
             query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
             query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
             query.whereEqualTo(PARAM_ACCOUNT_STATUS, ACTIVE);
+            if (ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY).equalsIgnoreCase(GROUP_A)
+                    || ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY).equalsIgnoreCase(GROUP_B))
+                query.whereEqualTo(PARAM_GROUP_CATEGORY, ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY));
             query.whereNotEqualTo(PARAM_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
             query.setLimit(1000);
             query.findInBackground((objects, e) -> {
@@ -905,6 +914,7 @@ public class BaseInteractor {
                                        final String reason,
                                        final String comment,
                                        final boolean isMediaApproved,
+                                       final boolean isMediaPending,
                                        final OnFinishedListener listener) {
         if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
         else {
@@ -915,6 +925,7 @@ public class BaseInteractor {
             params.put("reason", reason);
             params.put("comment", comment);
             params.put("isMediaApproved", isMediaApproved);
+            params.put("isMediaPending", isMediaPending);
             ParseCloud.callFunctionInBackground(PARSE_CLOUD_FUNCTION_UPDATE_USER, params, new FunctionCallback<String>() {
                 @Override
                 public void done(String object, ParseException e) {

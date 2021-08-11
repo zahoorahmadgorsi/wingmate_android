@@ -85,6 +85,7 @@ import static com.app.wingmate.utils.AppConstants.ACTIVE;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
+import static com.app.wingmate.utils.AppConstants.PARAM_GROUP_CATEGORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_ADMIN;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_MEDIA_APPROVED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
@@ -496,7 +497,7 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                         .show();
             }
         } else if (accountStatus == PENDING) {
-            homeFragment.setBannerTV("Your profile is under screening process");
+            homeFragment.setBannerTV("Your profile is under review by admin");
         } else if (!isPaid && accountStatus == ACTIVE) {
             String str = days + " days left for trial. <b>Buy Pro</b>";
             homeFragment.setBannerTV(Html.fromHtml(str).toString());
@@ -956,8 +957,35 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 
     @Override
     public void setMyFansSuccess(List<Fans> fansList) {
+
+        List<Fans> fansListTemp = new ArrayList<>();
+        if (fansList != null && fansList.size() > 0) {
+            for (int i = 0; i < fansList.size(); i++) {
+                ParseUser fromUser = fansList.get(i).getFromUser();
+                ParseUser toUser = fansList.get(i).getToUser();
+
+                String currentUserCategory = ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY);
+                String fromUserCategory = fansList.get(i).getFromUser().getString(PARAM_GROUP_CATEGORY);
+                String toUserCategory = fansList.get(i).getToUser().getString(PARAM_GROUP_CATEGORY);
+
+                String currentUserId = ParseUser.getCurrentUser().getObjectId();
+                String fromUserId = fansList.get(i).getFromUser().getObjectId();
+                String toUserId = fansList.get(i).getToUser().getObjectId();
+
+                if (currentUserCategory != null) {
+                    if (
+                            (currentUserId.equals(fromUserId) && currentUserCategory.equalsIgnoreCase(toUserCategory) && toUser.getInt(PARAM_ACCOUNT_STATUS) == ACTIVE)
+                                    ||
+                                    (currentUserId.equals(toUserId) && currentUserCategory.equalsIgnoreCase(fromUserCategory) && fromUser.getInt(PARAM_ACCOUNT_STATUS) == ACTIVE)
+                    ) {
+                        fansListTemp.add(fansList.get(i));
+                    }
+                }
+            }
+        }
+
         myFansProgress = false;
-        this.myFansList = fansList;
+        this.myFansList = fansListTemp;
         EventBus.getDefault().post(new RefreshFans());
     }
 

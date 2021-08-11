@@ -46,7 +46,6 @@
                 android:layout_marginRight="@dimen/_16ssp"
                 android:fontFamily="@font/open_sans_regular"
                 android:gravity="center"
-                android:text="@string/please_wait"
                 android:textColor="@color/white"
                 android:textSize="@dimen/label_txt_size" />
         </LinearLayout>

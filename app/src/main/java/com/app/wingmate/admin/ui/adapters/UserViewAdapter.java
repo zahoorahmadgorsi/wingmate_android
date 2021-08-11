@@ -23,6 +23,7 @@ import java.util.List;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_GROUP_CATEGORY;
+import static com.app.wingmate.utils.AppConstants.PARAM_MEDIA_PENDING;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_PROFILE;
@@ -74,6 +75,7 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
 
         String groupCat = parseUser.getString(PARAM_GROUP_CATEGORY);
         int accStatus = parseUser.getInt(PARAM_ACCOUNT_STATUS);
+        boolean isMediaPending = parseUser.getBoolean(PARAM_MEDIA_PENDING);
 
         holder.statusTV.setVisibility(View.GONE);
 
@@ -98,7 +100,13 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.ViewHo
         } else if (accStatus==1) {
             holder.statusTV.setText("Active");
             holder.statusTV.setBackgroundResource(R.drawable.bg_status_active);
-            holder.statusTV.setVisibility(View.GONE);
+            if (isMediaPending) {
+                holder.statusTV.setText("Media Pending");
+                holder.statusTV.setBackgroundResource(R.drawable.bg_status_pending);
+                holder.statusTV.setVisibility(View.VISIBLE);
+            } else {
+                holder.statusTV.setVisibility(View.GONE);
+            }
         } else if (accStatus==2) {
             holder.statusTV.setText("Rejected");
             holder.statusTV.setBackgroundResource(R.drawable.bg_status_rejected);
