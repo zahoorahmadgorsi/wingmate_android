@@ -958,34 +958,35 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
     @Override
     public void setMyFansSuccess(List<Fans> fansList) {
 
-        List<Fans> fansListTemp = new ArrayList<>();
-        if (fansList != null && fansList.size() > 0) {
-            for (int i = 0; i < fansList.size(); i++) {
-                ParseUser fromUser = fansList.get(i).getFromUser();
-                ParseUser toUser = fansList.get(i).getToUser();
-
-                String currentUserCategory = ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY);
-                String fromUserCategory = fansList.get(i).getFromUser().getString(PARAM_GROUP_CATEGORY);
-                String toUserCategory = fansList.get(i).getToUser().getString(PARAM_GROUP_CATEGORY);
-
-                String currentUserId = ParseUser.getCurrentUser().getObjectId();
-                String fromUserId = fansList.get(i).getFromUser().getObjectId();
-                String toUserId = fansList.get(i).getToUser().getObjectId();
-
-                if (currentUserCategory != null) {
-                    if (
-                            (currentUserId.equals(fromUserId) && currentUserCategory.equalsIgnoreCase(toUserCategory) && toUser.getInt(PARAM_ACCOUNT_STATUS) == ACTIVE)
-                                    ||
-                                    (currentUserId.equals(toUserId) && currentUserCategory.equalsIgnoreCase(fromUserCategory) && fromUser.getInt(PARAM_ACCOUNT_STATUS) == ACTIVE)
-                    ) {
-                        fansListTemp.add(fansList.get(i));
-                    }
-                }
-            }
-        }
+//        List<Fans> fansListTemp = new ArrayList<>();
+//        if (fansList != null && fansList.size() > 0) {
+//            for (int i = 0; i < fansList.size(); i++) {
+//                ParseUser fromUser = fansList.get(i).getFromUser();
+//                ParseUser toUser = fansList.get(i).getToUser();
+//
+//                String currentUserCategory = ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY);
+//                String fromUserCategory = fansList.get(i).getFromUser().getString(PARAM_GROUP_CATEGORY);
+//                String toUserCategory = fansList.get(i).getToUser().getString(PARAM_GROUP_CATEGORY);
+//
+//                String currentUserId = ParseUser.getCurrentUser().getObjectId();
+//                String fromUserId = fansList.get(i).getFromUser().getObjectId();
+//                String toUserId = fansList.get(i).getToUser().getObjectId();
+//
+//                if (currentUserCategory != null) {
+//                    if (
+//                            (currentUserId.equals(fromUserId) && currentUserCategory.equalsIgnoreCase(toUserCategory) && toUser.getInt(PARAM_ACCOUNT_STATUS) == ACTIVE)
+//                                    ||
+//                                    (currentUserId.equals(toUserId) && currentUserCategory.equalsIgnoreCase(fromUserCategory) && fromUser.getInt(PARAM_ACCOUNT_STATUS) == ACTIVE)
+//                    ) {
+//                        fansListTemp.add(fansList.get(i));
+//                    }
+//                }
+//            }
+//        }
+//        this.myFansList = fansListTemp;
 
         myFansProgress = false;
-        this.myFansList = fansListTemp;
+        this.myFansList = fansList;
         EventBus.getDefault().post(new RefreshFans());
     }
 

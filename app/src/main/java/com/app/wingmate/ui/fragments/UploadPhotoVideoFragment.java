@@ -600,15 +600,15 @@ public class UploadPhotoVideoFragment extends BaseFragment implements BaseView {
                 else userProfileVideoOnly.add(userProfilePhotoVideo);
             }
             if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
-                for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
-                    String profilePicUrl = ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC);
-                    System.out.println(profilePicUrl + "==match==" + userProfilePhotoOnly.get(i).getFile().getUrl());
-                    if (profilePicUrl != null && profilePicUrl.equals(userProfilePhotoOnly.get(i).getFile().getUrl())) {
-                        user1stPhotoFile = userProfilePhotoOnly.get(i);
-                        userProfilePhotoOnly.remove(i);
-                        break;
-                    }
-                }
+//                for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
+//                    String profilePicUrl = ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC);
+//                    System.out.println(profilePicUrl + "==match==" + userProfilePhotoOnly.get(i).getFile().getUrl());
+//                    if (profilePicUrl != null && profilePicUrl.equals(userProfilePhotoOnly.get(i).getFile().getUrl())) {
+//                        user1stPhotoFile = userProfilePhotoOnly.get(i);
+//                        userProfilePhotoOnly.remove(i);
+//                        break;
+//                    }
+//                }
                 if (user1stPhotoFile == null) {
                     user1stPhotoFile = userProfilePhotoOnly.get(0);
                     userProfilePhotoOnly.remove(0);

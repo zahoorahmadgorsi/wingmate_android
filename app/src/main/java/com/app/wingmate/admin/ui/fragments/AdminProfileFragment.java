@@ -622,15 +622,15 @@ public class AdminProfileFragment extends BaseFragment implements BaseView, Reje
                 else userProfileVideoOnly.add(userProfilePhotoVideo);
             }
 
-            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
-                for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
-                    String profilePicUrl = parseUser.getString(PARAM_PROFILE_PIC);
-                    if (profilePicUrl != null && profilePicUrl.equals(userProfilePhotoOnly.get(i).getFile().getUrl())) {
-                        Collections.swap(userProfilePhotoOnly, i, 0);
-                        break;
-                    }
-                }
-            }
+//            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
+//                for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
+//                    String profilePicUrl = parseUser.getString(PARAM_PROFILE_PIC);
+//                    if (profilePicUrl != null && profilePicUrl.equals(userProfilePhotoOnly.get(i).getFile().getUrl())) {
+//                        Collections.swap(userProfilePhotoOnly, i, 0);
+//                        break;
+//                    }
+//                }
+//            }
 
             if (userProfilePhotoOnly.size() > 0) {
                 if (userProfilePhotoOnly.get(0).getInt(PARAM_FILE_STATUS) == 1)

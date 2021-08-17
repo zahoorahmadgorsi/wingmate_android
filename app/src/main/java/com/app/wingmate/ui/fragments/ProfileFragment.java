@@ -705,24 +705,20 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 else userProfileVideoOnly.add(userProfilePhotoVideo);
             }
 
-            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
-                for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
-                    String profilePicUrl = "";
-                    if (isCurrentUser) {
-                        profilePicUrl = ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC);
-                    } else {
-                        profilePicUrl = parseUser.getString(PARAM_PROFILE_PIC);
-                    }
-                    System.out.println(profilePicUrl + "==match==" + userProfilePhotoOnly.get(i).getFile().getUrl());
-                    if (profilePicUrl != null && profilePicUrl.equals(userProfilePhotoOnly.get(i).getFile().getUrl())) {
-//                        UserProfilePhotoVideo user1stPhotoFile = userProfilePhotoOnly.get(i);
-//                        userProfilePhotoOnly.remove(i);
-//                        userProfilePhotoOnly.add(0, user1stPhotoFile);
-                        Collections.swap(userProfilePhotoOnly, i, 0);
-                        break;
-                    }
-                }
-            }
+//            if (userProfilePhotoOnly != null && userProfilePhotoOnly.size() > 0) {
+//                for (int i = 0; i < userProfilePhotoOnly.size(); i++) {
+//                    String profilePicUrl = "";
+//                    if (isCurrentUser) {
+//                        profilePicUrl = ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC);
+//                    } else {
+//                        profilePicUrl = parseUser.getString(PARAM_PROFILE_PIC);
+//                    }
+//                    if (profilePicUrl != null && profilePicUrl.equals(userProfilePhotoOnly.get(i).getFile().getUrl())) {
+//                        Collections.swap(userProfilePhotoOnly, i, 0);
+//                        break;
+//                    }
+//                }
+//            }
 
             if (userProfilePhotoOnly.size() > 0) {
                 Picasso.get().load(userProfilePhotoOnly.get(0).getFile().getUrl()).placeholder(R.drawable.image_placeholder).into(pic1);
