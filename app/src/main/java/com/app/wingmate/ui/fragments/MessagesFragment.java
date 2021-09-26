@@ -7,10 +7,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.ui.activities.MainActivity;
+import com.app.wingmate.ui.adapters.ChatsAdapter;
 import com.parse.ParseUser;
 
 import butterknife.ButterKnife;
@@ -26,6 +29,7 @@ public class MessagesFragment extends BaseFragment {
     private DashboardFragment dashboardInstance;
 
     Unbinder unbinder;
+    RecyclerView chatList;
 
     public MessagesFragment() {
 
@@ -52,6 +56,9 @@ public class MessagesFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_messages, container, false);
         unbinder = ButterKnife.bind(this, view);
+        chatList = view.findViewById(R.id.chatList);
+        chatList.setAdapter(new ChatsAdapter());
+        chatList.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         return view;
     }
 

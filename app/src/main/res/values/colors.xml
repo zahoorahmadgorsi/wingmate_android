@@ -22,6 +22,9 @@
     <color name="colorPrimaryTrans">#9028816D</color>
     <!--<color name="colorAccent">#FFD4E9</color>-->
 
+    <color name="space_green">#19323C</color>
+    <color name="dark_blue">#11294F</color>
+    <color name="black_shade">#081938</color>
     <color name="app_yellow">#F8F4D8</color>
 
     <color name="blue">#169CEE</color>

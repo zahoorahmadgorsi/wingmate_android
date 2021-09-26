@@ -28,8 +28,11 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE_TEXT_FIELDS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_FORGOT_PASSWORD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_HOME;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LAUNCH_CAMPAIGN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_MEMBERSHIP;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
@@ -65,6 +68,9 @@ public class ActivityUtility {
             case KEY_FRAGMENT_PRE_LOGIN:
             case KEY_FRAGMENT_QUESTIONNAIRE:
             case KEY_FRAGMENT_PAYMENT:
+            case KEY_FRAGMENT_MEMBERSHIP:
+            case KEY_FRAGMENT_LAUNCH_CAMPAIGN:
+            case KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP:
             case KEY_FRAGMENT_ACCOUNT_PENDING:
                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             case KEY_FRAGMENT_CROP:
@@ -217,6 +223,25 @@ public class ActivityUtility {
     }
 
     public static void startPaymentActivity(Activity context, String tag, boolean isClear) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG, tag);
+        intent.putExtra(KEY_BACK_TAG, isClear);
+        if (isClear)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+
+    public static void startLaunchActivity(Activity context, String tag, boolean isClear) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG, tag);
+        intent.putExtra(KEY_BACK_TAG, isClear);
+        if (isClear)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+    public static void startNextStepMembershipActivity(Activity context, String tag, boolean isClear){
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(KEY_ACTIVITY_TAG, tag);
         intent.putExtra(KEY_BACK_TAG, isClear);

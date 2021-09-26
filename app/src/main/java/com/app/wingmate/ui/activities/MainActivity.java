@@ -33,6 +33,9 @@ import com.app.wingmate.ui.fragments.AccountPendingFragment;
 import com.app.wingmate.ui.fragments.DashboardFragment;
 import com.app.wingmate.events.RefreshProfile;
 import com.app.wingmate.ui.fragments.HomeFragment;
+import com.app.wingmate.ui.fragments.LaunchCampaignFragment;
+import com.app.wingmate.ui.fragments.MembershipFragment;
+import com.app.wingmate.ui.fragments.NextStep_Membership;
 import com.app.wingmate.ui.fragments.PaymentFragment;
 import com.app.wingmate.ui.fragments.ProfileFragment;
 import com.app.wingmate.ui.fragments.EditProfileFragment;
@@ -71,8 +74,11 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE_TEXT_F
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EMAIL_VERIFY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_FORGOT_PASSWORD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_HOME;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LAUNCH_CAMPAIGN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_MEMBERSHIP;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
@@ -121,6 +127,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Fragment videoViewFragment;
     private Fragment photoViewFragment;
     private Fragment paymentFragment;
+    private Fragment membershipFragment;
+    private Fragment launchCampaignFragment;
+    private Fragment nextStepMembershipFragment;
     private Fragment accountPendingFragment;
 
     private Fragment adminDashboardFragment;
@@ -204,6 +213,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case KEY_FRAGMENT_PAYMENT:
                 beginPaymentFragment();
+                break;
+            case KEY_FRAGMENT_MEMBERSHIP:
+                beginMembershipFragment();
+                break;
+            case KEY_FRAGMENT_LAUNCH_CAMPAIGN:
+                beginLaunchCampaignFragment();
+                break;
+            case KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP:
+                beginLaunchNextStepMemebershipFragment();
                 break;
             case KEY_FRAGMENT_ACCOUNT_PENDING:
                 beginAccountPendingFragment();
@@ -385,7 +403,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             paymentFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), PaymentFragment.TAG);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, paymentFragment, PaymentFragment.TAG).commit();
     }
-
+    private void beginMembershipFragment() {
+        showTopView();
+        setScreenTitle("Membership\npackages");
+        setScreenSubTitle("");
+        membershipFragment = getSupportFragmentManager().findFragmentByTag(MembershipFragment.TAG);
+        if (membershipFragment == null)
+            membershipFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), MembershipFragment.TAG);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, membershipFragment, MembershipFragment.TAG).commit();
+    }
+    private void beginLaunchCampaignFragment(){
+        launchCampaignFragment = getSupportFragmentManager().findFragmentByTag(LaunchCampaignFragment.TAG);
+        if (launchCampaignFragment == null)
+            launchCampaignFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), LaunchCampaignFragment.TAG);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, launchCampaignFragment, LaunchCampaignFragment.TAG).commit();
+    }
+    private void beginLaunchNextStepMemebershipFragment(){
+        showTopView();
+        setScreenTitle("Next Steps");
+        nextStepMembershipFragment = getSupportFragmentManager().findFragmentByTag(NextStep_Membership.TAG);
+        if (nextStepMembershipFragment == null)
+            nextStepMembershipFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), NextStep_Membership.TAG);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, nextStepMembershipFragment, NextStep_Membership.TAG).commit();
+    }
     private void beginAccountPendingFragment() {
         accountPendingFragment = getSupportFragmentManager().findFragmentByTag(AccountPendingFragment.TAG);
         if (accountPendingFragment == null)

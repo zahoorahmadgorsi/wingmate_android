@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.app.wingmate.R;
 import com.app.wingmate.admin.models.RejectionReason;
 import com.app.wingmate.models.Fans;
+import com.app.wingmate.models.LaunchCampaign;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.TermsConditions;
@@ -123,6 +124,8 @@ public class BaseInteractor {
         void onEmailVerificationError(ParseException e);
 
         void onLoginSuccess(ParseUser parseUser);
+
+        void onGetLaunchCampaignStatus(boolean launchCampaign);
 
         void onQuestionResponseSuccess(List<Question> questions);
 
@@ -268,7 +271,23 @@ public class BaseInteractor {
             });
         }
     }
-
+    public void getLaunchCampaignStatus(Context context, final OnFinishedListener listener){
+        if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
+        else{
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("LaunchCampaign");
+            query.getInBackground("NzU48aDCP9", new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    if (e == null){
+                        boolean isCampaignLaunched = object.getBoolean("launchCampaign");
+                        listener.onGetLaunchCampaignStatus(isCampaignLaunched);
+                    }else{
+                        listener.onResponseError(e);
+                    }
+                }
+            });
+        }
+    }
     public void resendEmailViaCloudCode(Context context, final String email, final OnFinishedListener listener) {
         if (!Utilities.isInternetAvailable(context)) listener.onInternetError();
         else {

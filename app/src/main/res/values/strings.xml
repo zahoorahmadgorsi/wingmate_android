@@ -67,8 +67,14 @@
     <string name="please_wait">Please wait</string>
     <string name="hurrah_">Hurrah!!! Now you are Pro member for Wing Mate</string>
     <string name="hurrah_1">Congratulations! Now you have full access to Wingmate.</string>
+    <string name="launch_campaign_title">Launch Campaign</string>
+    <string name="launch_campaign_subtitle">We are happy to offer Wingmate free of charge during the launch campaign period. Once the campaign period is over you will be notified by e-mail</string>
     <string name="payment_success_msg"><![CDATA[For better result we need to know more about you. please provide few answers about you & your interests.]]></string>
     <string name="thank_photo_video">Thank you for uploading your media.</string>
     <string name="allow_photo_video">Please allow us up to 24 hours to confirm your profile by email.</string>
     <string name="please_go_to_your_inbox_and_click_on_the_link">Please go to your inbox and click on the link</string>
+    <string name="membership_msg">During 7 days trial period you can search and see other user profiles however interactions with others will be restricted.\n\nAll of the paid membership options allow you full access to all App functions without restrictions.</string>
+    <string name="next_step_payment">In order to see your compatibility score with other users you must complete the optional questionnaire.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

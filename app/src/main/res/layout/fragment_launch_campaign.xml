@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purple_theme">
+
+    <RelativeLayout
+        android:id="@+id/payment_success_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/purple_theme"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/btn_continue"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/launch_camp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/baloo_regular"
+                android:gravity="left"
+                android:paddingLeft="@dimen/_30ssp"
+                android:text="@string/launch_campaign_title"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_28ssp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans_regular"
+                android:gravity="left"
+                android:paddingLeft="@dimen/_30ssp"
+                android:paddingRight="@dimen/_20ssp"
+                android:text="@string/launch_campaign_subtitle"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_11ssp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_continue"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/_40ssp"
+            android:layout_marginLeft="@dimen/_40ssp"
+            android:layout_marginTop="@dimen/_16ssp"
+            android:layout_marginEnd="@dimen/_40ssp"
+            android:layout_marginRight="@dimen/_40ssp"
+            android:layout_marginBottom="@dimen/_16ssp"
+            android:background="@drawable/button_pressed_grey"
+            android:fontFamily="@font/baloo_regular"
+            android:onClick="onClick"
+            android:text="Continue"
+            android:textAllCaps="false"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/txt_size" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

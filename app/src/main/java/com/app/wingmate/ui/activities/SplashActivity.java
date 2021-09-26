@@ -31,6 +31,9 @@ import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LAUNCH_CAMPAIGN;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_MEMBERSHIP;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
@@ -77,6 +80,9 @@ public class SplashActivity extends AppCompatActivity {
                     });
                 } else {
                     ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_PRE_LOGIN);
+                    //ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_MEMBERSHIP);
+                    //ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_LAUNCH_CAMPAIGN);
+                    //ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP);
                 }
             }
         }, AppConstants.SPLASH_DISPLAY_LENGTH);

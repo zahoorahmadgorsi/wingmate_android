@@ -160,6 +160,11 @@ public class BaseFragment extends Fragment implements BaseView {
     }
 
     @Override
+    public void setLaunchCampaignSuccess(boolean isLaunchCampaign) {
+
+    }
+
+    @Override
     public void setQuestionResponseSuccess(List<Question> questions) {
 
     }

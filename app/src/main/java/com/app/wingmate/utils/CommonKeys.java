@@ -28,7 +28,10 @@ public class CommonKeys {
     public static final String KEY_FRAGMENT_DUMMY = "DummyFragment";
     public static final String KEY_FRAGMENT_WEB_VIEW = "WebViewFragment";
     public static final String KEY_FRAGMENT_PAYMENT = "PaymentFragment";
+    public static final String KEY_FRAGMENT_MEMBERSHIP = "MembershipFragment";
+    public static final String KEY_FRAGMENT_LAUNCH_CAMPAIGN = "LaunchCampaignFragment";
     public static final String KEY_FRAGMENT_ACCOUNT_PENDING = "AccountPendingFragment";
+    public static final String KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP = "NextStep_Membership";
     public static final String KEY_FRAGMENT_ADMIN_DASHBOARD = "AdminDashboardFragment";
     public static final String KEY_FRAGMENT_ADMIN_PROFILE = "AdminProfileFragment";
     public static final String KEY_FRAGMENT_ADMIN_PHOTO_VIEW = "AdminPhotoViewFragment";

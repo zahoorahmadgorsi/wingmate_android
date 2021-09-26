@@ -151,7 +151,11 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
             interactor.fetchUserFanStatusFormParse(context, parseUser, this);
         }
     }
-
+    public void getLaunchCampaignStatus(Context context){
+        if (baseView!=null){
+            interactor.getLaunchCampaignStatus(context,this);
+        }
+    }
     public void checkServerDate(Context context, boolean showLoader, boolean isJustRefresh) {
         if (baseView != null) {
             interactor.fetchServerDateFormParse(context, showLoader, isJustRefresh, this);
@@ -403,6 +407,13 @@ public class BasePresenter implements BaseInteractor.OnFinishedListener {
     public void onLoginSuccess(ParseUser parseUser) {
         if (baseView != null) {
             baseView.setLoginSuccess(parseUser);
+        }
+    }
+
+    @Override
+    public void onGetLaunchCampaignStatus(boolean launchCampaign) {
+        if (baseView!=null){
+            baseView.setLaunchCampaignSuccess(launchCampaign);
         }
     }
 

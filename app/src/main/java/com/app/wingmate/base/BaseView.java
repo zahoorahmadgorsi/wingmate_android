@@ -41,6 +41,9 @@ public interface BaseView {
     void setEmailVerificationError(ParseException e);
     void setLoginSuccess(ParseUser parseUser);
 
+    //Launch Campaign
+    void setLaunchCampaignSuccess(boolean isLaunchCampaign);
+
     // Questionnaire Methods
     void setQuestionResponseSuccess(List<Question> questions);
     void setOptionsResponseSuccess(List<QuestionOption> questionOptions);

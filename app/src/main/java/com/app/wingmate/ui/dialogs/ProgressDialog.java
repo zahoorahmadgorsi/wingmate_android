@@ -36,7 +36,7 @@ public class ProgressDialog extends DialogFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        myActivity = activity;
+        this.myActivity = activity;
     }
 
     @Override
