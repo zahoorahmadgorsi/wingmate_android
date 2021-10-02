@@ -22,6 +22,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_PHOTO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_VIDEO_VIEW;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CHAT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DUMMY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
@@ -71,6 +72,7 @@ public class ActivityUtility {
             case KEY_FRAGMENT_MEMBERSHIP:
             case KEY_FRAGMENT_LAUNCH_CAMPAIGN:
             case KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP:
+            case KEY_FRAGMENT_CHAT:
             case KEY_FRAGMENT_ACCOUNT_PENDING:
                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             case KEY_FRAGMENT_CROP:
@@ -247,6 +249,15 @@ public class ActivityUtility {
         intent.putExtra(KEY_BACK_TAG, isClear);
         if (isClear)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+    public static void startChatActivity(Activity context,String tag,String userId, String username){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG, tag);
+        //intent.putExtra(KEY_PARSE_USER, parseUser);
+        intent.putExtra("userId", userId);
+        intent.putExtra("username", username);
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }

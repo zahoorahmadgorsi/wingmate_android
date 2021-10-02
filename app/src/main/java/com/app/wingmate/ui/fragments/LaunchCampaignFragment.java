@@ -18,6 +18,7 @@ import android.widget.Button;
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.base.BaseView;
+import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.utils.ActivityUtility;
 import com.parse.ParseUser;
 
@@ -36,6 +37,7 @@ public class LaunchCampaignFragment extends BaseFragment implements BaseView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
+        ((MainActivity)getActivity()).setStatusBarColor(R.color.purple_theme,false);
     }
 
     @Override

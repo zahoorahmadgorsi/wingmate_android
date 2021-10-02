@@ -101,6 +101,7 @@ import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
 import static com.app.wingmate.utils.AppConstants.UPDATE_INTERVAL_MINS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ACCOUNT_PENDING;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LAUNCH_CAMPAIGN;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_MEMBERSHIP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
@@ -510,7 +511,12 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                         .setMessage(GO_TO_PAYMENT_SCREEN)
                         .setPositiveButton("OK", (dialoginterface, i) -> {
                             dialoginterface.cancel();
-                            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);
+                            if (isLaunchCampaignStatus){
+                                ActivityUtility.startLaunchActivity(getActivity(),KEY_FRAGMENT_LAUNCH_CAMPAIGN,true);
+                            }else{
+                                // ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+                                ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_MEMBERSHIP, true);
+                            }
                         })
                         .show();
             }
@@ -582,7 +588,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                         if (isLaunchCampaignStatus){
                             ActivityUtility.startLaunchActivity(getActivity(),KEY_FRAGMENT_LAUNCH_CAMPAIGN,true);
                         }else{
-                            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+                           // ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+                            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_MEMBERSHIP, true);
                         }
                     })
                     .show();
@@ -654,7 +661,12 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                     .setMessage(GO_TO_PAYMENT_SCREEN_AFTER_EXPIRED)
                     .setPositiveButton("OK", (dialoginterface, i) -> {
                         dialoginterface.cancel();
-                        ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+                        if (isLaunchCampaignStatus){
+                            ActivityUtility.startLaunchActivity(getActivity(),KEY_FRAGMENT_LAUNCH_CAMPAIGN,true);
+                        }else{
+                            // ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+                            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_MEMBERSHIP, true);
+                        }
                     })
                     .show();
         } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {

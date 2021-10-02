@@ -3,7 +3,7 @@ package com.app.wingmate.models;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
-@ParseClassName("Question")
+@ParseClassName("LaunchCampaign")
 public class LaunchCampaign extends ParseObject {
     private boolean launchCampaign;
 

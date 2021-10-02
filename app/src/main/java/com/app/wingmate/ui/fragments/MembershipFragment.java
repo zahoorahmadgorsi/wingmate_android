@@ -1,5 +1,8 @@
 package com.app.wingmate.ui.fragments;
 
+import static com.app.wingmate.utils.AppConstants.PARAM_IS_PAID_USER;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -28,10 +31,13 @@ import butterknife.Unbinder;
 import android.widget.Toast;
 
 import android.app.ProgressDialog;
+
+import com.app.wingmate.utils.ActivityUtility;
 import com.parse.FunctionCallback;
 import com.parse.Parse;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.stripe.android.ApiResultCallback;
 import com.stripe.android.Stripe;
 import com.stripe.android.model.Card;
@@ -88,7 +94,14 @@ public class MembershipFragment extends BaseFragment implements BaseView{
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                buy();
+                //buy();
+                ParseUser.getCurrentUser().put(PARAM_IS_PAID_USER, true);
+                //showProgress();
+                ParseUser.getCurrentUser().saveInBackground(en -> {
+                  //  dismissProgress();
+                    ActivityUtility.startNextStepMembershipActivity(getActivity(),KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP,true);
+                });
+                //Toast.makeText(this,"Implementation soon",Toast.)
             }
         });
         return view;

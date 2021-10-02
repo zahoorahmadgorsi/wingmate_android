@@ -86,8 +86,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="@dimen/_60ssp"
@@ -112,30 +112,30 @@
                     android:id="@+id/screen_sub_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
                     android:layout_below="@+id/screen_title"
                     android:fontFamily="@font/open_sans_regular"
                     android:gravity="center"
+                    android:text=""
                     android:textColor="@color/text_color_grey"
-                    android:textSize="@dimen/label_txt_size"  />
+                    android:textSize="@dimen/label_txt_size" />
 
                 <LinearLayout
                     android:id="@+id/fans_count_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:visibility="visible"
                     android:gravity="center_horizontal|end"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="visible">
 
                     <LinearLayout
                         android:id="@+id/btn_likes_filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/likes_count"
@@ -150,15 +150,15 @@
                             android:id="@+id/likes_count_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/open_sans_semibold"
                             android:background="@drawable/custom_select"
-                            android:text="MY LIKES"
-                            android:paddingLeft="@dimen/_6ssp"
-                            android:paddingEnd="@dimen/_6ssp"
-                            android:paddingTop="@dimen/_2ssp"
-                            android:paddingBottom="@dimen/_2ssp"
-                            android:paddingRight="@dimen/_6ssp"
+                            android:fontFamily="@font/open_sans_semibold"
                             android:paddingStart="@dimen/_6ssp"
+                            android:paddingLeft="@dimen/_6ssp"
+                            android:paddingTop="@dimen/_2ssp"
+                            android:paddingEnd="@dimen/_6ssp"
+                            android:paddingRight="@dimen/_6ssp"
+                            android:paddingBottom="@dimen/_2ssp"
+                            android:text="MY LIKES"
                             android:textColor="@drawable/custom_text_color"
                             android:textSize="@dimen/extra_small_txt_size" />
                     </LinearLayout>
@@ -167,10 +167,10 @@
                         android:id="@+id/btn_crush_filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_4ssp"
                         android:layout_marginStart="@dimen/_4ssp"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:layout_marginLeft="@dimen/_4ssp"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/crush_count"
@@ -185,15 +185,15 @@
                             android:id="@+id/crush_count_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/open_sans_semibold"
                             android:background="@drawable/custom_select"
-                            android:text="CRUSH"
-                            android:paddingLeft="@dimen/_6ssp"
-                            android:paddingEnd="@dimen/_6ssp"
-                            android:paddingTop="@dimen/_2ssp"
-                            android:paddingBottom="@dimen/_2ssp"
-                            android:paddingRight="@dimen/_6ssp"
+                            android:fontFamily="@font/open_sans_semibold"
                             android:paddingStart="@dimen/_6ssp"
+                            android:paddingLeft="@dimen/_6ssp"
+                            android:paddingTop="@dimen/_2ssp"
+                            android:paddingEnd="@dimen/_6ssp"
+                            android:paddingRight="@dimen/_6ssp"
+                            android:paddingBottom="@dimen/_2ssp"
+                            android:text="CRUSH"
                             android:textColor="@drawable/custom_text_color"
                             android:textSize="@dimen/extra_small_txt_size" />
                     </LinearLayout>
@@ -202,10 +202,10 @@
                         android:id="@+id/btn_may_be_filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_4ssp"
                         android:layout_marginStart="@dimen/_4ssp"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:layout_marginLeft="@dimen/_4ssp"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/may_be_count"
@@ -220,15 +220,15 @@
                             android:id="@+id/may_be_count_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/open_sans_semibold"
                             android:background="@drawable/custom_select"
-                            android:text="MAYBE"
-                            android:paddingLeft="@dimen/_6ssp"
-                            android:paddingEnd="@dimen/_6ssp"
-                            android:paddingTop="@dimen/_2ssp"
-                            android:paddingBottom="@dimen/_2ssp"
-                            android:paddingRight="@dimen/_6ssp"
+                            android:fontFamily="@font/open_sans_semibold"
                             android:paddingStart="@dimen/_6ssp"
+                            android:paddingLeft="@dimen/_6ssp"
+                            android:paddingTop="@dimen/_2ssp"
+                            android:paddingEnd="@dimen/_6ssp"
+                            android:paddingRight="@dimen/_6ssp"
+                            android:paddingBottom="@dimen/_2ssp"
+                            android:text="MAYBE"
                             android:textColor="@drawable/custom_text_color"
                             android:textSize="@dimen/extra_small_txt_size" />
                     </LinearLayout>
@@ -238,15 +238,15 @@
 
             </RelativeLayout>
 
-<!--            <TextView-->
-<!--                android:id="@+id/screen_title"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:fontFamily="@font/baloo_regular"-->
-<!--                android:layout_marginTop="@dimen/_8ssp"-->
-<!--                android:text="sdgasdgasdg"-->
-<!--                android:textColor="@color/purple_theme"-->
-<!--                android:textSize="@dimen/header_size" />-->
+            <!--            <TextView-->
+            <!--                android:id="@+id/screen_title"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:fontFamily="@font/baloo_regular"-->
+            <!--                android:layout_marginTop="@dimen/_8ssp"-->
+            <!--                android:text="sdgasdgasdg"-->
+            <!--                android:textColor="@color/purple_theme"-->
+            <!--                android:textSize="@dimen/header_size" />-->
 
         </LinearLayout>
 
@@ -326,21 +326,21 @@
                 android:textSize="@dimen/small_label_txt_size" />
         </RelativeLayout>
 
-         <RelativeLayout
+        <RelativeLayout
             android:layout_width="@dimen/_60ssp"
             android:layout_height="@dimen/_60ssp"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true">
 
-             <ImageView
-                 android:id="@+id/ic_step"
-                 android:layout_centerVertical="true"
-                 android:layout_alignParentEnd="true"
-                 android:layout_alignParentRight="true"
-                 android:layout_width="@dimen/_32ssp"
-                 android:layout_height="@dimen/_32ssp"/>
-         </RelativeLayout>
+            <ImageView
+                android:id="@+id/ic_step"
+                android:layout_width="@dimen/_32ssp"
+                android:layout_height="@dimen/_32ssp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_img"

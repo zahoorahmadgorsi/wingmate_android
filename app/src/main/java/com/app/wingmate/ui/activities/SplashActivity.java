@@ -3,9 +3,11 @@ package com.app.wingmate.ui.activities;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.app.wingmate.R;
 import com.app.wingmate.utils.ActivityUtility;
@@ -30,6 +32,7 @@ import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONAL_QUESTIONNAIRE_F
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CHAT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LAUNCH_CAMPAIGN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_MEMBERSHIP;
@@ -46,7 +49,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
+        setStatusBarColor(R.color.bg_color,true);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -83,8 +86,22 @@ public class SplashActivity extends AppCompatActivity {
                     //ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_MEMBERSHIP);
                     //ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_LAUNCH_CAMPAIGN);
                     //ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP);
+                    //ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_CHAT);
                 }
             }
         }, AppConstants.SPLASH_DISPLAY_LENGTH);
+    }
+    public void setStatusBarColor(int color, boolean isLightStatusBar){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            if (isLightStatusBar){
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                //getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                getWindow().setStatusBarColor(ContextCompat.getColor(SplashActivity.this,color));
+            }else{
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                //getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                getWindow().setStatusBarColor(ContextCompat.getColor(SplashActivity.this,color));
+            }
+        }
     }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+    <include
+        android:id="@+id/left_chat_layout"
+        layout="@layout/left_chat_bubble"
+        android:visibility="invisible"
+        />
+
+    <include
+        android:id="@+id/right_chat_layout"
+        layout="@layout/right_chat_bubble"
+        android:visibility="invisible" />
+</RelativeLayout>

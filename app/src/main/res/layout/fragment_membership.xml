@@ -57,7 +57,7 @@
             android:layout_marginTop="@dimen/_16ssp"
             android:layout_marginEnd="@dimen/_40ssp"
             android:layout_marginRight="@dimen/_40ssp"
-            android:layout_marginBottom="@dimen/_40ssp"
+            android:layout_marginBottom="@dimen/_30ssp"
             android:background="@drawable/button_pressed"
             android:fontFamily="@font/baloo_regular"
             android:text="@string/txt_continue"

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,10 @@ import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.ui.adapters.ChatsAdapter;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import butterknife.ButterKnife;
@@ -21,6 +26,13 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
+import static com.app.wingmate.utils.AppConstants.USER_CLASS_NAME;
+import static com.app.wingmate.utils.CommonKeys.INSTANTS_CLASS_NAME;
+import static com.app.wingmate.utils.CommonKeys.INSTANTS_ID;
+import static com.app.wingmate.utils.CommonKeys.INSTANTS_UPDATED_AT;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MessagesFragment extends BaseFragment {
 
@@ -30,6 +42,9 @@ public class MessagesFragment extends BaseFragment {
 
     Unbinder unbinder;
     RecyclerView chatList;
+    List<ParseObject> instantsArray = new ArrayList<>();
+    int skip = 0;
+    ChatsAdapter chatsAdapter;
 
     public MessagesFragment() {
 
@@ -50,15 +65,20 @@ public class MessagesFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
+        skip = 0;
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_messages, container, false);
         unbinder = ButterKnife.bind(this, view);
         chatList = view.findViewById(R.id.chatList);
-        chatList.setAdapter(new ChatsAdapter());
+        chatsAdapter = new ChatsAdapter(getActivity(),instantsArray);
+        chatList.setAdapter(chatsAdapter);
         chatList.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        //queryInstants();
         return view;
     }
 
@@ -72,6 +92,8 @@ public class MessagesFragment extends BaseFragment {
         super.onResume();
         ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
 //        dashboardInstance.performUserUpdateAction();
+        showProgress();
+        queryInstants();
     }
 
     @Override
@@ -83,5 +105,38 @@ public class MessagesFragment extends BaseFragment {
     @OnClick({})
     public void onViewClicked(View v) {
 
+    }
+
+    private void queryInstants() {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+
+        // Query
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(INSTANTS_CLASS_NAME);
+        query.include(USER_CLASS_NAME);
+        query.whereContains(INSTANTS_ID, currentUser.getObjectId());
+        query.orderByDescending(INSTANTS_UPDATED_AT);
+        query.setSkip(skip);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    instantsArray.clear();
+                    instantsArray.addAll(objects);
+                    if (objects.size() == 100) {
+                        skip = skip + 100;
+                        queryInstants();
+                    }
+                    chatsAdapter.notifyDataSetChanged();
+                    dismissProgress();
+/*                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            chatsAdapter.notifyDataSetChanged();
+                        }
+                    });*/
+                    // error
+                } else {
+                    Toast.makeText(getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
+                }}});
     }
 }

@@ -32,6 +32,7 @@ public class AppConstants {
     public static final String MALE = "Male";
     public static final String FEMALE = "Female";
 
+    public static String USER_CLASS_NAME = "_User";
     public static final String CLASS_NAME_USER = "User";
     public static final String PARAM_OBJECT_ID = "objectId";
     public static final String PARAM_GENDER = "gender";

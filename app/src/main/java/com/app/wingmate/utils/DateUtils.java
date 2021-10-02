@@ -1,5 +1,6 @@
 package com.app.wingmate.utils;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import org.joda.time.DateTime;
@@ -915,5 +916,31 @@ public class DateUtils {
         }
 
         return calendar;
+    }
+
+    public static String timeAgoSinceDate(Date date) {
+        String dateString = "";
+        try {
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss");
+            String sentStr = (df.format(date));
+            Date past = df.parse(sentStr);
+            Date now = new Date();
+            long seconds= TimeUnit.MILLISECONDS.toSeconds(now.getTime() - past.getTime());
+            long minutes=TimeUnit.MILLISECONDS.toMinutes(now.getTime() - past.getTime());
+            long hours=TimeUnit.MILLISECONDS.toHours(now.getTime() - past.getTime());
+            long days=TimeUnit.MILLISECONDS.toDays(now.getTime() - past.getTime());
+
+            if(seconds<60)  { dateString = seconds+" SEC";
+            } else if(minutes<60)  { dateString = minutes+" MIN";
+            } else if(hours<24) { dateString = hours+" HRS";
+            } else { dateString = days+" DAYS"; }
+        }
+        catch (Exception j){ j.printStackTrace(); }
+        return dateString;
+    }
+
+    public static String dateToTime (Date date){
+        SimpleDateFormat dateformat = new SimpleDateFormat("HH:mm");
+        return dateformat.format(date);
     }
 }

@@ -8,7 +8,7 @@ public class CommonKeys {
 
     public static final String KEY_EMAIL_TAG = "key_email_tag";
     public static final String KEY_NICK_TAG = "key_nick_tag";
-
+    public static final String KEY_FRAGMENT_CHAT = "ChatFragment";
     public static final String KEY_FRAGMENT_CROP = "CropFragment";
     public static final String KEY_FRAGMENT_LOGIN = "LoginFragment";
     public static final String KEY_FRAGMENT_PRE_LOGIN = "PreLoginFragment";
@@ -59,4 +59,19 @@ public class CommonKeys {
     public static final String KEY_PROFILE_PIC = "key_profile_pic";
     public static final String PREF_IMAGE_URL = "wingmate_pref_image_url";
 
+    public static final String MESSAGES_CLASS_NAME = "Messages";
+    public static final String MESSAGES_SENDER = "sender";
+    public static final String  MESSAGES_RECEIVER = "receiver";
+    public static final String MESSAGES_MESSAGE_ID = "messageID";
+    public static final String MESSAGES_MESSAGE = "message";
+    public static final String MESSAGES_CREATED_AT = "createdAt";
+
+    public static final String INSTANTS_CLASS_NAME = "Instants";
+    public static String  INSTANTS_SENDER = "sender";
+    public static String  INSTANTS_RECEIVER = "receiver";
+    public static String  INSTANTS_ID = "instantID";
+    public static final String LAST_MESSAGE = "lastMessage";
+    public static String  INSTANTS_UPDATED_AT = "updatedAt";
+    public static final String USER_USERNAME = "username";
+    public static final String NICK = "nick";
 }

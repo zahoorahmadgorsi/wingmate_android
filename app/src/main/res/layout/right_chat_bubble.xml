@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingEnd="@dimen/_20ssp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:id="@+id/rightcontainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:layout_marginLeft="@dimen/_50ssp"
+        >
+        <TextView
+            android:id="@+id/right_message"
+            android:layout_gravity="end"
+            android:elevation="@dimen/_5ssp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:padding="@dimen/_8ssp"
+            android:text=""
+            android:textSize="@dimen/_12ssp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/open_sans_regular"
+            android:background="@drawable/right_chat_bubble_background"
+            />
+    </FrameLayout>
+    <TextView
+        android:id="@+id/right_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#b9b9b9"
+        android:textSize="@dimen/_10ssp"
+        android:fontFamily="@font/open_sans_regular"
+        app:layout_constraintEnd_toEndOf="@+id/rightcontainer"
+        app:layout_constraintTop_toBottomOf="@id/rightcontainer"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

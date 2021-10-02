@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ import com.app.wingmate.base.BaseActivity;
 import com.app.wingmate.events.RefreshDashboard;
 import com.app.wingmate.events.RefreshUserStatus;
 import com.app.wingmate.ui.fragments.AccountPendingFragment;
+import com.app.wingmate.ui.fragments.ChatFragment;
 import com.app.wingmate.ui.fragments.DashboardFragment;
 import com.app.wingmate.events.RefreshProfile;
 import com.app.wingmate.ui.fragments.HomeFragment;
@@ -67,6 +69,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_PHOTO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_VIDEO_VIEW;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CHAT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CROP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DUMMY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
@@ -108,6 +111,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private FragmentManager supportFragmentManager;
 
+    private Fragment chatFragment;
     private Fragment preLoginFragment;
     private Fragment loginFragment;
     private Fragment signUpFragment;
@@ -143,7 +147,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-
+        setStatusBarColor(R.color.white,true);
         permissionStatus = getSharedPreferences("permissionStatus", MODE_PRIVATE);
 
         hideBackBtn();
@@ -245,9 +249,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case KEY_FRAGMENT_ADMIN_PHOTO_VIEW:
                 beginAdminPhotoViewFragment();
                 break;
+            case KEY_FRAGMENT_CHAT:
+                beginChatFragment();
+                break;
             default:
                 onBackPressed();
                 break;
+        }
+    }
+
+    private void beginChatFragment() {
+        chatFragment = getSupportFragmentManager().findFragmentByTag(ChatFragment.TAG);
+        if (chatFragment == null){
+            chatFragment = supportFragmentManager.getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(),ChatFragment.TAG);
+            chatFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,chatFragment,ChatFragment.TAG).commit();
         }
     }
 
@@ -752,6 +768,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     && ActivityCompat.checkSelfPermission(MainActivity.this, permissionsRequired[4]) == PackageManager.PERMISSION_GRANTED
             ) {
                 proceedAfterPermission();
+            }
+        }
+    }
+
+    public void setStatusBarColor(int color, boolean isLightStatusBar){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            if (isLightStatusBar){
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                //getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,color));
+            }else{
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                //getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,color));
             }
         }
     }

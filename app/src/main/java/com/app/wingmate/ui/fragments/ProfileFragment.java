@@ -1,5 +1,6 @@
 package com.app.wingmate.ui.fragments;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -95,8 +96,11 @@ import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ACCOUNT_PENDING;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CHAT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LAUNCH_CAMPAIGN;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_MEMBERSHIP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
@@ -179,6 +183,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 
     public boolean isExpired = false;
     public int remainingDays = TRIAL_PERIOD;
+    private boolean isLaunchCampaignStatus = false;
 
     public ProfileFragment() {
 
@@ -220,6 +225,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
         }
 
         showProgress();
+        presenter.getLaunchCampaignStatus(getContext());
         presenter.queryUserAnswers(getContext(), parseUser);
         presenter.queryUserPhotosVideo(getContext(), parseUser);
         if (!isCurrentUser) {
@@ -331,7 +337,12 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     })
                     .setPositiveButton("Pay Now", (dialoginterface, i) -> {
                         dialoginterface.cancel();
-                        ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, false);
+                        if (isLaunchCampaignStatus){
+                            ActivityUtility.startLaunchActivity(getActivity(),KEY_FRAGMENT_LAUNCH_CAMPAIGN,false);
+                        }else{
+                            // ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_PAYMENT, true);
+                            ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_MEMBERSHIP, false);
+                        }
                     }).show();
             return false;
         } else if (isPaid && accountStatus == ACTIVE && !isMandatoryQuestionnaireFilled) {
@@ -535,7 +546,9 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 }
             }
         } else if (v.getId() == R.id.btn_msg) {
-
+            String userId = parseUser.getObjectId();
+            String name = parseUser.getString("nick");
+            ActivityUtility.startChatActivity(requireActivity(),KEY_FRAGMENT_CHAT,userId,name);
         } else if (v.getId() == R.id.btn_refresh) {
             showProgress();
             presenter.queryUserAnswers(getContext(), parseUser);
@@ -892,6 +905,10 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     })
                     .show();
         }
+    }
+
+    public void setLaunchCampaignStatus(boolean launchCampaignStatus) {
+        isLaunchCampaignStatus = launchCampaignStatus;
     }
 
     private void showRejectionPopupAndLogout() {
