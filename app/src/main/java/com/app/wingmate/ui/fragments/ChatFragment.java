@@ -15,7 +15,9 @@ import static com.app.wingmate.utils.CommonKeys.MESSAGES_MESSAGE;
 import static com.app.wingmate.utils.CommonKeys.MESSAGES_MESSAGE_ID;
 import static com.app.wingmate.utils.CommonKeys.MESSAGES_RECEIVER;
 import static com.app.wingmate.utils.CommonKeys.MESSAGES_SENDER;
+import static com.app.wingmate.utils.CommonKeys.NICK;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -38,6 +40,8 @@ import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.ui.adapters.MessagesAdapter;
 import com.app.wingmate.utils.AppConstants;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -46,6 +50,7 @@ import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -142,7 +147,9 @@ public class ChatFragment extends BaseFragment {
                         mObj.put(MESSAGES_RECEIVER, userObj);
                         mObj.put(MESSAGES_MESSAGE_ID, currentUser.getObjectId() + userObj.getObjectId());
                         mObj.put(MESSAGES_MESSAGE, message.getText().toString());
-
+                        mObj.put("senderId",currentUser.getObjectId());
+                        mObj.put("receiverId",userObj.getObjectId());
+                        mObj.put("profilePic",currentUser.getString("profilePic"));
                         mObj.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
@@ -154,6 +161,30 @@ public class ChatFragment extends BaseFragment {
                                     messagesList.scrollToPosition(messagesArray.size()-1);
                                     updateInstants(lastMessage);
                                     //startRefreshTimer();
+                                    final String pushMessage = currentUser.getString(NICK) + ": '" + lastMessage + "'";
+
+                                    if (true) {
+                                        HashMap<String, Object> params = new HashMap<>();
+                                        params.put("userObjectID", userObj.getObjectId());
+                                        params.put("data", pushMessage);
+                                        params.put("senderId",currentUser.getObjectId());
+                                        params.put("senderName",currentUser.getString(NICK));
+                                        ParseCloud.callFunctionInBackground("pushAndroid", params, new FunctionCallback<Object>() {
+                                            @Override
+                                            public void done(Object object, ParseException e) {
+                                                if (e == null) {
+                                                   // Log.i("log-", "PUSH SENT TO: " + userObj.getString(USER_USERNAME) + "\nMESSAGE: " + pushMessage);
+
+                                                    // error
+                                                } else {
+                                                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                                                    alert.setMessage(e.getMessage())
+                                                            .setTitle(R.string.app_name)
+                                                            .setPositiveButton("OK", null)
+                                                            .setIcon(R.drawable.wingmate);
+                                                    alert.create().show();
+                                                }}});// ./ ParseCloud
+                                    }
                                 }else{
                                     //Toast.makeText(getContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
                                 }
@@ -168,7 +199,7 @@ public class ChatFragment extends BaseFragment {
         return view;
     }
     void startRefreshTimer() {
-        int delay = 8 * 1000;
+        int delay = 20 * 1000;
         refreshTimer.scheduleAtFixedRate(new TimerTask() {
             @Override public void run() {
                 getActivity().runOnUiThread(new Runnable() { @Override public void run() {
@@ -205,6 +236,8 @@ public class ChatFragment extends BaseFragment {
                     iObj.put(INSTANTS_RECEIVER, userObj);
                     iObj.put(INSTANTS_ID, currentUser.getObjectId() + userObj.getObjectId());
                     iObj.put(LAST_MESSAGE,lastMessage);
+                    iObj.put("isUnread",true);
+                    iObj.put("msgSentBy",currentUser.getObjectId());
                     // Saving...
                     iObj.saveInBackground(new SaveCallback() {
                         @Override

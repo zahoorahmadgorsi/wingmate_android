@@ -16,8 +16,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +32,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -70,16 +73,27 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
                 Objects.requireNonNull(iObj.getParseObject(INSTANTS_RECEIVER)).fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                     public void done(ParseObject receiverUser, ParseException e) {
                         // Date
-                        holder.time.setText(timeAgoSinceDate(iObj.getUpdatedAt()));
+                        holder.time.setText(timeAgoSinceDate(iObj.getUpdatedAt(),true));
                         String lastmessage = iObj.getString(LAST_MESSAGE);
                         holder.lastMessage.setText(lastmessage);
                         // Avatar Image of the User you're chatting with
+                        if (iObj.getBoolean("isUnread")){
+                            if (!senderUser.getObjectId().matches(currentUser.getObjectId())){
+                                holder.newMessage.setVisibility(View.VISIBLE);
+                            }else{
+                                holder.newMessage.setVisibility(View.GONE);
+                            }
+                        }
+                        else{
+                            holder.newMessage.setVisibility(View.GONE);
+                        }
                         if (senderUser.getObjectId().matches(currentUser.getObjectId())) {
                             getParseImage(holder.userImage, receiverUser, "avatar");
                             //getParseImage();
                             holder.itemView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
+                                    //makeUnreadZero(iObj);
                                     ActivityUtility.startChatActivity(activity,KEY_FRAGMENT_CHAT,receiverUser.getObjectId(),receiverUser.getString(NICK));
                                 }
                             });
@@ -91,6 +105,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
                             holder.itemView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
+                                    makeUnreadZero(iObj);
                                     ActivityUtility.startChatActivity(activity,KEY_FRAGMENT_CHAT,senderUser.getObjectId(),senderUser.getString(NICK));
                                 }
                             });
@@ -100,6 +115,21 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
 
             }});// ./ senderUser
 
+    }
+
+    private void makeUnreadZero(ParseObject iObj) {
+        iObj.put("isUnread",false);
+        iObj.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    //Log.i("log-", "LAST MESS SAVED: " + lastMessage);
+                } else {
+                    //Toast.makeText(,"Something went wrong",Toast.LENGTH_SHORT).show();
+                    //simpleAlert(e.getMessage(), ctx);
+                }
+            }
+        });
     }
 
     public static void getParseImage(final ImageView imgView, ParseObject parseObj, String className) {
@@ -134,6 +164,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
         TextView userName;
         TextView lastMessage;
         ImageView userImage;
+        TextView newMessage;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -141,6 +172,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
             userImage = itemView.findViewById(R.id.image);
             userName = itemView.findViewById(R.id.user_name);
             lastMessage = itemView.findViewById(R.id.last_message);
+            newMessage = itemView.findViewById(R.id.unread);
         }
     }
 }

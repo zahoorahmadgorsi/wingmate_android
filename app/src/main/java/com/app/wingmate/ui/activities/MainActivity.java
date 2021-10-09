@@ -142,14 +142,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Fragment adminVideoViewFragment;
 
     private String fragmentTag;
-
+    private String id = null;
+    private String username = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
         setStatusBarColor(R.color.white,true);
         permissionStatus = getSharedPreferences("permissionStatus", MODE_PRIVATE);
-
+        id = getIntent().getStringExtra("userId");
+        username = getIntent().getStringExtra("userName");
         hideBackBtn();
 
         supportFragmentManager = getSupportFragmentManager();
@@ -371,6 +373,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         dashboardFragment = getSupportFragmentManager().findFragmentByTag(DashboardFragment.TAG);
         if (dashboardFragment == null)
             dashboardFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), DashboardFragment.TAG);
+
         getSupportFragmentManager().beginTransaction().replace(R.id.container, dashboardFragment, DashboardFragment.TAG).commit();
     }
 

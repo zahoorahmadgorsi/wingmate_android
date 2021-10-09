@@ -79,6 +79,7 @@ public class MessagesFragment extends BaseFragment {
         chatList.setAdapter(chatsAdapter);
         chatList.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         //queryInstants();
+        showProgress();
         return view;
     }
 
@@ -92,7 +93,6 @@ public class MessagesFragment extends BaseFragment {
         super.onResume();
         ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
 //        dashboardInstance.performUserUpdateAction();
-        showProgress();
         queryInstants();
     }
 

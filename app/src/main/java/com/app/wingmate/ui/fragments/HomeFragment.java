@@ -17,6 +17,7 @@ import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.events.RefreshHome;
 import com.app.wingmate.events.RefreshHomeWithNewLocation;
+import com.app.wingmate.ui.activities.SplashActivity;
 import com.app.wingmate.ui.adapters.UserViewAdapter;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.Utilities;
@@ -36,6 +37,7 @@ import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_CHAT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
 
 public class HomeFragment extends BaseFragment {
@@ -91,6 +93,14 @@ public class HomeFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView();
+        if (getActivity().getIntent()!=null){
+            if (getActivity().getIntent().hasExtra("userId")){
+                String userId = getActivity().getIntent().getStringExtra("userId");
+                String userName = getActivity().getIntent().getStringExtra("userName");
+                if (userId!=null && userName!=null)
+                ActivityUtility.startChatActivity(getActivity(),KEY_FRAGMENT_CHAT,userId,userName);
+            }
+        }
     }
 
     @Override

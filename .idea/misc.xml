@@ -3,11 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/drawable/green_indicator.xml" value="0.2169230769230769" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/drawable/left_chat_bubble_background.xml" value="0.20555555555555555" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/drawable/right_chat_bg.xml" value="0.20555555555555555" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/drawable/right_chat_bubble_background.xml" value="0.20555555555555555" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/activity_base.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/chat_item_layout.xml" value="0.22" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/chat_item_layout.xml" value="0.25" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_chat.xml" value="0.22" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_edit_profile.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_home.xml" value="0.20416666666666666" />

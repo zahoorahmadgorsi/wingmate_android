@@ -9,10 +9,12 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -918,7 +920,7 @@ public class DateUtils {
         return calendar;
     }
 
-    public static String timeAgoSinceDate(Date date) {
+    public static String timeAgoSinceDate(Date date, boolean isCapital) {
         String dateString = "";
         try {
             @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss");
@@ -930,17 +932,92 @@ public class DateUtils {
             long hours=TimeUnit.MILLISECONDS.toHours(now.getTime() - past.getTime());
             long days=TimeUnit.MILLISECONDS.toDays(now.getTime() - past.getTime());
 
-            if(seconds<60)  { dateString = seconds+" SEC";
-            } else if(minutes<60)  { dateString = minutes+" MIN";
-            } else if(hours<24) { dateString = hours+" HRS";
-            } else { dateString = days+" DAYS"; }
+            if (isCapital){
+                if(seconds<60)  { dateString = seconds+" SEC";
+                } else if(minutes<60)  { dateString = minutes+" MIN";
+                } else if(hours<24) { dateString = hours+" HRS";
+                } else { dateString = days+" DAYS"; }
+                return dateString;
+            }else{
+                if(seconds<60)  {
+                    if (seconds>1){
+                        dateString = seconds+" seconds";
+                    }else{
+                        dateString = seconds+" second";
+                    }
+                } else if(minutes<60) {
+                    if (minutes>1){
+                        dateString = minutes+" minutes";
+                    }else{
+                        dateString = minutes+" minute";
+                    }
+                } else if(hours<24) {
+                    if (hours>1){
+                        dateString = hours+" hours";
+                    }else{
+                        dateString = hours+" hour";
+                    }
+                } else {
+                    if (days>1){
+                        dateString = days+" days";
+                    }else {
+                        dateString = days+" day";
+                    }
+                }
+                return dateString + " ago";
+            }
         }
         catch (Exception j){ j.printStackTrace(); }
+
         return dateString;
     }
 
+
+    public static String getDateCurrentTimeZone(long timestamp){
+        try{
+            Calendar calendar = Calendar.getInstance();
+            TimeZone tz = TimeZone.getDefault();
+            calendar.setTimeInMillis(timestamp * 1000);
+            calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date currenTimeZone = (Date) calendar.getTime();
+            return sdf.format(currenTimeZone);
+        }catch (Exception e) {
+        }
+        return "";
+    }
     public static String dateToTime (Date date){
         SimpleDateFormat dateformat = new SimpleDateFormat("HH:mm");
+        dateformat.setTimeZone(TimeZone.getDefault());
         return dateformat.format(date);
+    }
+    public static String convertToCurrentTimeZone(Date date) {
+        String converted_date = "";
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss");
+            String dateString = df.format(date);
+            DateFormat utcFormat = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss");
+            utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            Date dateone = utcFormat.parse(dateString);
+
+            DateFormat currentTFormat = new SimpleDateFormat("HH:mm");
+            currentTFormat.setTimeZone(TimeZone.getTimeZone(getCurrentTimeZone()));
+
+            converted_date =  currentTFormat.format(dateone);
+        }catch (Exception e){ e.printStackTrace();}
+
+        return converted_date;
+    }
+    public static String getCurrentTimeZone(){
+        TimeZone tz = new GregorianCalendar(Locale.getDefault()).getTimeZone();
+        return tz.getID();
+    }
+    public static CharSequence createDate(long timestamp) {
+        //"hh" in pattern is for 12 hour time format and "aa" is for AM/PM
+        SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("yyyy-MMM-dd hh:mm:ss aa");
+        //Setting the time zone
+        dateTimeInGMT.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return dateTimeInGMT.format(new Date());
     }
 }

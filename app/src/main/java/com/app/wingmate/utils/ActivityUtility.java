@@ -2,6 +2,7 @@ package com.app.wingmate.utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.app.wingmate.R;
 import com.app.wingmate.admin.models.RejectionReason;
@@ -59,8 +60,16 @@ import static com.app.wingmate.utils.CommonKeys.KEY_VIDEO_LINK;
 public class ActivityUtility {
 
     public static void startActivity(Activity activity, String tag) {
+        String id = activity.getIntent().getStringExtra("userId");
+        String username = activity.getIntent().getStringExtra("userName");
+        activity.getIntent().removeExtra("userId");
+        activity.getIntent().removeExtra("userName");
         Intent mainIntent = new Intent(activity, MainActivity.class);
         mainIntent.putExtra(KEY_ACTIVITY_TAG, tag);
+        if (id!=null){
+            mainIntent.putExtra("userId",id);
+            mainIntent.putExtra("userName",username);
+        }
         switch (tag) {
             case KEY_FRAGMENT_LOGIN:
             case KEY_FRAGMENT_DUMMY:
@@ -254,6 +263,17 @@ public class ActivityUtility {
     }
     public static void startChatActivity(Activity context,String tag,String userId, String username){
         Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG, tag);
+        //intent.putExtra(KEY_PARSE_USER, parseUser);
+        intent.putExtra("userId", userId);
+        intent.putExtra("username", username);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+
+    public static void startChatActivityOnly(Activity context,String tag,String userId, String username){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_ACTIVITY_TAG, tag);
         //intent.putExtra(KEY_PARSE_USER, parseUser);
         intent.putExtra("userId", userId);

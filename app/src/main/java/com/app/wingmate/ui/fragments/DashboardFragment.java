@@ -298,7 +298,9 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 //        viewPager.setPageTransformer(false, new FadePageTransformer());
         viewPager.setPagingEnabled(false);
 //        viewPager.setOffscreenPageLimit(2);
-        viewPager.setCurrentItem(0, false);
+        String id = getActivity().getIntent().getStringExtra("userId");
+        String username = getActivity().getIntent().getStringExtra("userName");
+
         viewPager.addOnPageChangeListener(this);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
@@ -308,6 +310,14 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
         tvHome.setTextColor(requireContext().getResources().getColor(R.color.purple_theme));
         btnHome.setAlpha(1.0f);
+        if (id!=null && username!=null){
+            viewPager.setCurrentItem(3, false);
+            setTab(3);
+            getActivity().getIntent().removeExtra("userId");
+            getActivity().getIntent().removeExtra("userName");
+        }else{
+            viewPager.setCurrentItem(0, false);
+        }
     }
 
     public void setHomeView() {

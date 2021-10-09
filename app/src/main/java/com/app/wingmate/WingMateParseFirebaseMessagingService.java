@@ -36,25 +36,27 @@ public class WingMateParseFirebaseMessagingService extends FirebaseMessagingServ
     @Override
     public void onNewToken(String token) {
         super.onNewToken(token);
-        Log.d(TAG, "token::"+token);
+        Log.e(TAG, "token::"+token);
         ParseFCM.register(token);
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Log.d(TAG, "onMessageReceived");
-
+        Log.e(TAG, "onMessageReceived");
+        String userId = null;
+        String userName = null;
         String pushId = remoteMessage.getData().get("push_id");
         String timestamp = remoteMessage.getData().get("time");
         String dataString = remoteMessage.getData().get("data");
         String channel = remoteMessage.getData().get("channel");
-
         JSONObject data = null;
         if (dataString != null) {
             try {
                 data = new JSONObject(dataString);
                 dataString = data.getString("alert");
+                userName = data.getString("username");
+                userId = data.getString("userId");
                 System.out.println("==WingMatePFMService=="+data.toString());
             } catch (JSONException e) {
                 Log.e(TAG, "Ignoring push because of JSON exception while processing: " + dataString, e);
@@ -64,11 +66,11 @@ public class WingMateParseFirebaseMessagingService extends FirebaseMessagingServ
 
 //        PushRouter.getInstance().handlePush(pushId, timestamp, channel, data);
         EventBus.getDefault().post(new RefreshUserStatus());
-        showNotification(getApplicationContext(), pushId, timestamp, dataString, channel, data);
+        showNotification(getApplicationContext(), pushId, timestamp, dataString, channel, data,userId,userName);
     }
 
 
-    public static void showNotification(Context mContext, String pushId, String timestamp, String dataString, String channel, JSONObject data) {
+    public static void showNotification(Context mContext, String pushId, String timestamp, String dataString, String channel, JSONObject data, String userId, String username) {
         NotificationCompat.BigTextStyle InboxStyle = new NotificationCompat.BigTextStyle()
                 .setBigContentTitle("Wing Mate")
                 .bigText(dataString);
@@ -96,6 +98,10 @@ public class WingMateParseFirebaseMessagingService extends FirebaseMessagingServ
                     .setStyle(InboxStyle);
         }
         Intent resultIntent = new Intent(mContext, SplashActivity.class);
+        if (userId!=null && username!=null){
+            resultIntent.putExtra("userId",userId);
+            resultIntent.putExtra("userName",username);
+        }
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =

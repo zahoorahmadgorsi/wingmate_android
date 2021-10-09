@@ -47,8 +47,39 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     @Override
     public void onBindViewHolder(MessageViewHolder holder, int position) {
         Log.e("position",""+position);
-        ParseObject mObj =messagesArray.get(position);
+        ParseObject mObj = messagesArray.get(position);
         ParseUser currentUser = ParseUser.getCurrentUser();
+        if (mObj.getString("senderId")!=null){
+            if (mObj.getString("senderId").equalsIgnoreCase(currentUser.getObjectId())){
+                holder.leftMessageLayout.setVisibility(View.GONE);
+                holder.rightMessageLayout.setVisibility(View.VISIBLE);
+                holder.rightMessage.setText(mObj.getString("message"));
+                Date date = mObj.getCreatedAt();
+                //holder.rightTime.setText(DateUtils.createDate(System.currentTimeMillis()));
+                holder.rightTime.setText(DateUtils.timeAgoSinceDate(date,false));
+            }else if (!mObj.getString("senderId").equalsIgnoreCase(currentUser.getObjectId())){
+                holder.rightMessageLayout.setVisibility(View.GONE);
+                holder.leftMessageLayout.setVisibility(View.VISIBLE);
+                holder.leftMessage.setText(mObj.getString("message"));
+                Date date = mObj.getCreatedAt();
+                //holder.leftTime.setText(DateUtils.createDate(System.currentTimeMillis()));
+                holder.leftTime.setText(DateUtils.timeAgoSinceDate(date,false));
+                String pic = mObj.getString("profilePic");
+                if (pic!=null){
+                    Picasso.get()
+                            .load(pic)
+                            .centerCrop()
+                            .resize(500, 500)
+                            .placeholder(R.drawable.image_placeholder)
+                            .into(holder.image);
+                }
+            }
+        }else{
+            holder.leftMessageLayout.setVisibility(View.GONE);
+            holder.rightMessageLayout.setVisibility(View.GONE);
+        }
+
+/*        ParseUser currentUser = ParseUser.getCurrentUser();
         Objects.requireNonNull(mObj.getParseObject(MESSAGES_SENDER)).fetchIfNeededInBackground(new GetCallback<ParseObject>() {
 
             @Override
@@ -58,13 +89,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
                     holder.rightMessageLayout.setVisibility(View.VISIBLE);
                     holder.rightMessage.setText(mObj.getString("message"));
                     Date date = mObj.getCreatedAt();
-                    holder.rightTime.setText(DateUtils.dateToTime(date));
+
+                    holder.rightTime.setText(DateUtils.convertToCurrentTimeZone(date));
                 }else if (!userPointer.getObjectId().matches(currentUser.getObjectId())){
                     holder.rightMessageLayout.setVisibility(View.GONE);
                     holder.leftMessageLayout.setVisibility(View.VISIBLE);
                     holder.leftMessage.setText(mObj.getString("message"));
                     Date date = mObj.getCreatedAt();
-                    holder.leftTime.setText(DateUtils.dateToTime(date));
+                    holder.leftTime.setText(DateUtils.convertToCurrentTimeZone(date));
                     Log.e("date",date.toString());
                     String pic = userPointer.getString("profilePic");
                     if (pic!=null){
@@ -77,7 +109,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
                     }
                 }
             }
-        });
+        });*/
     }
 
     @Override

@@ -51,7 +51,7 @@
         android:textStyle="bold"
         android:textColor="@color/dark_blue"
         android:textSize="@dimen/_14ssp"
-        app:layout_constraintEnd_toStartOf="@+id/time"
+        app:layout_constraintEnd_toStartOf="@+id/unread"
         app:layout_constraintStart_toEndOf="@id/userPic"
         app:layout_constraintTop_toTopOf="@id/userPic" />
 
@@ -66,8 +66,23 @@
         android:fontFamily="@font/open_sans_regular"
         android:textColor="#BBC0C9"
         android:textSize="@dimen/_12ssp"
-        app:layout_constraintEnd_toStartOf="@+id/time"
+        app:layout_constraintEnd_toStartOf="@+id/unread"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/user_name"
         app:layout_constraintTop_toBottomOf="@+id/user_name" />
+
+    <TextView
+        android:id="@+id/unread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Message"
+        android:textSize="@dimen/_10ssp"
+        android:textColor="@color/red"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/time"
+        android:layout_marginRight="@dimen/_5ssp"
+        android:layout_marginTop="@dimen/_5ssp"
+        android:visibility="gone"
+        >
+    </TextView>
 </androidx.constraintlayout.widget.ConstraintLayout>

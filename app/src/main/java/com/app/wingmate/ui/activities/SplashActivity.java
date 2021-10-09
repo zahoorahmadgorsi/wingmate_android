@@ -1,10 +1,13 @@
 package com.app.wingmate.ui.activities;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -43,13 +46,20 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.Utilities.showToast;
 
+import org.joda.time.LocalTime;
+
+import java.time.format.DateTimeFormatter;
+
 public class SplashActivity extends AppCompatActivity {
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         setStatusBarColor(R.color.bg_color,true);
+        String id = getIntent().getStringExtra("userId");
+        String username = getIntent().getStringExtra("userName");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -78,7 +88,13 @@ public class SplashActivity extends AppCompatActivity {
 //                            ActivityUtility.startQuestionnaireActivity(SplashActivity.this, KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY);
 //                        }
                         else {
-                            ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_DASHBOARD);
+                            //ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_DASHBOARD);
+                            if (id!=null && username!=null){
+                                //ActivityUtility.startChatActivityOnly(SplashActivity.this,KEY_FRAGMENT_CHAT,id,username);
+                                ActivityUtility.startActivity(SplashActivity.this,KEY_FRAGMENT_DASHBOARD);
+                            }else{
+                                ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_DASHBOARD);
+                            }
                         }
                     });
                 } else {
