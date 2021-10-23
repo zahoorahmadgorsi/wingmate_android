@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
@@ -42,6 +43,7 @@ public class MessagesFragment extends BaseFragment {
 
     Unbinder unbinder;
     RecyclerView chatList;
+    SwipeRefreshLayout pullToRefresh;
     List<ParseObject> instantsArray = new ArrayList<>();
     int skip = 0;
     ChatsAdapter chatsAdapter;
@@ -75,6 +77,7 @@ public class MessagesFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_messages, container, false);
         unbinder = ButterKnife.bind(this, view);
         chatList = view.findViewById(R.id.chatList);
+        pullToRefresh = view.findViewById(R.id.pullToRefresh);
         chatsAdapter = new ChatsAdapter(getActivity(),instantsArray);
         chatList.setAdapter(chatsAdapter);
         chatList.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
@@ -86,6 +89,14 @@ public class MessagesFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                pullToRefresh.setRefreshing(false);
+                showProgress();
+                queryInstants();
+            }
+        });
     }
 
     @Override
@@ -114,7 +125,7 @@ public class MessagesFragment extends BaseFragment {
         ParseQuery<ParseObject> query = ParseQuery.getQuery(INSTANTS_CLASS_NAME);
         query.include(USER_CLASS_NAME);
         query.whereContains(INSTANTS_ID, currentUser.getObjectId());
-        query.orderByDescending(INSTANTS_UPDATED_AT);
+        query.orderByDescending("msgCreateAt");
         query.setSkip(skip);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -128,12 +139,6 @@ public class MessagesFragment extends BaseFragment {
                     }
                     chatsAdapter.notifyDataSetChanged();
                     dismissProgress();
-/*                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            chatsAdapter.notifyDataSetChanged();
-                        }
-                    });*/
                     // error
                 } else {
                     Toast.makeText(getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();

@@ -28,13 +28,20 @@
             android:textSize="@dimen/label_txt_size"
             android:visibility="visible" />
     </LinearLayout>-->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatList"
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
         android:layout_marginRight="@dimen/_10ssp"
         android:layout_marginLeft="@dimen/_10ssp"
-        />
-
+        >
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>

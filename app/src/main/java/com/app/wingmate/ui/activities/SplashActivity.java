@@ -20,6 +20,7 @@ import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import static com.app.wingmate.utils.AppConstants.DEFAULT_TIMEZONE;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.INFO;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
@@ -49,6 +50,7 @@ import static com.app.wingmate.utils.Utilities.showToast;
 import org.joda.time.LocalTime;
 
 import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -60,6 +62,7 @@ public class SplashActivity extends AppCompatActivity {
         setStatusBarColor(R.color.bg_color,true);
         String id = getIntent().getStringExtra("userId");
         String username = getIntent().getStringExtra("userName");
+        DEFAULT_TIMEZONE = TimeZone.getDefault().getID();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

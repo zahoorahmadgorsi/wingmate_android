@@ -40,6 +40,8 @@
         android:theme="@style/Theme.WingMate"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
+        android:allowBackup="false"
+        tools:replace="android:allowBackup"
         tools:targetApi="m">
 
         <activity

@@ -50,10 +50,13 @@ import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -140,9 +143,6 @@ public class ChatFragment extends BaseFragment {
                         final ParseObject mObj = new ParseObject(MESSAGES_CLASS_NAME);
                         final ParseUser currentUser = ParseUser.getCurrentUser();
 
-                        // Prepare data
-                        String pic = currentUser.getString("profilePic");
-                        Log.e("picurl",pic);
                         mObj.put(MESSAGES_SENDER, currentUser);
                         mObj.put(MESSAGES_RECEIVER, userObj);
                         mObj.put(MESSAGES_MESSAGE_ID, currentUser.getObjectId() + userObj.getObjectId());
@@ -238,6 +238,7 @@ public class ChatFragment extends BaseFragment {
                     iObj.put(LAST_MESSAGE,lastMessage);
                     iObj.put("isUnread",true);
                     iObj.put("msgSentBy",currentUser.getObjectId());
+                    iObj.put("msgCreateAt",new Date());
                     // Saving...
                     iObj.saveInBackground(new SaveCallback() {
                         @Override

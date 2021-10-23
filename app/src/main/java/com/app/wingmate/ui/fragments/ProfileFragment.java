@@ -546,9 +546,11 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 }
             }
         } else if (v.getId() == R.id.btn_msg) {
-            String userId = parseUser.getObjectId();
-            String name = parseUser.getString("nick");
-            ActivityUtility.startChatActivity(requireActivity(),KEY_FRAGMENT_CHAT,userId,name);
+            if (canInteractWithUser()){
+                String userId = parseUser.getObjectId();
+                String name = parseUser.getString("nick");
+                ActivityUtility.startChatActivity(requireActivity(),KEY_FRAGMENT_CHAT,userId,name);
+            }
         } else if (v.getId() == R.id.btn_refresh) {
             showProgress();
             presenter.queryUserAnswers(getContext(), parseUser);

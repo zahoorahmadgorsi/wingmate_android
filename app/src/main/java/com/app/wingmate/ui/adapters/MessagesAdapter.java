@@ -55,15 +55,15 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
                 holder.rightMessageLayout.setVisibility(View.VISIBLE);
                 holder.rightMessage.setText(mObj.getString("message"));
                 Date date = mObj.getCreatedAt();
-                //holder.rightTime.setText(DateUtils.createDate(System.currentTimeMillis()));
-                holder.rightTime.setText(DateUtils.timeAgoSinceDate(date,false));
+                holder.rightTime.setText(DateUtils.convertToCurrentTimeZone(date));
+                //holder.rightTime.setText(DateUtils.timeAgoSinceDate(date,false));
             }else if (!mObj.getString("senderId").equalsIgnoreCase(currentUser.getObjectId())){
                 holder.rightMessageLayout.setVisibility(View.GONE);
                 holder.leftMessageLayout.setVisibility(View.VISIBLE);
                 holder.leftMessage.setText(mObj.getString("message"));
                 Date date = mObj.getCreatedAt();
-                //holder.leftTime.setText(DateUtils.createDate(System.currentTimeMillis()));
-                holder.leftTime.setText(DateUtils.timeAgoSinceDate(date,false));
+                holder.leftTime.setText(DateUtils.convertToCurrentTimeZone(date));
+                //holder.leftTime.setText(DateUtils.timeAgoSinceDate(date,false));
                 String pic = mObj.getString("profilePic");
                 if (pic!=null){
                     Picasso.get()

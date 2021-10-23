@@ -8,11 +8,11 @@
     <include
         android:id="@+id/left_chat_layout"
         layout="@layout/left_chat_bubble"
-        android:visibility="invisible"
-        />
+        android:visibility="invisible" />
 
     <include
         android:id="@+id/right_chat_layout"
         layout="@layout/right_chat_bubble"
+
         android:visibility="invisible" />
 </RelativeLayout>

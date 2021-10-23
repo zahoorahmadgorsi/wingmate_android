@@ -73,7 +73,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
                 Objects.requireNonNull(iObj.getParseObject(INSTANTS_RECEIVER)).fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                     public void done(ParseObject receiverUser, ParseException e) {
                         // Date
-                        holder.time.setText(timeAgoSinceDate(iObj.getUpdatedAt(),true));
+                        holder.time.setText(timeAgoSinceDate(iObj.getDate("msgCreateAt"),true));
                         String lastmessage = iObj.getString(LAST_MESSAGE);
                         holder.lastMessage.setText(lastmessage);
                         // Avatar Image of the User you're chatting with

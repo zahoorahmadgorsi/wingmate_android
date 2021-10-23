@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -933,10 +934,31 @@ public class DateUtils {
             long days=TimeUnit.MILLISECONDS.toDays(now.getTime() - past.getTime());
 
             if (isCapital){
-                if(seconds<60)  { dateString = seconds+" SEC";
-                } else if(minutes<60)  { dateString = minutes+" MIN";
-                } else if(hours<24) { dateString = hours+" HRS";
-                } else { dateString = days+" DAYS"; }
+                if(seconds<60)  {
+                    if (seconds>1){
+                        dateString = seconds+" SEC";
+                    }else{
+                        dateString = seconds+" SEC";
+                    }
+                } else if(minutes<60) {
+                    if (minutes>1){
+                        dateString = minutes+" MINS";
+                    }else{
+                        dateString = minutes+" MIN";
+                    }
+                } else if(hours<24) {
+                    if (hours>1){
+                        dateString = hours+" HRS";
+                    }else{
+                        dateString = hours+" HRS";
+                    }
+                } else {
+                    if (days>1){
+                        dateString = days+" DAYS";
+                    }else {
+                        dateString = days+" DAY";
+                    }
+                }
                 return dateString;
             }else{
                 if(seconds<60)  {
@@ -997,12 +1019,11 @@ public class DateUtils {
             SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss");
             String dateString = df.format(date);
             DateFormat utcFormat = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss");
-            utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-
+            //utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date dateone = utcFormat.parse(dateString);
 
             DateFormat currentTFormat = new SimpleDateFormat("HH:mm");
-            currentTFormat.setTimeZone(TimeZone.getTimeZone(getCurrentTimeZone()));
+            currentTFormat.setTimeZone(TimeZone.getTimeZone(AppConstants.DEFAULT_TIMEZONE));
 
             converted_date =  currentTFormat.format(dateone);
         }catch (Exception e){ e.printStackTrace();}
@@ -1010,7 +1031,7 @@ public class DateUtils {
         return converted_date;
     }
     public static String getCurrentTimeZone(){
-        TimeZone tz = new GregorianCalendar(Locale.getDefault()).getTimeZone();
+        TimeZone tz = TimeZone.getDefault();
         return tz.getID();
     }
     public static CharSequence createDate(long timestamp) {
