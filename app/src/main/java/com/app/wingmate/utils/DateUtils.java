@@ -1020,16 +1020,29 @@ public class DateUtils {
             String dateString = df.format(date);
             DateFormat utcFormat = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss");
             //utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            //utcFormat.setTimeZone(TimeZone.getTimeZone(AppConstants.DEFAULT_TIMEZONE));
             Date dateone = utcFormat.parse(dateString);
-
-            DateFormat currentTFormat = new SimpleDateFormat("HH:mm");
-            currentTFormat.setTimeZone(TimeZone.getTimeZone(AppConstants.DEFAULT_TIMEZONE));
-
-            converted_date =  currentTFormat.format(dateone);
+            long hours = getNoOfDays(dateone);
+            if (hours>=24){
+                DateFormat currentTFormat = new SimpleDateFormat("dd/M/yyyy HH:mm");
+                currentTFormat.setTimeZone(TimeZone.getTimeZone(AppConstants.DEFAULT_TIMEZONE));
+                converted_date =  currentTFormat.format(dateone);
+            }else{
+                DateFormat currentTFormat = new SimpleDateFormat("HH:mm");
+                currentTFormat.setTimeZone(TimeZone.getTimeZone(AppConstants.DEFAULT_TIMEZONE));
+                converted_date =  currentTFormat.format(dateone);
+            }
         }catch (Exception e){ e.printStackTrace();}
 
         return converted_date;
     }
+
+    private static long getNoOfDays(Date pastDate) {
+        Date now = new Date();
+        long hours=TimeUnit.MILLISECONDS.toHours(now.getTime() - pastDate.getTime());
+        return hours;
+    }
+
     public static String getCurrentTimeZone(){
         TimeZone tz = TimeZone.getDefault();
         return tz.getID();

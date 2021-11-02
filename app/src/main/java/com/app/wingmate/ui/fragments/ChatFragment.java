@@ -81,7 +81,7 @@ public class ChatFragment extends BaseFragment {
     int skip = 0;
     Timer refreshTimer = new Timer();
     ImageView back;
-
+    boolean isScrollEnabled = true;
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -139,57 +139,67 @@ public class ChatFragment extends BaseFragment {
             send.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!message.getText().toString().isEmpty()){
-                        final ParseObject mObj = new ParseObject(MESSAGES_CLASS_NAME);
-                        final ParseUser currentUser = ParseUser.getCurrentUser();
+                    if (send.isClickable()){
+                        if (!message.getText().toString().isEmpty()){
+                            send.setClickable(false);
+                            final ParseObject mObj = new ParseObject(MESSAGES_CLASS_NAME);
+                            final ParseUser currentUser = ParseUser.getCurrentUser();
 
-                        mObj.put(MESSAGES_SENDER, currentUser);
-                        mObj.put(MESSAGES_RECEIVER, userObj);
-                        mObj.put(MESSAGES_MESSAGE_ID, currentUser.getObjectId() + userObj.getObjectId());
-                        mObj.put(MESSAGES_MESSAGE, message.getText().toString());
-                        mObj.put("senderId",currentUser.getObjectId());
-                        mObj.put("receiverId",userObj.getObjectId());
-                        mObj.put("profilePic",currentUser.getString("profilePic"));
-                        mObj.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e==null){
-                                    String lastMessage = message.getText().toString();
-                                    message.setText("");
-                                    messagesArray.add(mObj);
-                                    messagesAdapter.notifyItemInserted(messagesArray.size());
-                                    messagesList.scrollToPosition(messagesArray.size()-1);
-                                    updateInstants(lastMessage);
-                                    //startRefreshTimer();
-                                    final String pushMessage = currentUser.getString(NICK) + ": '" + lastMessage + "'";
+                            mObj.put(MESSAGES_SENDER, currentUser);
+                            mObj.put(MESSAGES_RECEIVER, userObj);
+                            mObj.put(MESSAGES_MESSAGE_ID, currentUser.getObjectId() + userObj.getObjectId());
+                            mObj.put(MESSAGES_MESSAGE, message.getText().toString());
+                            mObj.put("senderId",currentUser.getObjectId());
+                            mObj.put("receiverId",userObj.getObjectId());
+                            mObj.put("profilePic",currentUser.getString("profilePic"));
 
-                                    if (true) {
-                                        HashMap<String, Object> params = new HashMap<>();
-                                        params.put("userObjectID", userObj.getObjectId());
-                                        params.put("data", pushMessage);
-                                        params.put("senderId",currentUser.getObjectId());
-                                        params.put("senderName",currentUser.getString(NICK));
-                                        ParseCloud.callFunctionInBackground("pushAndroid", params, new FunctionCallback<Object>() {
-                                            @Override
-                                            public void done(Object object, ParseException e) {
-                                                if (e == null) {
-                                                   // Log.i("log-", "PUSH SENT TO: " + userObj.getString(USER_USERNAME) + "\nMESSAGE: " + pushMessage);
+                            //mObj.put("senderName",currentUser.getString(NICK));
+                            //mObj.put("senderImage",currentUser.getString("profilePic"));
+                            //mObj.put("receiverName",userObj.getString(NICK));
+                            //mObj.put("receiverImage",userObj.getString("profilePic"));
+                            mObj.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e==null){
+                                        String lastMessage = message.getText().toString();
+                                        message.setText("");
+                                        send.setClickable(true);
+                                        messagesArray.add(mObj);
+                                        messagesAdapter.notifyItemInserted(messagesArray.size());
+                                        messagesList.scrollToPosition(messagesArray.size()-1);
+                                        updateInstants(lastMessage);
+                                        //startRefreshTimer();
+                                        final String pushMessage = currentUser.getString(NICK) + ": '" + lastMessage + "'";
 
-                                                    // error
-                                                } else {
-                                                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                                                    alert.setMessage(e.getMessage())
-                                                            .setTitle(R.string.app_name)
-                                                            .setPositiveButton("OK", null)
-                                                            .setIcon(R.drawable.wingmate);
-                                                    alert.create().show();
-                                                }}});// ./ ParseCloud
+                                        if (true) {
+                                            HashMap<String, Object> params = new HashMap<>();
+                                            params.put("userObjectID", userObj.getObjectId());
+                                            params.put("data", pushMessage);
+                                            params.put("senderId",currentUser.getObjectId());
+                                            params.put("senderName",currentUser.getString(NICK));
+                                            ParseCloud.callFunctionInBackground("pushAndroid", params, new FunctionCallback<Object>() {
+                                                @Override
+                                                public void done(Object object, ParseException e) {
+                                                    if (e == null) {
+                                                        // Log.i("log-", "PUSH SENT TO: " + userObj.getString(USER_USERNAME) + "\nMESSAGE: " + pushMessage);
+
+                                                        // error
+                                                    } else {
+                                                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                                                        alert.setMessage(e.getMessage())
+                                                                .setTitle(R.string.app_name)
+                                                                .setPositiveButton("OK", null)
+                                                                .setIcon(R.drawable.wingmate);
+                                                        alert.create().show();
+                                                    }}});// ./ ParseCloud
+                                        }
+                                    }else{
+                                        send.setClickable(true);
+                                        //Toast.makeText(getContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
                                     }
-                                }else{
-                                    //Toast.makeText(getContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 }
             });
@@ -282,7 +292,10 @@ public class ChatFragment extends BaseFragment {
                         messagesList.scrollToPosition(messagesArray.size());
                     }
                 };*/
-                messagesList.scrollToPosition(messagesArray.size()-1);
+                if (isScrollEnabled){
+                    messagesList.scrollToPosition(messagesArray.size()-1);
+                    isScrollEnabled = false;
+                }
             }
         });
     }

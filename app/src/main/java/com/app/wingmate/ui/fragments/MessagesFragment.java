@@ -14,6 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.models.InstantsList;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.ui.adapters.ChatsAdapter;
 import com.parse.FindCallback;
@@ -31,6 +32,8 @@ import static com.app.wingmate.utils.AppConstants.USER_CLASS_NAME;
 import static com.app.wingmate.utils.CommonKeys.INSTANTS_CLASS_NAME;
 import static com.app.wingmate.utils.CommonKeys.INSTANTS_ID;
 import static com.app.wingmate.utils.CommonKeys.INSTANTS_UPDATED_AT;
+import static com.app.wingmate.utils.CommonKeys.LAST_MESSAGE;
+import static com.app.wingmate.utils.DateUtils.timeAgoSinceDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +50,7 @@ public class MessagesFragment extends BaseFragment {
     List<ParseObject> instantsArray = new ArrayList<>();
     int skip = 0;
     ChatsAdapter chatsAdapter;
-
+    List<InstantsList> instantsLists = new ArrayList<>();
     public MessagesFragment() {
 
     }

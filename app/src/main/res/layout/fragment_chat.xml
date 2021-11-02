@@ -119,7 +119,7 @@
                             android:layout_width="@dimen/_25ssp"
                             android:layout_height="@dimen/_20ssp"
                             android:layout_gravity="center"
-                            android:src="@drawable/send"
+                            android:src="@drawable/send_icon"
                             />
                     </FrameLayout>
                 </androidx.cardview.widget.CardView>

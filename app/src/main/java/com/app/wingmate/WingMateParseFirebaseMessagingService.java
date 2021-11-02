@@ -55,8 +55,10 @@ public class WingMateParseFirebaseMessagingService extends FirebaseMessagingServ
             try {
                 data = new JSONObject(dataString);
                 dataString = data.getString("alert");
-                userName = data.getString("username");
-                userId = data.getString("userId");
+                if (data.has("username") && data.has("userId")){
+                    userName = data.getString("username");
+                    userId = data.getString("userId");
+                }
                 System.out.println("==WingMatePFMService=="+data.toString());
             } catch (JSONException e) {
                 Log.e(TAG, "Ignoring push because of JSON exception while processing: " + dataString, e);

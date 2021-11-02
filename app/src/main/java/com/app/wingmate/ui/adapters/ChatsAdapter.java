@@ -78,7 +78,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
                         holder.lastMessage.setText(lastmessage);
                         // Avatar Image of the User you're chatting with
                         if (iObj.getBoolean("isUnread")){
-                            if (!senderUser.getObjectId().matches(currentUser.getObjectId())){
+                            if (!senderUser.getObjectId().equals(currentUser.getObjectId())){
                                 holder.newMessage.setVisibility(View.VISIBLE);
                             }else{
                                 holder.newMessage.setVisibility(View.GONE);
@@ -87,7 +87,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
                         else{
                             holder.newMessage.setVisibility(View.GONE);
                         }
-                        if (senderUser.getObjectId().matches(currentUser.getObjectId())) {
+                        if (senderUser.getObjectId().equals(currentUser.getObjectId())) {
                             getParseImage(holder.userImage, receiverUser, "avatar");
                             //getParseImage();
                             holder.itemView.setOnClickListener(new View.OnClickListener() {

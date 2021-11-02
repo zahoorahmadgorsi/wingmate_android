@@ -13,10 +13,13 @@ import com.app.wingmate.models.QuestionOption;
 import com.app.wingmate.models.TermsConditions;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.models.UserProfilePhotoVideo;
+import com.app.wingmate.utils.AppConstants;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+
+import java.util.TimeZone;
 
 public class WingMateApplication extends Application {
 
@@ -25,7 +28,7 @@ public class WingMateApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        //AppConstants.DEFAULT_TIMEZONE = TimeZone.getDefault().getID();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);

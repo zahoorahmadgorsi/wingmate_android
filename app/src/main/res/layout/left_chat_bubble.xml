@@ -45,7 +45,7 @@
             android:fontFamily="@font/open_sans_regular"
             android:background="@drawable/left_chat_bubble_background"
             android:layout_gravity="start|center_vertical"
-            android:elevation="@dimen/_5ssp"
+            android:elevation="@dimen/_1ssp"
             android:layout_marginLeft="@dimen/_10ssp"
             />
 <!--        <androidx.cardview.widget.CardView

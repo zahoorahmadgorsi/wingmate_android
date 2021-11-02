@@ -174,5 +174,5 @@ public class AppConstants {
     public static final String PHOTO_VIDEO_NOT_APPROVED = "User has uploaded photos and video. You need to accept the media first then assign a group.";
     public static final String PHOTO_NOT_APPROVED = "User has uploaded photos and video. You need to accept the photo first then assign a group.";
     public static final String VIDEO_NOT_APPROVED = "User has uploaded photos and video. You need to accept the video first then assign a group.";
-    public static String DEFAULT_TIMEZONE = "Europe/London";
+    public static String DEFAULT_TIMEZONE = "";
 }
