@@ -115,6 +115,7 @@ public class AppConstants {
 
     public static final String TAG_PROFILE_EDIT = "tag_profile_edit";
     public static final String TAG_SEARCH = "tag_search";
+    public static final String CLASS_NAME_QUOTES = "Quotes";
 
     public static final String _5M = "5m";
     public static final String _10M = "10m";
@@ -175,4 +176,6 @@ public class AppConstants {
     public static final String PHOTO_NOT_APPROVED = "User has uploaded photos and video. You need to accept the photo first then assign a group.";
     public static final String VIDEO_NOT_APPROVED = "User has uploaded photos and video. You need to accept the video first then assign a group.";
     public static String DEFAULT_TIMEZONE = "";
+
+    public static String QUOTE_OF_THE_DAY = "";
 }

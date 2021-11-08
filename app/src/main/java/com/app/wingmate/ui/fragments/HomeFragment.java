@@ -9,17 +9,26 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
+import com.app.wingmate.GlobalArray;
+import com.app.wingmate.MyWorker;
 import com.app.wingmate.R;
+import com.app.wingmate.WorkRequestSingleton;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.events.RefreshHome;
 import com.app.wingmate.events.RefreshHomeWithNewLocation;
 import com.app.wingmate.ui.activities.SplashActivity;
 import com.app.wingmate.ui.adapters.UserViewAdapter;
 import com.app.wingmate.utils.ActivityUtility;
+import com.app.wingmate.utils.AppConstants;
 import com.app.wingmate.utils.Utilities;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
@@ -57,6 +66,8 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.banner_tv)
     TextView bannerTV;
 
+    TextView tv_quote;
+    TextView tv_quote_author;
     private UserViewAdapter userViewAdapter;
     private GridLayoutManager gridLayoutManager;
 
@@ -92,7 +103,8 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView();
+        initView(view);
+        WorkRequestSingleton.createInstance(getContext());
         if (getActivity().getIntent()!=null){
             if (getActivity().getIntent().hasExtra("userId")){
                 String userId = getActivity().getIntent().getStringExtra("userId");
@@ -103,9 +115,21 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
+        GlobalArray.liveQuote.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                AppConstants.QUOTE_OF_THE_DAY = s;
+                //tv_quote.setText(AppConstants.QUOTE_OF_THE_DAY);
+                String[] quoteAndAuth = AppConstants.QUOTE_OF_THE_DAY.split("@");
+                tv_quote.setText(quoteAndAuth[0]);
+                tv_quote_author.setText(quoteAndAuth[1]);
+            }
+        });
+        //tv_quote.setText(AppConstants.QUOTE_OF_THE_DAY);
         if (dashboardInstance.homeProgress) showProgress();
         else dismissProgress();
         pullToRefresh.setRefreshing(false);
@@ -211,7 +235,9 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    private void initView() {
+    private void initView(View view) {
+        tv_quote = view.findViewById(R.id.qoute_tv);
+        tv_quote_author = view.findViewById(R.id.author_tv);
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         if (dashboardInstance.allUsers == null) dashboardInstance.allUsers = new ArrayList<>();
         userViewAdapter = new UserViewAdapter(getActivity(), dashboardInstance.allUsers);

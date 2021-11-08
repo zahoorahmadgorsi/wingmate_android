@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.app.wingmate.GlobalArray;
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.base.BaseInteractor;
@@ -46,6 +48,7 @@ import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.MyCustomUser;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
+import com.app.wingmate.models.Quotes;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.utils.ActivityUtility;
@@ -56,9 +59,11 @@ import com.app.wingmate.utils.SharedPrefers;
 import com.app.wingmate.utils.Utilities;
 import com.app.wingmate.widgets.NonSwappableViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.greenrobot.eventbus.EventBus;
@@ -67,6 +72,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -82,6 +88,8 @@ import static com.app.wingmate.utils.AlertMessages.GO_TO_QUESTIONNAIRE_SCREEN;
 import static com.app.wingmate.utils.AlertMessages.GO_TO_UPLOAD_SCREEN;
 import static com.app.wingmate.utils.AlertMessages.GO_TO_UPLOAD_SCREEN_AFTER_EXPIRED;
 import static com.app.wingmate.utils.AppConstants.ACTIVE;
+import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUESTION;
+import static com.app.wingmate.utils.AppConstants.CLASS_NAME_QUOTES;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
 import static com.app.wingmate.utils.AppConstants.PARAM_ACCOUNT_STATUS;
 import static com.app.wingmate.utils.AppConstants.PARAM_CURRENT_LOCATION;
@@ -93,6 +101,8 @@ import static com.app.wingmate.utils.AppConstants.PARAM_IS_PHOTO_SUBMITTED;
 import static com.app.wingmate.utils.AppConstants.PARAM_IS_VIDEO_SUBMITTED;
 import static com.app.wingmate.utils.AppConstants.PARAM_MANDATORY_QUESTIONNAIRE_FILLED;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
+import static com.app.wingmate.utils.AppConstants.PARAM_OPTIONS_OBJ_ARRAY;
+import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_DISPLAY_ORDER;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.PARAM_USER_ID;
 import static com.app.wingmate.utils.AppConstants.PENDING;
@@ -229,7 +239,24 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
 
         initViews();
-
+        ParseQuery query = ParseQuery.getQuery(CLASS_NAME_QUOTES);
+        query.findInBackground((FindCallback<Quotes>) (objects, e) -> {
+            if (e == null) {
+                if (objects == null) objects = new ArrayList<>();
+                GlobalArray.quotes.clear();
+                GlobalArray.quotes.addAll(objects);
+                if (GlobalArray.quotes.size()>0){
+                    int random = new Random().nextInt(GlobalArray.quotes.size());
+                    Log.e("random no here",random+"");
+                    GlobalArray.liveQuote.postValue(GlobalArray.quotes.get(random).getQuote());
+                }
+            } else {
+                objects = new ArrayList<>();
+                GlobalArray.quotes.clear();
+                GlobalArray.quotes.addAll(objects);
+                AppConstants.QUOTE_OF_THE_DAY = "";
+            }
+        });
         presenter.getLaunchCampaignStatus(getContext());
         homeProgress = true;
         allUsers = new ArrayList<>();

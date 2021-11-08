@@ -29,8 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/open_sans_regular"
-                android:maxLines="2"
-                android:text="You will face many defeats in life, but never let yourself be defeated."
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="@dimen/small_label_txt_size" />
 
@@ -41,7 +40,7 @@
                 android:layout_marginTop="@dimen/_8ssp"
                 android:fontFamily="@font/open_sans_semibold_italic"
                 android:maxLines="1"
-                android:text="Maya Angelou"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="@dimen/extra_small_txt_size" />
         </LinearLayout>

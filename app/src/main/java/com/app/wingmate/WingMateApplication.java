@@ -10,6 +10,7 @@ import com.app.wingmate.models.Fans;
 import com.app.wingmate.models.LaunchCampaign;
 import com.app.wingmate.models.Question;
 import com.app.wingmate.models.QuestionOption;
+import com.app.wingmate.models.Quotes;
 import com.app.wingmate.models.TermsConditions;
 import com.app.wingmate.models.UserAnswer;
 import com.app.wingmate.models.UserProfilePhotoVideo;
@@ -42,6 +43,7 @@ public class WingMateApplication extends Application {
         ParseObject.registerSubclass(RejectionReason.class);
         ParseObject.registerSubclass(LaunchCampaign.class);
         ParseObject.registerSubclass(AdminUsers.class);
+        ParseObject.registerSubclass(Quotes.class);
 
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(getString(R.string.back4app_app_id))
