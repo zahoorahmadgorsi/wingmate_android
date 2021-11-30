@@ -104,7 +104,7 @@ public class HomeFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        WorkRequestSingleton.createInstance(getContext());
+        //WorkRequestSingleton.createInstance(getContext());
         if (getActivity().getIntent()!=null){
             if (getActivity().getIntent().hasExtra("userId")){
                 String userId = getActivity().getIntent().getStringExtra("userId");
@@ -159,6 +159,7 @@ public class HomeFragment extends BaseFragment {
                     .into(profileImg);
 
         dashboardInstance.saveCurrentGeoPoint();
+        WorkRequestSingleton.createInstance(getContext());
     }
 
     @Subscribe

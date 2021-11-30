@@ -266,6 +266,7 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
         if (selectedIndex > -1) {
             List<UserAnswer> filter = new ArrayList<>();
             for (int i = 0; i < userAnswers.size(); i++) {
+                if (userAnswers.get(i).getUserId()!=null)
                 if (!Objects.equals(ParseUser.getCurrentUser().getString(PARAM_GENDER), userAnswers.get(i).getUserId().getString(PARAM_GENDER))) {
                     filter.add(userAnswers.get(i));
                 }
@@ -370,6 +371,7 @@ public class SearchFragment extends BaseFragment implements BaseView, OptionsSel
             if (count == totalNoOfSelectedQuestions) {
                 if (!userIds.contains(userId1)
                         && allSearchedResults.get(y).getUserId().getInt(PARAM_ACCOUNT_STATUS) == ACTIVE
+                        && !allSearchedResults.get(y).getUserId().getBoolean("isUserUnsubscribed") //added by zaki
                 ) {
                     MyCustomUser myCustomUser = new MyCustomUser();
                     myCustomUser.setParseUser(allSearchedResults.get(y).getUserId());

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/notificationSettingsFragment"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    tools:context=".ui.fragments.NotificationsSettingsFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <RelativeLayout
+                android:id="@+id/notification_alert"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50ssp"
+                android:background="#ffffff"
+                >
+
+                <TextView
+                    android:id="@+id/notification_Item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:fontFamily="@font/open_sans_semibold"
+                    android:text="Notification alert"
+                    android:textColor="#11294F"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/notification_alert_choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="#E2E2E2" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/pushNotification"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_60ssp"
+                android:background="#ffffff"
+                android:visibility="gone"
+                >
+
+                <TextView
+                    android:id="@+id/pushNotification_Item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="@dimen/_10ssp"
+                    android:fontFamily="@font/open_sans_semibold"
+                    android:text="Push Notification"
+                    android:textColor="#11294F"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/pushNotification_Item"
+                    android:layout_marginLeft="16dp"
+                    android:fontFamily="@font/baloo_reg"
+                    android:text="Receive weekly push notification"
+                    android:textColor="#909090"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/pushNotificationsChoice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#E2E2E2"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/chat_notification"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_60ssp"
+                android:background="#ffffff"
+                >
+
+                <TextView
+                    android:id="@+id/chatNotificationItem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="@dimen/_10ssp"
+                    android:fontFamily="@font/open_sans_semibold"
+                    android:text="Chat Notification"
+                    android:textColor="#11294F"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/chatNotificationItem"
+                    android:layout_marginLeft="16dp"
+                    android:fontFamily="@font/baloo_reg"
+                    android:text="Receive chat notification"
+                    android:textColor="#909090"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/chatNotificationChoice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#E2E2E2"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/emailNotification"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_60ssp"
+                android:background="#ffffff"
+                android:visibility="gone"
+                >
+
+                <TextView
+                    android:id="@+id/emailNotificationItem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="@dimen/_10ssp"
+                    android:fontFamily="@font/open_sans_semibold"
+                    android:text="Email Notification"
+                    android:textColor="#11294F"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/emailNotificationItem"
+                    android:layout_marginLeft="16dp"
+                    android:fontFamily="@font/baloo_reg"
+                    android:text="Receive email notification"
+                    android:textColor="#909090"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/emailNotificationChoice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150sp"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:paddingTop="@dimen/_20ssp"
+        android:paddingLeft="@dimen/_33ssp"
+        android:paddingRight="@dimen/_33ssp"
+        >
+        <Button
+            android:id="@+id/save"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/open_sans_semibold"
+            android:text="Save"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size"/>
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_23ssp"
+            android:src="@drawable/ic_back_button"
+            android:layout_marginTop="@dimen/_9ssp"
+            />
+    </LinearLayout>
+</FrameLayout>

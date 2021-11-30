@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,6 +50,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
@@ -233,6 +235,12 @@ public class ProfileFragment extends BaseFragment implements BaseView {
             crushObject = null;
             likeObject = null;
             presenter.queryUserFansStatus(requireContext(), parseUser);
+            parseUser.fetchInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+
+                }
+            });
         }
 
         pic2Card.setVisibility(View.GONE);
@@ -358,7 +366,30 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                         ActivityUtility.startQuestionnaireActivity(getActivity(), KEY_FRAGMENT_QUESTIONNAIRE, MANDATORY, false);
                     }).show();
             return false;
-        } else return true;
+        }
+        else return true;
+    }
+    private boolean canMessageThisPerson(){
+        if (!isCurrentUser){
+            boolean isMessageDisabled = parseUser.getBoolean("messageDisabled");
+            if (isMessageDisabled){
+                Toast.makeText(getContext(),"This person has disabled message",Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            return true;
+        }
+        return true;
+    }
+    private boolean canLikeThisPerson(){
+        if (!isCurrentUser){
+            boolean isLikeDisabled = parseUser.getBoolean("likeDisabled");
+            if (isLikeDisabled){
+                Toast.makeText(getContext(),"This person has disabled likes,crush and may be requests",Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            return true;
+        }
+        return true;
     }
 
     @OnClick({R.id.back_btn, R.id.btn_edit, R.id.btn_edit_media, R.id.pic_1, R.id.pic2_card, R.id.pic3_card, R.id.video_card,
@@ -444,7 +475,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 //                    showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
 //            }
 
-            if (canInteractWithUser()) {
+            if (canInteractWithUser() && canLikeThisPerson()) {
                 showProgress();
                 if (maybeObject != null) {
                     maybeObject.deleteInBackground(e -> {
@@ -486,7 +517,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 //                    showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
 //            }
 
-            if (canInteractWithUser()) {
+            if (canInteractWithUser() && canLikeThisPerson()) {
                 showProgress();
                 if (likeObject != null) {
                     likeObject.deleteInBackground(e -> {
@@ -528,7 +559,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
 //                    showToast(getActivity(), getContext(), "Couldn't perform this action as your account is not active.", ERROR);
 //            }
 
-            if (canInteractWithUser()) {
+            if (canInteractWithUser() && canLikeThisPerson()) {
                 showProgress();
                 if (crushObject != null) {
                     crushObject.deleteInBackground(e -> {
@@ -546,7 +577,7 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 }
             }
         } else if (v.getId() == R.id.btn_msg) {
-            if (canInteractWithUser()){
+            if (canInteractWithUser() && canMessageThisPerson()){
                 String userId = parseUser.getObjectId();
                 String name = parseUser.getString("nick");
                 ActivityUtility.startChatActivity(requireActivity(),KEY_FRAGMENT_CHAT,userId,name);
@@ -559,6 +590,12 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                 maybeObject = null;
                 crushObject = null;
                 likeObject = null;
+                parseUser.fetchInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+
+                    }
+                });
                 presenter.queryUserFansStatus(requireContext(), parseUser);
             }
         }

@@ -1,13 +1,10 @@
 package com.app.wingmate.ui.fragments;
 
-import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER;
-import static com.app.wingmate.utils.AppConstants.PARAM_OBJECT_ID;
 import static com.app.wingmate.utils.AppConstants.USER_CLASS_NAME;
 import static com.app.wingmate.utils.CommonKeys.INSTANTS_CLASS_NAME;
 import static com.app.wingmate.utils.CommonKeys.INSTANTS_ID;
 import static com.app.wingmate.utils.CommonKeys.INSTANTS_RECEIVER;
 import static com.app.wingmate.utils.CommonKeys.INSTANTS_SENDER;
-import static com.app.wingmate.utils.CommonKeys.KEY_PARSE_USER;
 import static com.app.wingmate.utils.CommonKeys.LAST_MESSAGE;
 import static com.app.wingmate.utils.CommonKeys.MESSAGES_CLASS_NAME;
 import static com.app.wingmate.utils.CommonKeys.MESSAGES_CREATED_AT;
@@ -37,6 +34,7 @@ import android.widget.Toast;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.models.Instants;
 import com.app.wingmate.ui.adapters.MessagesAdapter;
 import com.app.wingmate.utils.AppConstants;
 import com.parse.FindCallback;
@@ -71,17 +69,20 @@ public class ChatFragment extends BaseFragment {
     TextView user_name;
     EditText message;
     CardView send;
-    String username,objectID;
+    String username, objectID;
     ParseUser parseUser;
     ParseUser userObj;
     RecyclerView messagesList;
     MessagesAdapter messagesAdapter;
-    List<ParseObject>messagesArray = new ArrayList<>();
-    List<ParseObject>instantsArray = new ArrayList<>();
+    List<ParseObject> messagesArray = new ArrayList<>();
+    List<ParseObject> instantsArray = new ArrayList<>();
     int skip = 0;
     Timer refreshTimer = new Timer();
     ImageView back;
     boolean isScrollEnabled = true;
+    boolean isChatNotificationEnabled = true;
+    boolean isMessageDisabled = false;
+
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -90,6 +91,7 @@ public class ChatFragment extends BaseFragment {
         ChatFragment contentFragment = new ChatFragment();
         return contentFragment;
     }
+
     public static ChatFragment newInstance(DashboardFragment dashboardInstance) {
         ChatFragment contentFragment = new ChatFragment();
         contentFragment.dashboardInstance = dashboardInstance;
@@ -117,10 +119,10 @@ public class ChatFragment extends BaseFragment {
         back = view.findViewById(R.id.back);
         user_name = view.findViewById(R.id.username);
         messagesList = view.findViewById(R.id.messagesList);
-        messagesList.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        messagesList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         message = view.findViewById(R.id.message);
         send = view.findViewById(R.id.sendBtn);
-        if (username!=null && !username.isEmpty()){
+        if (username != null && !username.isEmpty()) {
             user_name.setText(username);
         }
         back.setOnClickListener(new View.OnClickListener() {
@@ -139,89 +141,111 @@ public class ChatFragment extends BaseFragment {
             send.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (send.isClickable()){
-                        if (!message.getText().toString().isEmpty()){
-                            send.setClickable(false);
-                            final ParseObject mObj = new ParseObject(MESSAGES_CLASS_NAME);
-                            final ParseUser currentUser = ParseUser.getCurrentUser();
+                    if (send.isClickable()) {
+                        if (!isMessageDisabled) {
+                            if (!message.getText().toString().isEmpty()) {
+                                send.setClickable(false);
+                                final ParseObject mObj = new ParseObject(MESSAGES_CLASS_NAME);
+                                final ParseUser currentUser = ParseUser.getCurrentUser();
 
-                            mObj.put(MESSAGES_SENDER, currentUser);
-                            mObj.put(MESSAGES_RECEIVER, userObj);
-                            mObj.put(MESSAGES_MESSAGE_ID, currentUser.getObjectId() + userObj.getObjectId());
-                            mObj.put(MESSAGES_MESSAGE, message.getText().toString());
-                            mObj.put("senderId",currentUser.getObjectId());
-                            mObj.put("receiverId",userObj.getObjectId());
-                            mObj.put("profilePic",currentUser.getString("profilePic"));
+                                mObj.put(MESSAGES_SENDER, currentUser);
+                                mObj.put(MESSAGES_RECEIVER, userObj);
+                                mObj.put(MESSAGES_MESSAGE_ID, currentUser.getObjectId() + userObj.getObjectId());
+                                mObj.put(MESSAGES_MESSAGE, message.getText().toString());
+                                mObj.put("senderId", currentUser.getObjectId());
+                                mObj.put("receiverId", userObj.getObjectId());
+                                mObj.put("profilePic", currentUser.getString("profilePic"));
 
-                            //mObj.put("senderName",currentUser.getString(NICK));
-                            //mObj.put("senderImage",currentUser.getString("profilePic"));
-                            //mObj.put("receiverName",userObj.getString(NICK));
-                            //mObj.put("receiverImage",userObj.getString("profilePic"));
-                            mObj.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if (e==null){
-                                        String lastMessage = message.getText().toString();
-                                        message.setText("");
-                                        send.setClickable(true);
-                                        messagesArray.add(mObj);
-                                        messagesAdapter.notifyItemInserted(messagesArray.size());
-                                        messagesList.scrollToPosition(messagesArray.size()-1);
-                                        updateInstants(lastMessage);
-                                        //startRefreshTimer();
-                                        final String pushMessage = currentUser.getString(NICK) + ": '" + lastMessage + "'";
+                                //mObj.put("senderName",currentUser.getString(NICK));
+                                //mObj.put("senderImage",currentUser.getString("profilePic"));
+                                //mObj.put("receiverName",userObj.getString(NICK));
+                                //mObj.put("receiverImage",userObj.getString("profilePic"));
+                                mObj.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e == null) {
+                                            String lastMessage = message.getText().toString();
+                                            message.setText("");
+                                            send.setClickable(true);
+                                            messagesArray.add(mObj);
+                                            messagesAdapter.notifyItemInserted(messagesArray.size());
+                                            messagesList.scrollToPosition(messagesArray.size() - 1);
+                                            updateInstants(lastMessage);
+                                            //startRefreshTimer();
+                                            final String pushMessage = currentUser.getString(NICK) + ": '" + lastMessage + "'";
 
-                                        if (true) {
-                                            HashMap<String, Object> params = new HashMap<>();
-                                            params.put("userObjectID", userObj.getObjectId());
-                                            params.put("data", pushMessage);
-                                            params.put("senderId",currentUser.getObjectId());
-                                            params.put("senderName",currentUser.getString(NICK));
-                                            ParseCloud.callFunctionInBackground("pushAndroid", params, new FunctionCallback<Object>() {
-                                                @Override
-                                                public void done(Object object, ParseException e) {
-                                                    if (e == null) {
-                                                        // Log.i("log-", "PUSH SENT TO: " + userObj.getString(USER_USERNAME) + "\nMESSAGE: " + pushMessage);
+                                            if (isChatNotificationEnabled) {
+                                                HashMap<String, Object> params = new HashMap<>();
+                                                params.put("userObjectID", userObj.getObjectId());
+                                                params.put("data", pushMessage);
+                                                params.put("senderId", currentUser.getObjectId());
+                                                params.put("senderName", currentUser.getString(NICK));
+                                                ParseCloud.callFunctionInBackground("pushAndroid", params, new FunctionCallback<Object>() {
+                                                    @Override
+                                                    public void done(Object object, ParseException e) {
+                                                        if (e == null) {
+                                                            // Log.i("log-", "PUSH SENT TO: " + userObj.getString(USER_USERNAME) + "\nMESSAGE: " + pushMessage);
 
-                                                        // error
-                                                    } else {
-                                                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                                                        alert.setMessage(e.getMessage())
-                                                                .setTitle(R.string.app_name)
-                                                                .setPositiveButton("OK", null)
-                                                                .setIcon(R.drawable.wingmate);
-                                                        alert.create().show();
-                                                    }}});// ./ ParseCloud
+                                                            // error
+                                                        } else {
+                                                            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                                                            alert.setMessage(e.getMessage())
+                                                                    .setTitle(R.string.app_name)
+                                                                    .setPositiveButton("OK", null)
+                                                                    .setIcon(R.drawable.wingmate);
+                                                            alert.create().show();
+                                                        }
+                                                    }
+                                                });// ./ ParseCloud
+                                            }
+                                        } else {
+                                            send.setClickable(true);
+                                            //Toast.makeText(getContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
                                         }
-                                    }else{
-                                        send.setClickable(true);
-                                        //Toast.makeText(getContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
                                     }
-                                }
-                            });
+                                });
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "This person has disabled messages", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
             });
-        }catch (ParseException parseException){
+        } catch (ParseException parseException) {
             parseException.printStackTrace();
         }
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isChatNotificationEnabled = userObj.getBoolean("allowChatNotification");
+        isMessageDisabled = userObj.getBoolean("messageDisabled");
+    }
+
     void startRefreshTimer() {
         int delay = 20 * 1000;
         refreshTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override public void run() {
-                getActivity().runOnUiThread(new Runnable() { @Override public void run() {
-                    skip = 0;
-                    //messagesArray = new ArrayList<>();
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        skip = 0;
+                        isChatNotificationEnabled = userObj.getBoolean("allowChatNotification");
+                        //messagesArray = new ArrayList<>();
 
-                    // Call query
-                    queryMessages();
-                    Log.i(TAG, "REFRESH MESSAGES!");
+                        // Call query
+                        queryMessages();
+                        Log.i(TAG, "REFRESH MESSAGES!");
 
-                }});}}, delay, delay);
+                    }
+                });
+            }
+        }, delay, delay);
     }
+
     private void updateInstants(String lastMessage) {
         final ParseUser currentUser = ParseUser.getCurrentUser();
 
@@ -238,32 +262,40 @@ public class ChatFragment extends BaseFragment {
                 if (e == null) {
                     instantsArray = objects;
 
-                    ParseObject iObj = new ParseObject(INSTANTS_CLASS_NAME);
-                    if (instantsArray.size() != 0) { iObj = instantsArray.get(0); }
+                    //ParseObject iObj = new ParseObject(INSTANTS_CLASS_NAME);
+                    Instants instants = new Instants();
+
+                    if (instantsArray.size() != 0) {
+                        instants = (Instants) instantsArray.get(0);
+                    }
 
                     // Prepare data
-                    iObj.put(INSTANTS_SENDER, currentUser);
-                    iObj.put(INSTANTS_RECEIVER, userObj);
-                    iObj.put(INSTANTS_ID, currentUser.getObjectId() + userObj.getObjectId());
-                    iObj.put(LAST_MESSAGE,lastMessage);
-                    iObj.put("isUnread",true);
-                    iObj.put("msgSentBy",currentUser.getObjectId());
-                    iObj.put("msgCreateAt",new Date());
+                    instants.put(INSTANTS_SENDER, currentUser);
+                    instants.put(INSTANTS_RECEIVER, userObj);
+                    instants.put(INSTANTS_ID, currentUser.getObjectId() + userObj.getObjectId());
+                    instants.put(LAST_MESSAGE, lastMessage);
+                    instants.put("isUnread", true);
+                    instants.put("msgSentBy", currentUser.getObjectId());
+                    instants.put("msgCreateAt", new Date());
                     // Saving...
-                    iObj.saveInBackground(new SaveCallback() {
+                    instants.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             if (e == null) {
                                 //Log.i("log-", "LAST MESS SAVED: " + lastMessage);
                             } else {
-                                Toast.makeText(getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
                                 //simpleAlert(e.getMessage(), ctx);
-                            }}});
+                            }
+                        }
+                    });
 
                     // error
                 } else { //simpleAlert(e.getMessage(), ctx);
-                    Toast.makeText(getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
-                }}});
+                    Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void queryMessages() {
@@ -272,7 +304,7 @@ public class ChatFragment extends BaseFragment {
         String messId2 = userObj.getObjectId() + currentUser.getObjectId();
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery(MESSAGES_CLASS_NAME);
-        String ids[] = {messId1,messId2};
+        String ids[] = {messId1, messId2};
         query.whereContainedIn(MESSAGES_MESSAGE_ID, Arrays.asList(ids));
         query.orderByAscending(MESSAGES_CREATED_AT);
         query.setSkip(skip);
@@ -292,8 +324,8 @@ public class ChatFragment extends BaseFragment {
                         messagesList.scrollToPosition(messagesArray.size());
                     }
                 };*/
-                if (isScrollEnabled){
-                    messagesList.scrollToPosition(messagesArray.size()-1);
+                if (isScrollEnabled) {
+                    messagesList.scrollToPosition(messagesArray.size() - 1);
                     isScrollEnabled = false;
                 }
             }

@@ -14,6 +14,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.wingmate.R;
 import com.app.wingmate.base.BaseFragment;
+import com.app.wingmate.models.Fans;
+import com.app.wingmate.models.Instants;
 import com.app.wingmate.models.InstantsList;
 import com.app.wingmate.ui.activities.MainActivity;
 import com.app.wingmate.ui.adapters.ChatsAdapter;
@@ -27,6 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.app.wingmate.utils.AppConstants.CLASS_NAME_FANS;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.AppConstants.USER_CLASS_NAME;
 import static com.app.wingmate.utils.CommonKeys.INSTANTS_CLASS_NAME;
@@ -125,17 +128,76 @@ public class MessagesFragment extends BaseFragment {
         ParseUser currentUser = ParseUser.getCurrentUser();
 
         // Query
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(INSTANTS_CLASS_NAME);
-        query.include(USER_CLASS_NAME);
-        query.whereContains(INSTANTS_ID, currentUser.getObjectId());
+        ParseQuery queryUserToMe = ParseQuery.getQuery(INSTANTS_CLASS_NAME);
+        queryUserToMe.whereContains(INSTANTS_ID, currentUser.getObjectId());
+
+        List<ParseQuery<Instants>> queries = new ArrayList<>();
+        queries.add(queryUserToMe);
+
+        ParseQuery<Instants> query = ParseQuery.or(queries);
+        query.include("sender");
+        query.include("sender"+"."+"isUserUnsubscribed");
+        query.include("receiver");
+        query.include("receiver"+"."+"isUserUnsubscribed");
         query.orderByDescending("msgCreateAt");
         query.setSkip(skip);
-        query.findInBackground(new FindCallback<ParseObject>() {
+        query.findInBackground((objects, e) -> {
+            if (e==null){
+                instantsArray.clear();
+                List<ParseObject> filteredList = new ArrayList<>();
+                for (int i=0; i<objects.size(); i++){
+                    ParseUser senderUser = objects.get(i).getSender();
+                    ParseUser receiverUser = objects.get(i).getReceiver();
+                    if (senderUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                        boolean isUserUnsubscribed = false;
+                        isUserUnsubscribed = receiverUser.getBoolean("isUserUnsubscribed");
+                        if (!isUserUnsubscribed){
+                            filteredList.add(objects.get(i));
+                        }
+                    }else{
+                        boolean isUserUnsubscribed = false;
+                        isUserUnsubscribed = senderUser.getBoolean("isUserUnsubscribed");
+                        if (!isUserUnsubscribed){
+                            filteredList.add(objects.get(i));
+                        }
+                    }
+                }
+                instantsArray.addAll(filteredList);
+                if (objects.size() == 100) {
+                    skip = skip + 100;
+                    queryInstants();
+                }
+                chatsAdapter.notifyDataSetChanged();
+                dismissProgress();
+
+            }else{
+                Toast.makeText(getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
+            }
+        });
+        /*query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
                     instantsArray.clear();
-                    instantsArray.addAll(objects);
+                    List<ParseObject> filteredList = new ArrayList<>();
+                    for (int i=0; i<objects.size(); i++){
+                        ParseUser senderUser = (ParseUser)objects.get(i).get("sender");
+                        ParseUser receiverUser = (ParseUser)objects.get(i).get("receiver");
+                        if (senderUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                            boolean isUserUnsubscribed = false;
+                            isUserUnsubscribed = receiverUser.getBoolean("isUserUnsubscribed");
+                            if (!isUserUnsubscribed){
+                                filteredList.add(objects.get(i));
+                            }
+                        }else{
+                            boolean isUserUnsubscribed = false;
+                            isUserUnsubscribed = senderUser.getBoolean("isUserUnsubscribed");
+                            if (!isUserUnsubscribed){
+                                filteredList.add(objects.get(i));
+                            }
+                        }
+                    }
+                    instantsArray.addAll(filteredList);
                     if (objects.size() == 100) {
                         skip = skip + 100;
                         queryInstants();
@@ -145,6 +207,6 @@ public class MessagesFragment extends BaseFragment {
                     // error
                 } else {
                     Toast.makeText(getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
-                }}});
+                }}})*/;
     }
 }

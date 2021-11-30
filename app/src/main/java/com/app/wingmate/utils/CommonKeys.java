@@ -36,7 +36,13 @@ public class CommonKeys {
     public static final String KEY_FRAGMENT_ADMIN_PROFILE = "AdminProfileFragment";
     public static final String KEY_FRAGMENT_ADMIN_PHOTO_VIEW = "AdminPhotoViewFragment";
     public static final String KEY_FRAGMENT_ADMIN_VIDEO_VIEW = "AdminVideoViewFragment";
-
+    public static final String KEY_FRAGMENT_NOTIFICATION_SETTINGS = "NotificationsSettingsFragment";
+    public static final String KEY_FRAGMENT_PRIVACY_POLICY = "KEY_FRAGMENT_PRIVACY_POLICY";
+    public static final String KEY_FRAGMENT_ABOUT_US = "AboutUsFragment";
+    public static final String KEY_FRAGMENT_HELP = "HelpFragment";
+    public static final String KEY_TERMS_OF_CONDITIONS = "TermsOfConditionsFragment";
+    public static final String KEY_CONTACT_US_FRAGMENT = "ContactUsFragment";
+    public static final String KEY_CHANGE_PASSWORD = "ChangePasswordFragment";
 
     public static final String KEY_TITLE = "key_title";
     public static final String KEY_QUESTION_TYPE = "QuestionType";

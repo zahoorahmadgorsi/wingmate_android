@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,18 +31,25 @@ import com.app.wingmate.admin.ui.fragments.AdminVideoViewFragment;
 import com.app.wingmate.base.BaseActivity;
 import com.app.wingmate.events.RefreshDashboard;
 import com.app.wingmate.events.RefreshUserStatus;
+import com.app.wingmate.ui.fragments.AboutUsFragment;
 import com.app.wingmate.ui.fragments.AccountPendingFragment;
+import com.app.wingmate.ui.fragments.ChangePasswordFragment;
 import com.app.wingmate.ui.fragments.ChatFragment;
+import com.app.wingmate.ui.fragments.ContactUsFragment;
 import com.app.wingmate.ui.fragments.DashboardFragment;
 import com.app.wingmate.events.RefreshProfile;
+import com.app.wingmate.ui.fragments.HelpFragment;
 import com.app.wingmate.ui.fragments.HomeFragment;
 import com.app.wingmate.ui.fragments.LaunchCampaignFragment;
 import com.app.wingmate.ui.fragments.MembershipFragment;
 import com.app.wingmate.ui.fragments.NextStep_Membership;
+import com.app.wingmate.ui.fragments.NotificationsSettingsFragment;
 import com.app.wingmate.ui.fragments.PaymentFragment;
+import com.app.wingmate.ui.fragments.PrivacyPolicyFragment;
 import com.app.wingmate.ui.fragments.ProfileFragment;
 import com.app.wingmate.ui.fragments.EditProfileFragment;
 import com.app.wingmate.ui.fragments.EditProfileTextFieldFragment;
+import com.app.wingmate.ui.fragments.TermsOfConditionsFragment;
 import com.app.wingmate.ui.fragments.UploadPhotoVideoFragment;
 import com.app.wingmate.ui.fragments.CropFragment;
 import com.app.wingmate.ui.fragments.DummyFragment;
@@ -64,6 +72,9 @@ import static com.app.wingmate.utils.AppConstants.PARAM_ABOUT_ME;
 import static com.app.wingmate.utils.AppConstants.PARAM_NICK;
 import static com.app.wingmate.utils.AppConstants.PARAM_PROFILE_PIC;
 import static com.app.wingmate.utils.CommonKeys.KEY_ACTIVITY_TAG;
+import static com.app.wingmate.utils.CommonKeys.KEY_CHANGE_PASSWORD;
+import static com.app.wingmate.utils.CommonKeys.KEY_CONTACT_US_FRAGMENT;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ABOUT_US;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ACCOUNT_PENDING;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_PHOTO_VIEW;
@@ -76,15 +87,18 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EDIT_PROFILE_TEXT_FIELDS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_EMAIL_VERIFY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_FORGOT_PASSWORD;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_HELP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_HOME;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LAUNCH_CAMPAIGN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_MEMBERSHIP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_NOTIFICATION_SETTINGS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PHOTO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRIVACY_POLICY;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_SIGN_UP;
@@ -92,6 +106,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_TERMS_AND_CONDITION
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_VIDEO_VIEW;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_WEB_VIEW;
+import static com.app.wingmate.utils.CommonKeys.KEY_TERMS_OF_CONDITIONS;
 import static com.app.wingmate.utils.CommonKeys.KEY_TITLE;
 import static com.app.wingmate.utils.Utilities.showToast;
 
@@ -111,6 +126,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private FragmentManager supportFragmentManager;
 
+    private Fragment changePassword;
+    private Fragment contactUsFragment;
+    private Fragment termsOfConditions;
+    private Fragment helpFragment;
+    private Fragment aboutUsFragment;
+    private Fragment privacyPolicyFragment;
+    private Fragment notificationsSettingsFragment;
     private Fragment chatFragment;
     private Fragment preLoginFragment;
     private Fragment loginFragment;
@@ -144,10 +166,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private String fragmentTag;
     private String id = null;
     private String username = null;
+    TextView backLabel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+        backLabel = findViewById(R.id.backLabel);
         setStatusBarColor(R.color.white,true);
         permissionStatus = getSharedPreferences("permissionStatus", MODE_PRIVATE);
         id = getIntent().getStringExtra("userId");
@@ -162,6 +187,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         getDoneButton().setOnClickListener(this);
         getRotateLeftButton().setOnClickListener(this);
         getRotateRightButton().setOnClickListener(this);
+        backLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
     private void replaceFragment() {
@@ -254,16 +285,117 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case KEY_FRAGMENT_CHAT:
                 beginChatFragment();
                 break;
+            case KEY_FRAGMENT_NOTIFICATION_SETTINGS:
+                beginNotificationSettingsFragment();
+                break;
+            case KEY_FRAGMENT_PRIVACY_POLICY:
+                beginPrivacyPolicyFragment();
+                break;
+            case KEY_FRAGMENT_ABOUT_US:
+                beginAboutUsFragment();
+                break;
+            case KEY_FRAGMENT_HELP:
+                beginHelpFragment();
+                break;
+            case KEY_TERMS_OF_CONDITIONS:
+                beginTermsOfConditions();
+                break;
+            case KEY_CONTACT_US_FRAGMENT:
+                beginContactUsFragment();
+                break;
+            case KEY_CHANGE_PASSWORD:
+                beginChangePassword();
+                break;
             default:
                 onBackPressed();
                 break;
         }
     }
 
+    private void beginChangePassword() {
+        showTopView();
+        setScreenTitle("Change Password");
+        showBackLabel();
+        hideProfileImage();
+        changePassword  = getSupportFragmentManager().findFragmentByTag(ChangePasswordFragment.TAG);
+        if (changePassword == null){
+            changePassword = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(),ChangePasswordFragment.TAG);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,changePassword,ChangePasswordFragment.TAG).commit();
+        }
+    }
+
+    private void beginContactUsFragment() {
+        showTopView();
+        setScreenTitle("Contact us");
+        showBackLabel();
+        hideProfileImage();
+        contactUsFragment  = getSupportFragmentManager().findFragmentByTag(ContactUsFragment.TAG);
+        if (contactUsFragment == null){
+            contactUsFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(),ContactUsFragment.TAG);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,contactUsFragment,ContactUsFragment.TAG).commit();
+        }
+    }
+
+    private void beginTermsOfConditions(){
+        showTopView();
+        setScreenTitle("Terms of use");
+        showBackLabel();
+        hideProfileImage();
+        termsOfConditions = getSupportFragmentManager().findFragmentByTag(TermsOfConditionsFragment.TAG);
+        if (termsOfConditions == null){
+            termsOfConditions = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(),TermsOfConditionsFragment.TAG);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,termsOfConditions,TermsOfConditionsFragment.TAG).commit();
+        }
+    }
+    private void beginHelpFragment() {
+        showTopView();
+        setScreenTitle("Help");
+        showBackLabel();
+        hideProfileImage();
+        helpFragment = getSupportFragmentManager().findFragmentByTag(HelpFragment.TAG);
+        if (helpFragment == null){
+            helpFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(),HelpFragment.TAG);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,helpFragment,HelpFragment.TAG).commit();
+        }
+    }
+
+    private void beginAboutUsFragment() {
+        showTopView();
+        setScreenTitle("About Us");
+        showBackLabel();
+        hideProfileImage();
+        aboutUsFragment = getSupportFragmentManager().findFragmentByTag(AboutUsFragment.TAG);
+        if (aboutUsFragment == null){
+            aboutUsFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(),AboutUsFragment.TAG);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,aboutUsFragment,AboutUsFragment.TAG).commit();
+        }
+    }
+
+    private void beginNotificationSettingsFragment(){
+        showTopView();
+        setScreenTitle("Notifications Settings");
+        notificationsSettingsFragment = getSupportFragmentManager().findFragmentByTag(NotificationsSettingsFragment.TAG);
+        if (notificationsSettingsFragment == null){
+            notificationsSettingsFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), NotificationsSettingsFragment.TAG);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,notificationsSettingsFragment,NotificationsSettingsFragment.TAG).commit();
+        }
+    }
+
+    private void beginPrivacyPolicyFragment(){
+        showTopView();
+        setScreenTitle("Privacy Policy");
+        showBackLabel();
+        hideProfileImage();
+        privacyPolicyFragment = getSupportFragmentManager().findFragmentByTag(PrivacyPolicyFragment.TAG);
+        if (privacyPolicyFragment == null){
+            privacyPolicyFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(),PrivacyPolicyFragment.TAG);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,privacyPolicyFragment,PrivacyPolicyFragment.TAG).commit();
+        }
+    }
     private void beginChatFragment() {
         chatFragment = getSupportFragmentManager().findFragmentByTag(ChatFragment.TAG);
         if (chatFragment == null){
-            chatFragment = supportFragmentManager.getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(),ChatFragment.TAG);
+            chatFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(),ChatFragment.TAG);
             chatFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().replace(R.id.container,chatFragment,ChatFragment.TAG).commit();
         }
@@ -272,7 +404,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void beginPreLoginFragment() {
         preLoginFragment = getSupportFragmentManager().findFragmentByTag(PreLoginFragment.TAG);
         if (preLoginFragment == null)
-            preLoginFragment = supportFragmentManager.getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), PreLoginFragment.TAG);
+            preLoginFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), PreLoginFragment.TAG);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, preLoginFragment, PreLoginFragment.TAG).commit();
     }
 
@@ -297,7 +429,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void beginTermsFragment() {
         showTopView();
-        setScreenTitle("Terms & Conditions");
+        setScreenTitle("Terms of use");
         termsFragment = getSupportFragmentManager().findFragmentByTag(TermsAndConditionsFragment.TAG);
         if (termsFragment == null)
             termsFragment = getSupportFragmentManager().getFragmentFactory().instantiate(ClassLoader.getSystemClassLoader(), TermsAndConditionsFragment.TAG);
@@ -524,6 +656,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             webViewFragment = Fragment.instantiate(this, WebviewFragment.TAG, getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.container, webViewFragment, WebviewFragment.TAG).commit();
     }
+
+
 
     @Override
     public void onClick(View v) {

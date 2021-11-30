@@ -18,6 +18,7 @@ import androidx.core.app.TaskStackBuilder;
 
 import com.app.wingmate.events.RefreshUserStatus;
 import com.app.wingmate.ui.activities.SplashActivity;
+import com.app.wingmate.utils.SharedPrefers;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -46,29 +47,32 @@ public class WingMateParseFirebaseMessagingService extends FirebaseMessagingServ
         Log.e(TAG, "onMessageReceived");
         String userId = null;
         String userName = null;
-        String pushId = remoteMessage.getData().get("push_id");
-        String timestamp = remoteMessage.getData().get("time");
-        String dataString = remoteMessage.getData().get("data");
-        String channel = remoteMessage.getData().get("channel");
-        JSONObject data = null;
-        if (dataString != null) {
-            try {
-                data = new JSONObject(dataString);
-                dataString = data.getString("alert");
-                if (data.has("username") && data.has("userId")){
-                    userName = data.getString("username");
-                    userId = data.getString("userId");
+        boolean isNotificationAlertEnabled = SharedPrefers.getBoolean(this,"isNotificationAlertEnabled",true);
+        if (isNotificationAlertEnabled){
+            String pushId = remoteMessage.getData().get("push_id");
+            String timestamp = remoteMessage.getData().get("time");
+            String dataString = remoteMessage.getData().get("data");
+            String channel = remoteMessage.getData().get("channel");
+            JSONObject data = null;
+            if (dataString != null) {
+                try {
+                    data = new JSONObject(dataString);
+                    dataString = data.getString("alert");
+                    if (data.has("username") && data.has("userId")){
+                        userName = data.getString("username");
+                        userId = data.getString("userId");
+                    }
+                    System.out.println("==WingMatePFMService=="+data.toString());
+                } catch (JSONException e) {
+                    Log.e(TAG, "Ignoring push because of JSON exception while processing: " + dataString, e);
+                    return;
                 }
-                System.out.println("==WingMatePFMService=="+data.toString());
-            } catch (JSONException e) {
-                Log.e(TAG, "Ignoring push because of JSON exception while processing: " + dataString, e);
-                return;
             }
-        }
 
 //        PushRouter.getInstance().handlePush(pushId, timestamp, channel, data);
-        EventBus.getDefault().post(new RefreshUserStatus());
-        showNotification(getApplicationContext(), pushId, timestamp, dataString, channel, data,userId,userName);
+            EventBus.getDefault().post(new RefreshUserStatus());
+            showNotification(getApplicationContext(), pushId, timestamp, dataString, channel, data,userId,userName);
+        }
     }
 
 

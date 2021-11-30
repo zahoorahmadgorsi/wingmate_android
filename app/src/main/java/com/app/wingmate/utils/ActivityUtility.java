@@ -35,6 +35,7 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_MEMBERSHIP;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_NEXTSTEP_MEMBERSHIP;
+import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_NOTIFICATION_SETTINGS;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PROFILE;
@@ -267,6 +268,53 @@ public class ActivityUtility {
         //intent.putExtra(KEY_PARSE_USER, parseUser);
         intent.putExtra("userId", userId);
         intent.putExtra("username", username);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+    public static void startContactUsFragment(Activity context, String tag){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG,tag);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left,R.anim.blank_anim);
+    }
+
+    public static void startTermsOfConditions(Activity context, String tag){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG,tag);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left,R.anim.blank_anim);
+    }
+
+    public static void startChangePasswordFragment(Activity context, String tag){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG,tag);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left,R.anim.blank_anim);
+    }
+
+    public static void startHelpFragment(Activity context, String tag){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG,tag);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+
+    public static void startAboutUsFragment(Activity context, String tag){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG,tag);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+
+    public static void startPrivacyPolicy(Activity context, String tag){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG,tag);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
+    }
+    public static void startNotificationSettings(Activity context, String tag){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_ACTIVITY_TAG,tag);
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.right_to_left, R.anim.blank_anim);
     }

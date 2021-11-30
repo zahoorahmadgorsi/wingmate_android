@@ -7,22 +7,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_view">
-
+<!--
         <TextView
             android:id="@+id/terms_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20ssp"
+            android:layout_marginLeft="@dimen/_20ssp"
+            android:layout_marginTop="@dimen/_6ssp"
+            android:layout_marginEnd="@dimen/_20ssp"
+            android:layout_marginRight="@dimen/_20ssp"
             android:fontFamily="@font/open_sans_regular"
             android:gravity="start"
             android:paddingBottom="@dimen/_40ssp"
-            android:layout_marginTop="@dimen/_6ssp"
-            android:layout_marginStart="@dimen/_20ssp"
-            android:layout_marginLeft="@dimen/_20ssp"
-            android:layout_marginRight="@dimen/_20ssp"
-            android:layout_marginEnd="@dimen/_20ssp"
-            android:text="@string/lorem_ipsum"
+            android:text=""
             android:textColor="@color/text_color"
-            android:textSize="@dimen/label_txt_size" />
+            android:visibility="gone"
+            android:textSize="@dimen/label_txt_size" />-->
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/_40ssp"
+            >
+
+        </WebView>
+
     </ScrollView>
 
     <LinearLayout

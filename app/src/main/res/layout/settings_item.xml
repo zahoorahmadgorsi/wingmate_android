@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    >
+    <RelativeLayout
+        android:id="@+id/layoutOne"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="#ffffff"
+        >
+
+        <TextView
+            android:id="@+id/settingItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:fontFamily="@font/open_sans_semibold"
+            android:text=""
+            android:textColor="#11294F"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp" />
+        <View
+            android:id="@+id/div"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="#E2E2E2"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutTwo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="@dimen/_16ssp"
+            android:layout_marginTop="@dimen/_25ssp"
+            android:background="@drawable/button_pressed"
+            android:fontFamily="@font/baloo_regular"
+            android:text="Logout"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:visibility="visible"
+            android:textSize="@dimen/txt_size" />
+
+        <TextView
+            android:id="@+id/version_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Version: 1.0.0"
+            android:textSize="@dimen/label_txt_size"
+            android:fontFamily="@font/open_sans_regular"
+            android:textColor="@color/text_color_grey"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_10ssp"
+            android:layout_marginBottom="@dimen/_25ssp"
+            />
+    </LinearLayout>
+</FrameLayout>

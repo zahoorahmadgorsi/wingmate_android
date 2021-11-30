@@ -54,6 +54,7 @@ public class BaseActivity extends AppCompatActivity {
     TextView crush_count_tv;
     TextView may_be_count;
     TextView may_be_count_tv;
+    TextView backLabel;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -89,7 +90,7 @@ public class BaseActivity extends AppCompatActivity {
         may_be_count_tv = findViewById(R.id.may_be_count_tv);
 
         profileImg = (CircleImageView) findViewById(R.id.profile_img);
-
+        backLabel = findViewById(R.id.backLabel);
         profileImg.setOnClickListener(v -> {
             ActivityUtility.startProfileActivity(BaseActivity.this, KEY_FRAGMENT_PROFILE, true, ParseUser.getCurrentUser());
 //            ActivityUtility.startPhotoViewActivity(BaseActivity.this, KEY_FRAGMENT_PHOTO_VIEW, ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
@@ -105,6 +106,11 @@ public class BaseActivity extends AppCompatActivity {
         hideCropOptions();
         hideProfileImage();
         hideCountsView();
+        hideBackLabel();
+    }
+
+    private void hideBackLabel() {
+        backLabel.setVisibility(View.GONE);
     }
 
 //    @Override
@@ -118,6 +124,9 @@ public class BaseActivity extends AppCompatActivity {
 //        }
 //    }
 
+    public void showBackLabel(){
+        backLabel.setVisibility(View.VISIBLE);
+    }
     public void showTopView() {
         topView.setVisibility(View.VISIBLE);
     }

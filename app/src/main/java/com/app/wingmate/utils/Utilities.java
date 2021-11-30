@@ -82,6 +82,8 @@ public class Utilities {
 
     public static String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
+
+
     public static boolean isValidEmail(String email) {
         Pattern pattern;
         Matcher matcher;

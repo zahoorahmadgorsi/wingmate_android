@@ -336,7 +336,7 @@ public class AdminSearchFragment extends BaseFragment implements BaseView, Optio
                 }
             }
             if (count == totalNoOfSelectedQuestions) {
-                if (!userIds.contains(userId1)) {
+                if (!userIds.contains(userId1) && !allSearchedResults.get(y).getUserId().getBoolean("isUserUnsubscribed") ) {
                     MyCustomUser myCustomUser = new MyCustomUser();
                     myCustomUser.setParseUser(allSearchedResults.get(y).getUserId());
                     myCustomUser.setMatchPercent(0);

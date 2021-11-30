@@ -35,14 +35,10 @@ public class MyWorker extends Worker {
             public void run() {
                 if (counter==900){
                     //AppConstants.QUOTE_OF_THE_DAY = GlobalArray.quotes.get(0).getQuote();
-                    int random = new Random().nextInt(GlobalArray.quotes.size());
-                    Log.e("random no",random+"");
-                    GlobalArray.liveQuote.postValue(GlobalArray.quotes.get((int) (Math.random()*GlobalArray.quotes.size())).getQuote());
+                    GlobalArray.liveQuote.postValue(GlobalArray.quotes.get(getRandomNo()).getQuote());
                 }else if (counter == 1800){
                     //AppConstants.QUOTE_OF_THE_DAY = GlobalArray.quotes.get(1).getQuote();
-                    int random = new Random().nextInt(GlobalArray.quotes.size());
-                    Log.e("random no",random+"");
-                    GlobalArray.liveQuote.postValue(GlobalArray.quotes.get(random).getQuote());
+                    GlobalArray.liveQuote.postValue(GlobalArray.quotes.get(getRandomNo()).getQuote());
                     timer.cancel();
                 }
                 Log.e("TimerTask", String.valueOf(counter));
@@ -51,5 +47,12 @@ public class MyWorker extends Worker {
         };
         timer.schedule(timerTask, 0, 1000);
         return Result.success() ;
+    }
+
+    private int getRandomNo() {
+        int min = 0;
+        int max = GlobalArray.quotes.size()-1;
+        int random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
+        return random_int;
     }
 }

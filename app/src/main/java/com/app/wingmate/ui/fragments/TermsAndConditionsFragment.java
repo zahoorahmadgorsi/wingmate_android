@@ -2,10 +2,12 @@ package com.app.wingmate.ui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +27,7 @@ public class TermsAndConditionsFragment extends BaseFragment {
     public static final String TAG = TermsAndConditionsFragment.class.getName();
 
     Unbinder unbinder;
+    WebView webView;
 
     public TermsAndConditionsFragment() {
 
@@ -40,6 +43,14 @@ public class TermsAndConditionsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_terms_and_conditions, container, false);
         unbinder = ButterKnife.bind(this, view);
+        webView = view.findViewById(R.id.webView);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webView.getSettings().setAllowFileAccessFromFileURLs(true);
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        webView.loadUrl("file:///android_asset/tou.html");
         return view;
     }
 

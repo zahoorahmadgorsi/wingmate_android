@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.app.wingmate.GlobalArray;
 import com.app.wingmate.R;
 import com.app.wingmate.admin.models.RejectionReason;
 import com.app.wingmate.models.Fans;
@@ -593,6 +594,7 @@ public class BaseInteractor {
             query.include(PARAM_USER_ID + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
             query.include(PARAM_USER_ID + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
             query.include(PARAM_USER_ID + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.include(PARAM_USER_ID + "." + PARAM_GENDER);
 
             query.whereContainedIn(PARAM_OPTIONS_OBJ_ARRAY, optionsObjArray);
             query.setLimit(1000);
@@ -619,6 +621,7 @@ public class BaseInteractor {
             query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
 //            query.whereNotEqualTo(PARAM_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
 //            query.whereNotEqualTo(PARAM_GENDER, ParseUser.getCurrentUser().getString(PARAM_GENDER));
+            query.whereNotEqualTo("isUserUnsubscribed",true); //added by zaki
             query.whereWithinKilometers(PARAM_CURRENT_LOCATION, myGeoPoint, distance);
             query.setLimit(1000);
             query.findInBackground((objects, e) -> {
@@ -650,6 +653,7 @@ public class BaseInteractor {
             query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
             query.whereNotEqualTo(PARAM_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
             query.whereNotEqualTo(PARAM_GENDER, ParseUser.getCurrentUser().getString(PARAM_GENDER));
+            query.whereNotEqualTo("isUserUnsubscribed",true); //added by zaki
             query.whereWithinKilometers(PARAM_CURRENT_LOCATION, myGeoPoint, distance);
             query.setLimit(1000);
             query.findInBackground((objects, e) -> {
@@ -676,6 +680,7 @@ public class BaseInteractor {
             query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
             query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
             query.whereEqualTo(PARAM_ACCOUNT_STATUS, ACTIVE);
+            query.whereEqualTo("isUserUnsubscribed",false);
             if (ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY).equalsIgnoreCase(GROUP_A)
                     || ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY).equalsIgnoreCase(GROUP_B))
                 query.whereEqualTo(PARAM_GROUP_CATEGORY, ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY));
@@ -704,6 +709,7 @@ public class BaseInteractor {
             query.include(PARAM_USER_MANDATORY_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
             query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
             query.include(PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+            query.whereEqualTo("isUserUnsubscribed",false);
             query.setLimit(1000);
             query.addDescendingOrder("createdAt");
             query.findInBackground((objects, e) -> {
@@ -728,6 +734,7 @@ public class BaseInteractor {
             ParseQuery queryMeToUser = ParseQuery.getQuery(CLASS_NAME_FANS);
             queryMeToUser.whereEqualTo(PARAM_FROM_USER, ParseUser.getCurrentUser());
 
+
             List<ParseQuery<Fans>> queries = new ArrayList<>();
             queries.add(queryUserToMe);
             queries.add(queryMeToUser);
@@ -740,6 +747,7 @@ public class BaseInteractor {
             mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_OPTIONAL_ARRAY);
             mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
             mainQuery.include(PARAM_FROM_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+
             mainQuery.include(PARAM_TO_USER);
             mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_MANDATORY_ARRAY);
             mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_MANDATORY_ARRAY + "." + PARAM_QUESTION_ID);
@@ -747,10 +755,35 @@ public class BaseInteractor {
             mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY);
             mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_QUESTION_ID);
             mainQuery.include(PARAM_TO_USER + "." + PARAM_USER_OPTIONAL_ARRAY + "." + PARAM_OPTIONS_OBJ_ARRAY);
+
             mainQuery.findInBackground((objects, e) -> {
                 if (e == null) {
-                    if (objects == null) objects = new ArrayList<>();
-                    listener.onMyFansSuccess(objects);
+                    List<Fans> filteredList = new ArrayList<>();
+                    if (objects == null){
+                        objects = new ArrayList<>();
+                        filteredList.addAll(objects);
+                    }else{
+                        List<Fans> list = (ArrayList<Fans>)objects;
+                        for (Fans item : list){
+                            String fromUserId = item.getFromUser().getObjectId();
+                            String toUserId = item.getToUser().getObjectId();
+                            if (fromUserId.equals(ParseUser.getCurrentUser().getObjectId())){
+                                ParseUser parseUser = item.getToUser();
+                                boolean isUserUnsubscribed = parseUser.getBoolean("isUserUnsubscribed");
+                                if (!isUserUnsubscribed){
+                                    filteredList.add(item);
+                                }
+                            }
+                            if (toUserId.equals(ParseUser.getCurrentUser().getObjectId())){
+                                ParseUser parseUser = item.getFromUser();
+                                boolean isUserUnsubscribed = parseUser.getBoolean("isUserUnsubscribed");
+                                if (!isUserUnsubscribed){
+                                    filteredList.add(item);
+                                }
+                            }
+                        }
+                    }
+                    listener.onMyFansSuccess(filteredList);
                 } else {
                     listener.onResponseError(e);
                 }

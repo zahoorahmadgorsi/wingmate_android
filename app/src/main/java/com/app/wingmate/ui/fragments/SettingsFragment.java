@@ -7,10 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.wingmate.BuildConfig;
 import com.app.wingmate.R;
@@ -18,11 +21,16 @@ import com.app.wingmate.base.BaseFragment;
 import com.app.wingmate.base.BaseInteractor;
 import com.app.wingmate.base.BasePresenter;
 import com.app.wingmate.ui.activities.MainActivity;
+import com.app.wingmate.ui.adapters.SettingsAdapter;
 import com.app.wingmate.utils.ActivityUtility;
 import com.app.wingmate.utils.AlertMessages;
 import com.app.wingmate.utils.SharedPrefers;
 import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +40,7 @@ import butterknife.Unbinder;
 import static com.app.wingmate.utils.AlertMessages.GO_TO_PAYMENT_SCREEN;
 import static com.app.wingmate.utils.AlertMessages.GO_TO_PAYMENT_SCREEN_AFTER_EXPIRED;
 import static com.app.wingmate.utils.AppConstants.ACTIVE;
+import static com.app.wingmate.utils.AppConstants.CLASS_NAME_USER;
 import static com.app.wingmate.utils.AppConstants.ERROR;
 import static com.app.wingmate.utils.AppConstants.INFO;
 import static com.app.wingmate.utils.AppConstants.MANDATORY;
@@ -47,6 +56,7 @@ import static com.app.wingmate.utils.AppConstants.PENDING;
 import static com.app.wingmate.utils.AppConstants.REJECTED;
 import static com.app.wingmate.utils.AppConstants.SUCCESS;
 import static com.app.wingmate.utils.AppConstants.TRIAL_PERIOD;
+import static com.app.wingmate.utils.AppConstants.USER_CLASS_NAME;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_ADMIN_DASHBOARD;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PAYMENT;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_PRE_LOGIN;
@@ -55,6 +65,9 @@ import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_QUESTIONNAIRE;
 import static com.app.wingmate.utils.CommonKeys.KEY_FRAGMENT_UPLOAD_PHOTO_VIDEO_PROFILE;
 import static com.app.wingmate.utils.CommonKeys.PREF_LAST_UPDATE_TIME;
 import static com.app.wingmate.utils.Utilities.showToast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SettingsFragment extends BaseFragment {
 
@@ -70,11 +83,18 @@ public class SettingsFragment extends BaseFragment {
     Button adminBtn;
     @BindView(R.id.version_tv)
     TextView versionTV;
+    boolean isLikeDisable = false;
+    boolean isMessageDisable = false;
+
+    RecyclerView settingsItemsList;
 
     public BasePresenter presenter;
 
     public boolean isExpired = false;
     public int remainingDays = TRIAL_PERIOD;
+    SettingsAdapter settingsAdapter;
+    int listSize = 12;
+    private boolean isUnSubscribed = false;
 
     public SettingsFragment() {
 
@@ -96,6 +116,7 @@ public class SettingsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         unbinder = ButterKnife.bind(this, view);
+        settingsItemsList = view.findViewById(R.id.itemsList);
         return view;
     }
 
@@ -103,7 +124,6 @@ public class SettingsFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter = new BasePresenter(this, new BaseInteractor());
-
         String versionNo = "Version: " + BuildConfig.VERSION_NAME;
         versionTV.setText(versionNo);
     }
@@ -113,19 +133,48 @@ public class SettingsFragment extends BaseFragment {
         super.onResume();
         ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
 //        dashboardInstance.performUserUpdateAction();
-
+        List<String> dataList = generateList();
         if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_ADMIN)) {
-            adminBtn.setVisibility(View.VISIBLE);
+            //adminBtn.setVisibility(View.VISIBLE);
+            //listSize = listSize + 1;
+            dataList.add("Go to Admin section");
         } else {
-            adminBtn.setVisibility(View.INVISIBLE);
+            //adminBtn.setVisibility(View.GONE);
+            //listSize = listSize - 1;
         }
 
         if (ParseUser.getCurrentUser().getBoolean(PARAM_IS_PAID_USER)) {
-            buyBtn.setVisibility(View.INVISIBLE);
+            buyBtn.setVisibility(View.GONE);
+            //listSize = listSize - 1;
         } else {
-            buyBtn.setVisibility(View.VISIBLE);
+            buyBtn.setVisibility(View.GONE);
+            //listSize = listSize + 1;
+            //dataList.add("Pay Now");
         }
+        dataList.add("Version: " + BuildConfig.VERSION_NAME);
+        isMessageDisable = ParseUser.getCurrentUser().getBoolean("messageDisabled");
+        isLikeDisable = ParseUser.getCurrentUser().getBoolean("likeDisabled");
+        isUnSubscribed = ParseUser.getCurrentUser().getBoolean("isUserUnsubscribed");
+        settingsAdapter = new SettingsAdapter(getActivity(),dataList,this,"Version: " + BuildConfig.VERSION_NAME,isMessageDisable,isLikeDisable,isUnSubscribed);
+        settingsItemsList.setAdapter(settingsAdapter);
+        settingsItemsList.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+    }
 
+    private List<String> generateList() {
+        List<String> list = new ArrayList<>();
+        list.add("Change Password");
+        list.add("Contact us");
+        list.add("Help");
+        list.add("About us");
+        list.add("Terms of use");
+        list.add("Privacy policy");
+        list.add("Notifications");
+        list.add("Disable messages");
+        list.add("Disable likes");
+        list.add("Change saved credit card");
+        list.add("Unsubscribe");
+        //list.add("Logout");
+        return list;
     }
 
     @Override
@@ -311,5 +360,118 @@ public class SettingsFragment extends BaseFragment {
                     ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
                 })
                 .show();
+    }
+
+    public void call(int action){
+        if (action == 1){
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setMessage("Are you sure you want to logout?");
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                dialog.cancel();
+                showToast(getActivity(), getContext(), "Logging out...", ERROR);
+                SharedPrefers.saveLong(requireContext(), PREF_LAST_UPDATE_TIME, 0);
+                ParseUser.logOutInBackground(e -> {
+                    ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_PRE_LOGIN);
+                });
+            });
+            builder.setNegativeButton("No", (dialog, which) -> {
+                dialog.cancel();
+            });
+            builder.show();
+        }
+        else if (action == 2){
+            ActivityUtility.startActivity(getActivity(), KEY_FRAGMENT_ADMIN_DASHBOARD);
+        }else if (action == 3){
+            performUserUpdateAction(true);
+        }else if (action == 4){
+
+        }else if (action == 5){
+
+        }
+    }
+
+    public void unSubscribe (boolean isUnsubscribe){
+        showProgress();
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(USER_CLASS_NAME);
+        parseQuery.whereEqualTo("objectId", ParseUser.getCurrentUser().getObjectId());
+        parseQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                object.put("isUserUnsubscribed",isUnsubscribe);
+                object.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e==null){
+                            ParseUser.getCurrentUser().fetchInBackground(new GetCallback<ParseObject>() {
+                                @Override
+                                public void done(ParseObject object, ParseException e) {
+                                    if (e==null){
+                                        dismissProgress();
+                                        if (isUnsubscribe){
+                                            Toast.makeText(getContext(),"You have unSubscribed successfully",Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            Toast.makeText(getContext(),"You have subscribed successfully",Toast.LENGTH_SHORT).show();
+                                        }
+                                    }else{
+                                        dismissProgress();
+                                        showToast(getActivity(), getContext(), e.getMessage(), ERROR);
+                                    }
+                                }
+                            });
+                        }else{
+                            dismissProgress();
+                            showToast(getActivity(), getContext(), e.getMessage(), ERROR);
+                        }
+                    }
+                });
+            }
+        });
+    }
+    public void disableLikes (boolean isDisable){
+        showProgress();
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(USER_CLASS_NAME);
+        parseQuery.whereEqualTo("objectId",ParseUser.getCurrentUser().getObjectId());
+        parseQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                object.put("likeDisabled",isDisable);
+                object.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e==null){
+                            //dismissProgress();
+                            fetchUpdatedCurrentUser(true);
+                        }else{
+                            dismissProgress();
+                            showToast(getActivity(), getContext(), e.getMessage(), ERROR);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    public void disableMessages (boolean isDisable){
+        showProgress();
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(USER_CLASS_NAME);
+        parseQuery.whereEqualTo("objectId",ParseUser.getCurrentUser().getObjectId());
+        parseQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                object.put("messageDisabled",isDisable);
+                object.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e==null){
+                            //dismissProgress();
+                            fetchUpdatedCurrentUser(true);
+                        }else{
+                            dismissProgress();
+                            showToast(getActivity(), getContext(), e.getMessage(), ERROR);
+                        }
+                    }
+                });
+            }
+        });
     }
 }
