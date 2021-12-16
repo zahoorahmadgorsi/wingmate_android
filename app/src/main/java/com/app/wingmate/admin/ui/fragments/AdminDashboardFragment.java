@@ -173,7 +173,8 @@ public class AdminDashboardFragment extends BaseFragment implements BaseView, Vi
         ((MainActivity) getActivity()).hideTopView();
         ((MainActivity) getActivity()).hideScreenTitle();
         ((MainActivity) getActivity()).hideProfileImage();
-        ((MainActivity) getActivity()).hideCountsView();
+        //((MainActivity) getActivity()).hideCountsView();
+        ((MainActivity) getActivity()).hideFansCountView();
         btnSearch.setVisibility(View.VISIBLE);
         resetAllBottomButtons();
         icHome.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -300,7 +301,8 @@ public class AdminDashboardFragment extends BaseFragment implements BaseView, Vi
                 isHomeView = true;
                 ((MainActivity) getActivity()).hideTopView();
                 ((MainActivity) getActivity()).hideScreenTitle();
-                ((MainActivity) getActivity()).hideCountsView();
+                //((MainActivity) getActivity()).hideCountsView();
+                ((MainActivity) getActivity()).hideFansCountView();
                 ((MainActivity) getActivity()).hideProfileImage();
                 btnSearch.setVisibility(View.VISIBLE);
                 resetAllBottomButtons();
@@ -313,7 +315,8 @@ public class AdminDashboardFragment extends BaseFragment implements BaseView, Vi
             case R.id.btn_search:
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
-                ((MainActivity) getActivity()).hideCountsView();
+                //((MainActivity) getActivity()).hideCountsView();
+                ((MainActivity) getActivity()).hideFansCountView();
                 ((MainActivity) getActivity()).setProfileImage(SharedPrefers.getString(requireContext(), PREF_IMAGE_URL, ""));
                 ((MainActivity) getActivity()).hideProfileImage();
                 resetAllBottomButtons();

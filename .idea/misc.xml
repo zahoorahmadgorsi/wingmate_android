@@ -3,8 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/drawable/crush_background.xml" value="0.2203125" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/drawable/green_indicator.xml" value="0.2169230769230769" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/drawable/left_chat_bubble_background.xml" value="0.20555555555555555" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/drawable/liike_background.xml" value="0.2203125" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/drawable/maybe_background.xml" value="0.2203125" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/drawable/right_chat_bg.xml" value="0.20555555555555555" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/drawable/right_chat_bubble_background.xml" value="0.20555555555555555" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/about_us_fragment.xml" value="0.20416666666666666" />
@@ -20,6 +23,7 @@
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_membership.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_messages.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_my_fans.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_next_step__membership.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_payment.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_profile.xml" value="0.20416666666666666" />

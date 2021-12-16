@@ -125,9 +125,9 @@ public class MyFansFragment extends BaseFragment {
         ((MainActivity) getActivity()).getCrushCount().setText(crushList.size() + "");
         ((MainActivity) getActivity()).getMaybeCount().setText(maybeList.size() + "");
 
-        ((MainActivity) getActivity()).getLikesCountTV().setSelected(true);
-        ((MainActivity) getActivity()).getCrushCountTV().setSelected(false);
-        ((MainActivity) getActivity()).getMaybeCountTV().setSelected(false);
+        //((MainActivity) getActivity()).getLikesCountTV().setSelected(true);
+        //((MainActivity) getActivity()).getCrushCountTV().setSelected(false);
+        //((MainActivity) getActivity()).getMaybeCountTV().setSelected(false);
 
         if (likesList == null || likesList.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
@@ -144,9 +144,9 @@ public class MyFansFragment extends BaseFragment {
         ((MainActivity) getActivity()).getCrushCount().setText(crushList.size() + "");
         ((MainActivity) getActivity()).getMaybeCount().setText(maybeList.size() + "");
 
-        ((MainActivity) getActivity()).getLikesCountTV().setSelected(false);
-        ((MainActivity) getActivity()).getCrushCountTV().setSelected(true);
-        ((MainActivity) getActivity()).getMaybeCountTV().setSelected(false);
+        //((MainActivity) getActivity()).getLikesCountTV().setSelected(false);
+        //((MainActivity) getActivity()).getCrushCountTV().setSelected(true);
+        //((MainActivity) getActivity()).getMaybeCountTV().setSelected(false);
 
         if (crushList == null || crushList.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
@@ -163,9 +163,9 @@ public class MyFansFragment extends BaseFragment {
         ((MainActivity) getActivity()).getCrushCount().setText(crushList.size() + "");
         ((MainActivity) getActivity()).getMaybeCount().setText(maybeList.size() + "");
 
-        ((MainActivity) getActivity()).getLikesCountTV().setSelected(false);
-        ((MainActivity) getActivity()).getCrushCountTV().setSelected(false);
-        ((MainActivity) getActivity()).getMaybeCountTV().setSelected(true);
+        //((MainActivity) getActivity()).getLikesCountTV().setSelected(false);
+        //((MainActivity) getActivity()).getCrushCountTV().setSelected(false);
+        //((MainActivity) getActivity()).getMaybeCountTV().setSelected(true);
 
         if (maybeList == null || maybeList.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
@@ -246,11 +246,11 @@ public class MyFansFragment extends BaseFragment {
             }
         }
 
-        System.out.println("===toList==" + toList.size());
+       /* System.out.println("===toList==" + toList.size());
         System.out.println("===fromList==" + fromList.size());
         System.out.println("===likesList==" + likesList.size());
         System.out.println("===crushList==" + crushList.size());
-        System.out.println("===maybeList=" + maybeList.size());
+        System.out.println("===maybeList=" + maybeList.size());*/
 
         if (dashboardInstance.myFansList == null || dashboardInstance.myFansList.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);

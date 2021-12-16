@@ -166,6 +166,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private String fragmentTag;
     private String id = null;
     private String username = null;
+    private String title = null;
     TextView backLabel;
 
     @Override
@@ -177,6 +178,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         permissionStatus = getSharedPreferences("permissionStatus", MODE_PRIVATE);
         id = getIntent().getStringExtra("userId");
         username = getIntent().getStringExtra("userName");
+        //title = getIntent().getStringExtra("title");
         hideBackBtn();
 
         supportFragmentManager = getSupportFragmentManager();

@@ -356,7 +356,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         ((MainActivity) getActivity()).hideTopView();
         ((MainActivity) getActivity()).hideScreenTitle();
         ((MainActivity) getActivity()).hideProfileImage();
-        ((MainActivity) getActivity()).hideCountsView();
+        //((MainActivity) getActivity()).hideCountsView();
+        ((MainActivity) getActivity()).hideFansCountView();
         btnSearch.setVisibility(View.GONE);
         btnFan.setVisibility(View.GONE);
         btnMsg.setVisibility(View.GONE);
@@ -399,7 +400,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
                 ((MainActivity) getActivity()).setScreenTitle("Search");
-                ((MainActivity) getActivity()).hideCountsView();
+                //((MainActivity) getActivity()).hideCountsView();
+                ((MainActivity) getActivity()).hideFansCountView();
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icSearch.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -414,7 +416,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
                 ((MainActivity) getActivity()).setScreenTitle("My Fans");
-                ((MainActivity) getActivity()).showCountsView();
+                //((MainActivity) getActivity()).showCountsView();
+                ((MainActivity) getActivity()).showFansCountView();
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icFan.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -429,7 +432,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
                 ((MainActivity) getActivity()).setScreenTitle("Messages");
-                ((MainActivity) getActivity()).hideCountsView();
+                //((MainActivity) getActivity()).hideCountsView();
+                ((MainActivity) getActivity()).hideFansCountView();
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icMsg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -867,7 +871,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
 //                setHomeView();
                 ((MainActivity) getActivity()).hideTopView();
                 ((MainActivity) getActivity()).hideScreenTitle();
-                ((MainActivity) getActivity()).hideCountsView();
+                //((MainActivity) getActivity()).hideCountsView();
+                ((MainActivity) getActivity()).hideFansCountView();
                 ((MainActivity) getActivity()).hideProfileImage();
                 btnSearch.setVisibility(View.GONE);
                 btnFan.setVisibility(View.GONE);
@@ -882,7 +887,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
             case R.id.btn_search:
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
-                ((MainActivity) getActivity()).hideCountsView();
+                //((MainActivity) getActivity()).hideCountsView();
+                ((MainActivity) getActivity()).hideFansCountView();
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icSearch.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -894,7 +900,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
             case R.id.btn_fan:
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
-                ((MainActivity) getActivity()).showCountsView();
+                //((MainActivity) getActivity()).showCountsView();
+                ((MainActivity) getActivity()).showFansCountView();
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icFan.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -906,7 +913,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
             case R.id.btn_msg:
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
-                ((MainActivity) getActivity()).hideCountsView();
+                //((MainActivity) getActivity()).hideCountsView();
+                ((MainActivity) getActivity()).hideFansCountView();
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
                 icMsg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.purple_theme), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -918,7 +926,8 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
             case R.id.btn_settings:
                 ((MainActivity) getActivity()).showTopView();
                 ((MainActivity) getActivity()).showScreenTitle();
-                ((MainActivity) getActivity()).hideCountsView();
+                //((MainActivity) getActivity()).hideCountsView();
+                ((MainActivity) getActivity()).hideFansCountView();
                 ((MainActivity) getActivity()).setScreenTitle("Settings");
                 ((MainActivity) getActivity()).setProfileImage(ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
                 resetAllBottomButtons();
@@ -1054,6 +1063,10 @@ public class DashboardFragment extends BaseFragment implements BaseView, ViewPag
         myFansProgress = false;
         this.myFansList = fansList;
         EventBus.getDefault().post(new RefreshFans());
+        String title = getActivity().getIntent().getStringExtra("title");
+        if (title!=null && title.equalsIgnoreCase("Fans")){
+            setTab(2);
+        }
     }
 
     @Subscribe

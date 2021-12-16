@@ -479,7 +479,7 @@ public class SignupFragment extends BaseFragment implements BaseView, ViewPager.
                         break;
                     case 3:
                         if (above21Checkbox.isChecked())
-                            signupPresenter.signUpFormValidate(getContext(), nickET.getText().toString(), gender, emailET.getText().toString().trim(), passwordET.getText().toString().trim());
+                            signupPresenter.signUpFormValidate(getContext(), nickET.getText().toString(), gender, emailET.getText().toString().trim().toLowerCase(), passwordET.getText().toString().trim());
                         else
                             showToast(requireActivity(), requireContext(), "You must be 21 or above", WARNING);
                         break;
@@ -617,7 +617,7 @@ public class SignupFragment extends BaseFragment implements BaseView, ViewPager.
         System.out.println("=============" + ParseUser.getCurrentUser().getEmail());
         System.out.println("=============" + ParseUser.getCurrentUser().getUsername());
         setPushToAdmin(requireActivity(), requireContext(), "Wing Mate", NOTI_MSG_SIGNUP);
-        ActivityUtility.startEmailVerifyActivity(getActivity(), KEY_FRAGMENT_EMAIL_VERIFY, emailET.getText().toString(), nickET.getText().toString());
+        ActivityUtility.startEmailVerifyActivity(getActivity(), KEY_FRAGMENT_EMAIL_VERIFY, emailET.getText().toString().toLowerCase(), nickET.getText().toString());
     }
 
     @Override
@@ -640,10 +640,10 @@ public class SignupFragment extends BaseFragment implements BaseView, ViewPager.
             showProgress();
             if (ParseUser.getCurrentUser() != null) {
                 System.out.println("====updateEmailViaParse===");
-                signupPresenter.updateEmailViaParse(getContext(), nickET.getText().toString(), gender, emailET.getText().toString().trim(), passwordET.getText().toString().trim());
+                signupPresenter.updateEmailViaParse(getContext(), nickET.getText().toString(), gender, emailET.getText().toString().trim().toLowerCase(), passwordET.getText().toString().trim());
             } else {
                 System.out.println("====signUpMeViaParse===");
-                signupPresenter.signUpMeViaParse(getContext(), nickET.getText().toString(), gender, emailET.getText().toString().trim(), passwordET.getText().toString().trim());
+                signupPresenter.signUpMeViaParse(getContext(), nickET.getText().toString(), gender, emailET.getText().toString().trim().toLowerCase(), passwordET.getText().toString().trim());
             }
         }
     }

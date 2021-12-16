@@ -56,6 +56,12 @@ public class BaseActivity extends AppCompatActivity {
     TextView may_be_count_tv;
     TextView backLabel;
 
+    RelativeLayout crush;
+    RelativeLayout like;
+    RelativeLayout maybe;
+    TextView crushCount, likeCount, maybeCount;
+    LinearLayout fansCountView;
+
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
@@ -91,6 +97,15 @@ public class BaseActivity extends AppCompatActivity {
 
         profileImg = (CircleImageView) findViewById(R.id.profile_img);
         backLabel = findViewById(R.id.backLabel);
+
+        fansCountView = findViewById(R.id.fansCountView);
+        crush = findViewById(R.id.crush);
+        like = findViewById(R.id.like);
+        maybe = findViewById(R.id.maybe);
+        crushCount = findViewById(R.id.crushCount);
+        likeCount = findViewById(R.id.likesCount);
+        maybeCount = findViewById(R.id.maybeCount);
+
         profileImg.setOnClickListener(v -> {
             ActivityUtility.startProfileActivity(BaseActivity.this, KEY_FRAGMENT_PROFILE, true, ParseUser.getCurrentUser());
 //            ActivityUtility.startPhotoViewActivity(BaseActivity.this, KEY_FRAGMENT_PHOTO_VIEW, ParseUser.getCurrentUser().getString(PARAM_PROFILE_PIC));
@@ -107,6 +122,7 @@ public class BaseActivity extends AppCompatActivity {
         hideProfileImage();
         hideCountsView();
         hideBackLabel();
+        hideFansCountView();
     }
 
     private void hideBackLabel() {
@@ -275,6 +291,12 @@ public class BaseActivity extends AppCompatActivity {
         profileImg.setVisibility(View.GONE);
     }
 
+    public void hideFansCountView(){
+        fansCountView.setVisibility(View.GONE);
+    }
+    public void showFansCountView(){
+        fansCountView.setVisibility(View.VISIBLE);
+    }
     public void hideCountsView() {
         fans_count_view.setVisibility(View.GONE);
     }
@@ -287,20 +309,20 @@ public class BaseActivity extends AppCompatActivity {
         return fans_count_view;
     }
 
-    public LinearLayout getBtnLikesFilter() {
-        return btn_likes_filter;
+    public RelativeLayout getBtnLikesFilter() {
+        return like;
     }
 
-    public LinearLayout getBtnCrushFilter() {
-        return btn_crush_filter;
+    public RelativeLayout getBtnCrushFilter() {
+        return crush;
     }
 
-    public LinearLayout getBtnMaybeFilter() {
-        return btn_may_be_filter;
+    public RelativeLayout getBtnMaybeFilter() {
+        return maybe;
     }
 
     public TextView getLikesCount() {
-        return likes_count;
+        return likeCount;
     }
 
     public TextView getLikesCountTV() {
@@ -308,7 +330,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public TextView getCrushCount() {
-        return crush_count;
+        return crushCount;
     }
 
     public TextView getCrushCountTV() {
@@ -316,7 +338,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public TextView getMaybeCount() {
-        return may_be_count;
+        return maybeCount;
     }
 
     public TextView getMaybeCountTV() {

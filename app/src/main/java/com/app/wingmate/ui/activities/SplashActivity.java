@@ -62,6 +62,7 @@ public class SplashActivity extends AppCompatActivity {
         setStatusBarColor(R.color.bg_color,true);
         String id = getIntent().getStringExtra("userId");
         String username = getIntent().getStringExtra("userName");
+        String title = getIntent().getStringExtra("title");
         DEFAULT_TIMEZONE = TimeZone.getDefault().getID();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -92,7 +93,7 @@ public class SplashActivity extends AppCompatActivity {
 //                        }
                         else {
                             //ActivityUtility.startActivity(SplashActivity.this, KEY_FRAGMENT_DASHBOARD);
-                            if (id!=null && username!=null){
+                            if ((id!=null && username!=null) || title!=null ){
                                 //ActivityUtility.startChatActivityOnly(SplashActivity.this,KEY_FRAGMENT_CHAT,id,username);
                                 ActivityUtility.startActivity(SplashActivity.this,KEY_FRAGMENT_DASHBOARD);
                             }else{

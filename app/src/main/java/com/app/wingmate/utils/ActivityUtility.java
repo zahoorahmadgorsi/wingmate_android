@@ -63,13 +63,18 @@ public class ActivityUtility {
     public static void startActivity(Activity activity, String tag) {
         String id = activity.getIntent().getStringExtra("userId");
         String username = activity.getIntent().getStringExtra("userName");
+        String title = activity.getIntent().getStringExtra("title");
         activity.getIntent().removeExtra("userId");
         activity.getIntent().removeExtra("userName");
+        activity.getIntent().removeExtra("title");
         Intent mainIntent = new Intent(activity, MainActivity.class);
         mainIntent.putExtra(KEY_ACTIVITY_TAG, tag);
         if (id!=null){
             mainIntent.putExtra("userId",id);
             mainIntent.putExtra("userName",username);
+        }
+        if (title!=null){
+            mainIntent.putExtra("title",title);
         }
         switch (tag) {
             case KEY_FRAGMENT_LOGIN:

@@ -65,7 +65,44 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
         // currentUser
         final ParseUser currentUser = ParseUser.getCurrentUser();
 
-        // senderUser
+        ParseUser senderUser = (ParseUser) iObj.get("sender");
+        ParseUser receiverUser = (ParseUser) iObj.get("receiver");
+        String lastMessage = iObj.getString(LAST_MESSAGE);
+        String time = timeAgoSinceDate(iObj.getDate("msgCreateAt"),true);
+        holder.lastMessage.setText(lastMessage);
+        holder.time.setText(time);
+        if (currentUser.getObjectId().equals(senderUser.getObjectId())){
+            getParseImage(holder.userImage, receiverUser, "avatar");
+            holder.userName.setText(receiverUser.getString("nick"));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //makeUnreadZero(iObj);
+                    ActivityUtility.startChatActivity(activity,KEY_FRAGMENT_CHAT,receiverUser.getObjectId(),receiverUser.getString(NICK));
+                }
+            });
+        }else{
+            getParseImage(holder.userImage, senderUser, "avatar");
+            holder.userName.setText(senderUser.getString("nick"));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    makeUnreadZero(iObj);
+                    ActivityUtility.startChatActivity(activity,KEY_FRAGMENT_CHAT,senderUser.getObjectId(),senderUser.getString(NICK));
+                }
+            });
+        }
+        if (iObj.getBoolean("isUnread")){
+            if (!senderUser.getObjectId().equals(currentUser.getObjectId())){
+                holder.newMessage.setVisibility(View.VISIBLE);
+            }else{
+                holder.newMessage.setVisibility(View.GONE);
+            }
+        }
+        else{
+            holder.newMessage.setVisibility(View.GONE);
+        }
+        /*// senderUser
         Objects.requireNonNull(iObj.getParseObject(INSTANTS_SENDER)).fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             public void done(final ParseObject senderUser, ParseException e) {
 
@@ -113,7 +150,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
 
                     }});// ./ receiverUser
 
-            }});// ./ senderUser
+            }});// ./ senderUser*/
 
     }
 
@@ -143,7 +180,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
                             imgView.setImageBitmap(bmp);
                         }}}});}*/
         String pic = parseObj.getString("profilePic");
-        if (pic!=null){
+        if (pic!=null && !pic.isEmpty()){
             Picasso.get()
                     .load(pic)
                     .centerCrop()
