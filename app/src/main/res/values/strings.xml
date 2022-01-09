@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Wing Mate</string>
+    <string name="app_name">Blinqui</string>
 
     <string name="back4app_server_url">https://parseapi.back4app.com/</string>
     <string name="back4app_app_id">D7Vyy11JKs7lpEpMwAHxKbRV0RAdFWI5SzEjZ8r3</string>
@@ -41,7 +41,7 @@
     <string name="nick_req">Nick required!</string>
     <string name="don_t_receive_a_link">Didn\'t receive a link?</string>
     <string name="verify_your_email">Verify Your Email</string>
-    <string name="email_verification_msg">Hi, you are almost ready to start enjoying Wing Mate! Simply click on button to verify your email address.</string>
+    <string name="email_verification_msg">Hi, you are almost ready to start enjoying Blinqui! Simply click on button to verify your email address.</string>
     <string name="please_enter_your_registered_email_address">Please enter your registered email address to retrieve your password</string>
     <string name="skip">Skip</string>
     <string name="save_and_continue">Save &amp; Continue</string>
@@ -63,18 +63,17 @@
     <string name="try_later">Hmmm, We’re not getting any result.</string>
     <string name="no_distance_selected">No distance selected</string>
     <string name="distance">Distance</string>
-    <string name="pending_msg">Please allow up to 24 hours for approval. Upon verification, we will send you an email and get you to the next step closer to being a Wing Mate member!</string>
+    <string name="pending_msg">Please allow up to 24 hours for approval. Upon verification, we will send you an email and get you to the next step closer to being a Blinqui member!</string>
     <string name="please_wait">Please wait</string>
-    <string name="hurrah_">Hurrah!!! Now you are Pro member for Wing Mate</string>
-    <string name="hurrah_1">Congratulations! Now you have full access to Wingmate.</string>
+    <string name="hurrah_">Hurrah!!! Now you are Pro member for Blinqui</string>
+    <string name="hurrah_1">Congratulations! Now you have full access to Blinqui.</string>
     <string name="launch_campaign_title">Launch Campaign</string>
-    <string name="launch_campaign_subtitle">We are happy to offer Wingmate free of charge during the launch campaign period. Once the campaign period is over you will be notified by e-mail</string>
+    <string name="launch_campaign_subtitle">We are happy to offer Blinqui free of charge during the launch campaign period. Once the campaign period is over you will be notified by e-mail</string>
     <string name="payment_success_msg"><![CDATA[For better result we need to know more about you. please provide few answers about you & your interests.]]></string>
     <string name="thank_photo_video">Thank you for uploading your media.</string>
     <string name="allow_photo_video">Please allow us up to 24 hours to confirm your profile by email.</string>
     <string name="please_go_to_your_inbox_and_click_on_the_link">Please go to your inbox and click on the link</string>
     <string name="membership_msg">During 7 days trial period you can search and see other user profiles however interactions with others will be restricted.\n\nAll of the paid membership options allow you full access to all App functions without restrictions.</string>
     <string name="next_step_payment">In order to see your compatibility score with other users you must complete the optional questionnaire.</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

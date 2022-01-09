@@ -15,8 +15,9 @@ public class AlertMessages {
     public static String PROFILE_ACCEPTED = "Your profile is accepted by Wingmate. Please log in again to complete your profile.";
     public static String GO_TO_UPLOAD_SCREEN = "You need to upload photos/video.";
     public static String GO_TO_UPLOAD_SCREEN_AFTER_EXPIRED = "Your trial period has been expired. You need to upload photos/video";
-    public static String GO_TO_ACC_PENDING_SCREEN = "Your trial period has been expired. Your profile is being reviewed by the admin";
+    public static String GO_TO_ACC_PENDING_SCREEN = "Your 7 days trial period has been ended. To enjoy full access to all Blinqui features, you will be directed to the payment page";
     public static String GO_TO_PAYMENT_SCREEN = "You need to pay now.";
     public static String GO_TO_PAYMENT_SCREEN_AFTER_EXPIRED = "Your trial period has been expired. You need to pay now";
     public static String GO_TO_QUESTIONNAIRE_SCREEN = "You need to fill mandatory questionnaire.";
 }
+//Your trial period has been expired. Your profile is being reviewed by the admin

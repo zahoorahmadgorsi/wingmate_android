@@ -922,7 +922,8 @@ public class ProfileFragment extends BaseFragment implements BaseView {
                     .setMessage(GO_TO_ACC_PENDING_SCREEN)
                     .setPositiveButton("OK", (dialoginterface, i) -> {
                         dialoginterface.cancel();
-                        ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
+                        //ActivityUtility.startActivity(requireActivity(), KEY_FRAGMENT_ACCOUNT_PENDING);
+                        ActivityUtility.startPaymentActivity(getActivity(), KEY_FRAGMENT_MEMBERSHIP, true); // Added by Zk
                     })
                     .show();
         } else if (!isPaid && accountStatus == ACTIVE) {

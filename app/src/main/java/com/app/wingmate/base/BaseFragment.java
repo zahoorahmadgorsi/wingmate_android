@@ -61,7 +61,7 @@ public class BaseFragment extends Fragment implements BaseView {
                 .setChooserTitle("Select Image")
                 .setChooserType(ChooserType.CAMERA_AND_GALLERY)
                 .setCopyImagesToPublicGalleryFolder(false)
-                .setFolderName("Wing Mate")
+                .setFolderName("Blinqui")
                 .allowMultiple(false)
                 .build();
     }

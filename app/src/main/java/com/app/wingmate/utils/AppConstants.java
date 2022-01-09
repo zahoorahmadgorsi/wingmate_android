@@ -143,7 +143,7 @@ public class AppConstants {
     public static final String NOTI_MSG_UN_LIKED = " unliked you.";
     public static final String NOTI_MSG_MAYBE = "You are marked as maybe by ";
     public static final String NOTI_MSG_UN_MAYBE = "You are unmarked as maybe by ";
-    public static final String NOTI_MSG_SIGNUP = "A new user has just registered to Wing Mate.";
+    public static final String NOTI_MSG_SIGNUP = "A new user has just registered to Blinqui.";
 
     public static double DEFAULT_LATITUDE = 41.485678;
     public static double DEFAULT_LONGITUDE = -81.708915;

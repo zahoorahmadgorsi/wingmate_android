@@ -1,14 +1,14 @@
 var nodemailer = require('nodemailer');
 
 var mailer = {
-    from: 'appdeveloper1484@gmail.com',
+    from: 'info@blinqui.com',
     options: {
         service: 'gmail',
         host: 'smtp.gmail.com',
         port: 465,
         secure: true, // use SSL
         auth: {
-            user: 'appdeveloper1484@gmail.com',
+            user: 'info@blinqui.com',
             pass: 'cymtdyomeejoyeus'
         }
     }

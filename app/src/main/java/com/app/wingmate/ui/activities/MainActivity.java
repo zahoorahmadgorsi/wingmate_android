@@ -777,7 +777,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 //Show Information about why you need the permission
                 AlertDialog.Builder builder = new AlertDialog.Builder(com.app.wingmate.ui.activities.MainActivity.this);
                 builder.setTitle("Need Multiple Permissions");
-                builder.setMessage("Wing Mate needs permissions.");
+                builder.setMessage("Blinqui needs permissions.");
                 builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -797,7 +797,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 // Redirect to Settings after showing Information about why you need the permission
                 AlertDialog.Builder builder = new AlertDialog.Builder(com.app.wingmate.ui.activities.MainActivity.this);
                 builder.setTitle("Need Multiple Permissions");
-                builder.setMessage("Wing Mate needs permissions.");
+                builder.setMessage("Blinqui needs permissions.");
                 builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -856,7 +856,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             ) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(com.app.wingmate.ui.activities.MainActivity.this);
                 builder.setTitle("Need Multiple Permissions");
-                builder.setMessage("Wing Mate needs permissions.");
+                builder.setMessage("Blinqui needs permissions.");
                 builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

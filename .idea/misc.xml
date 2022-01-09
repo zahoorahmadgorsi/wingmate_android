@@ -12,33 +12,65 @@
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/drawable/right_chat_bubble_background.xml" value="0.20555555555555555" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/about_us_fragment.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/activity_base.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/activity_splash.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/change_password_fragment.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/chat_item_layout.xml" value="0.25" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/contact_us_fragment.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/dialog_options_selector.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/dialog_progress.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/dialog_reject_reasons.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_account_pending.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_admin_home.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_chat.xml" value="0.22" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_crop.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_dummy.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_edit_profile.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_edit_profile_fields.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_email_verify.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_forgot_password.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_home.xml" value="0.33" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_home.xml" value="0.22" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_launch_campaign.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_login.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_main.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_main_admin.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_membership.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_messages.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_my_fans.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_next_step__membership.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_payment.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_photo_view.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_photo_view_admin.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_pre_login.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_profile.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_profile_admin.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_questionnaire.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_search.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_settings.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_signup.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_terms_and_conditions.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_upload_photos_video.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_video_view.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_video_view_admin.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/fragment_webview.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/grid_item_user.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/grid_item_user_new.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/grid_item_user_new_admin.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/help_fragment.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/layout_custom_toast.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/layout_error_occurred.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/layout_header.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/layout_no_internet.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/left_chat_bubble.xml" value="0.25" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/list_item_dos_donts.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/list_item_dos_photos.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/list_item_option.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/list_item_photo.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/list_item_profile.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/list_item_question_option.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/list_item_reject_reason.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/message_item.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/notification_settings_layout.xml" value="0.25" />
+        <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/package_item.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/privacy_poilcy_layout.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/right_chat_bubble.xml" value="0.25" />
         <entry key="..\:/Users/DELL/Desktop/ZakiStuff/Projects/wingmate_android/app/src/main/res/layout/settings_item.xml" value="0.25" />

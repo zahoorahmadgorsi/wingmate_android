@@ -83,12 +83,12 @@ public class WingMateParseFirebaseMessagingService extends FirebaseMessagingServ
 
     public static void showNotification(Context mContext, String pushId, String timestamp, String dataString, String channel, JSONObject data, String userId, String username, String title) {
         NotificationCompat.BigTextStyle InboxStyle = new NotificationCompat.BigTextStyle()
-                .setBigContentTitle("Wing Mate")
+                .setBigContentTitle("Blinqui")
                 .bigText(dataString);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext, pushId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             mBuilder.setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("Wing Mate")
+                    .setContentTitle("Blinqui")
                     .setContentText(dataString)
                     .setAutoCancel(true)
                     .setSound(null)
@@ -99,7 +99,7 @@ public class WingMateParseFirebaseMessagingService extends FirebaseMessagingServ
                     .setStyle(InboxStyle);
         } else {
             mBuilder.setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("Wing Mate")
+                    .setContentTitle("Blinqui")
                     .setContentText(dataString)
                     .setAutoCancel(true)
                     .setSound(null)
@@ -125,7 +125,7 @@ public class WingMateParseFirebaseMessagingService extends FirebaseMessagingServ
         NotificationManager mNotifyMgr = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String CHANNEL_ID = "1";
-            String CHANNEL_NAME = "Wingmate";
+            String CHANNEL_NAME = "Blinqui";
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
             mNotifyMgr.createNotificationChannel(mChannel);
         }

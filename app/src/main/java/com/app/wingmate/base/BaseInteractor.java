@@ -685,6 +685,7 @@ public class BaseInteractor {
                     || ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY).equalsIgnoreCase(GROUP_B))
                 query.whereEqualTo(PARAM_GROUP_CATEGORY, ParseUser.getCurrentUser().getString(PARAM_GROUP_CATEGORY));
             query.whereNotEqualTo(PARAM_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
+            query.whereNotEqualTo(PARAM_GENDER, ParseUser.getCurrentUser().getString(PARAM_GENDER)); //Added by zk
             query.setLimit(1000);
             query.findInBackground((objects, e) -> {
                 if (e == null) {
